@@ -242,6 +242,14 @@
       margin-bottom: 30px;
     }
     h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); line-height: 1.1; letter-spacing: 0; font-weight: 700; }
+    .section-kicker {
+      margin: 0 0 12px;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
     .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     .panel { border: 1px solid var(--line); border-radius: 8px; background: #ffffff; padding: 28px; }
@@ -258,23 +266,50 @@
       font-weight: 600;
     }
 
-    .projects { background: #10131a; color: #ffffff; }
-    .projects .section-note, .projects .project-card p, .projects .project-meta { color: #b8c0cf; }
-    .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .projects {
+      background: #f3f5f9;
+      color: var(--ink);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .projects .section-heading { align-items: flex-start; }
+    .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
+    .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
     .project-card {
-      min-height: 260px;
+      min-height: 286px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 1px solid rgba(255, 255, 255, 0.13);
+      border: 1px solid #d9dee8;
       border-radius: 8px;
-      background: #171b24;
-      padding: 24px;
+      background: rgba(255, 255, 255, 0.76);
+      padding: 28px;
+      box-shadow: 0 18px 44px rgba(31, 36, 48, 0.045);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
-    .project-card h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.25; }
+    .project-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(13, 111, 104, 0.42);
+      box-shadow: 0 22px 54px rgba(31, 36, 48, 0.075);
+    }
+    .project-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 42px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .project-number { font-weight: 600; }
+    .project-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      line-height: 1;
+    }
+    .project-card h3 { margin: 0 0 12px; font-size: 24px; line-height: 1.25; font-weight: 600; }
     .project-card p { margin: 0; font-size: 15px; }
     .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; font-size: 12px; font-weight: 600; }
-    .project-meta span { border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; padding: 6px 9px; }
+    .project-meta span { border: 1px solid #d8dde7; border-radius: 999px; padding: 6px 9px; background: rgba(255, 255, 255, 0.64); }
 
     .contact-band { background: var(--soft); }
     .contact-box {
@@ -330,9 +365,9 @@
     <nav class="nav" aria-label="주요 메뉴">
       <a class="brand" href="#top">전연주</a>
       <div class="nav-links">
+        <a href="#projects">Projects</a>
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
-        <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </div>
     </nav>
@@ -377,6 +412,64 @@
             </dl>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Projects</p>
+            <h2 id="projects-title">분석 프로젝트</h2>
+          </div>
+          <p class="section-note">진행한 4개의 프로젝트를 하나씩 열어볼 수 있는 영역입니다. 상세 내용은 추후 프로젝트별로 채워갈 예정입니다.</p>
+        </div>
+        <div class="project-grid">
+          <a class="project-card" id="project-01" href="#project-01" aria-label="Project 01 상세 보기">
+            <div>
+              <div class="project-card-top">
+                <span class="project-number">01</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Project 01</h3>
+              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+            </div>
+            <div class="project-meta"><span>Analysis</span><span>Dashboard</span><span>Insight</span></div>
+          </a>
+          <a class="project-card" id="project-02" href="#project-02" aria-label="Project 02 상세 보기">
+            <div>
+              <div class="project-card-top">
+                <span class="project-number">02</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Project 02</h3>
+              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+            </div>
+            <div class="project-meta"><span>Python</span><span>SQL</span><span>Visualization</span></div>
+          </a>
+          <a class="project-card" id="project-03" href="#project-03" aria-label="Project 03 상세 보기">
+            <div>
+              <div class="project-card-top">
+                <span class="project-number">03</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Project 03</h3>
+              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+            </div>
+            <div class="project-meta"><span>EDA</span><span>Modeling</span><span>Report</span></div>
+          </a>
+          <a class="project-card" id="project-04" href="#project-04" aria-label="Project 04 상세 보기">
+            <div>
+              <div class="project-card-top">
+                <span class="project-number">04</span>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+              <h3>Project 04</h3>
+              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+            </div>
+            <div class="project-meta"><span>Tableau</span><span>Storytelling</span><span>Business</span></div>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -425,38 +518,6 @@
             <li>Report Writing</li>
           </ul>
         </article>
-      </div>
-    </section>
-
-    <section class="projects" id="projects" aria-labelledby="projects-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <h2 id="projects-title">프로젝트</h2>
-          <p class="section-note">상세 프로젝트는 추후 실제 분석 결과와 링크로 교체할 수 있게 구조를 잡아두었습니다.</p>
-        </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div>
-              <h3>고객 행동 데이터 분석</h3>
-              <p>고객 이용 패턴을 분석해 주요 지표를 정의하고, 개선 기회를 도출하는 프로젝트 영역입니다.</p>
-            </div>
-            <div class="project-meta"><span>EDA</span><span>Python</span><span>Insight</span></div>
-          </article>
-          <article class="project-card">
-            <div>
-              <h3>매출 지표 대시보드</h3>
-              <p>매출, 전환율, 재구매율 등 핵심 지표를 한눈에 볼 수 있는 대시보드 프로젝트 영역입니다.</p>
-            </div>
-            <div class="project-meta"><span>Dashboard</span><span>SQL</span><span>Visualization</span></div>
-          </article>
-          <article class="project-card">
-            <div>
-              <h3>공공데이터 인사이트</h3>
-              <p>공공데이터를 활용해 사회 현상이나 생활 문제를 분석하는 프로젝트 영역입니다.</p>
-            </div>
-            <div class="project-meta"><span>Open Data</span><span>Report</span><span>Storytelling</span></div>
-          </article>
-        </div>
       </div>
     </section>
 
