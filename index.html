@@ -176,6 +176,7 @@
 
     .featured-list {
       display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
     }
 
@@ -200,21 +201,8 @@
       font-size: 14px;
     }
 
-    .hero-proof {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 16px;
-      color: #323846;
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    .hero-proof span {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 11px;
-      background: #ffffff;
+    .featured-card.wide {
+      grid-column: span 2;
     }
 
     section { padding: 86px 0; }
@@ -299,6 +287,8 @@
       .nav-links { width: 100%; justify-content: space-between; }
       .lead { font-size: 16px; }
       .button { width: 100%; }
+      .featured-list { grid-template-columns: 1fr; }
+      .featured-card.wide { grid-column: auto; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
       .panel, .project-card, .contact-box { padding: 22px; }
     }
@@ -333,26 +323,29 @@
             <a class="button primary" href="#projects">프로젝트 보기</a>
           </div>
         </div>
-        <aside class="hero-showcase" aria-label="대표 프로젝트 미리보기">
-          <p class="showcase-label">Featured Projects</p>
+        <aside class="hero-showcase" aria-label="포트폴리오 요약">
+          <p class="showcase-label">Portfolio Snapshot</p>
           <div class="featured-list">
             <a class="featured-card" href="#projects">
-              <strong>식료품 플랫폼 개인화 마케팅</strong>
-              <span>구매 로그 기반 고객 세분화 및 재구매 타이밍 분석</span>
+              <strong>4 Projects</strong>
+              <span>데이터 분석 프로젝트</span>
             </a>
-            <a class="featured-card" href="#projects">
-              <strong>쥬얼리 브랜드 광고 예산 최적화</strong>
-              <span>리뷰 데이터와 광고 성과를 활용한 타겟 리포지셔닝</span>
+            <div class="featured-card">
+              <strong>3 Certificates</strong>
+              <span>SQLD · ADsP 외 1</span>
+            </div>
+            <a class="featured-card wide" href="mailto:duswn0852@gmail.com">
+              <strong>Email</strong>
+              <span>duswn0852@gmail.com</span>
             </a>
-            <a class="featured-card" href="#projects">
-              <strong>DACON K리그 패스 좌표 예측</strong>
-              <span>스포츠 데이터를 활용한 AI 예측 모델 실험</span>
+            <a class="featured-card" href="https://public.tableau.com/app/profile/.10463744/vizzes" target="_blank" rel="noreferrer">
+              <strong>Tableau Public</strong>
+              <span>시각화 포트폴리오</span>
             </a>
-          </div>
-          <div class="hero-proof" aria-label="포트폴리오 요약 지표">
-            <span>2 Projects</span>
-            <span>2 Certificates</span>
-            <span>Top 6.94% DACON</span>
+            <a class="featured-card" href="https://duswn1204.tistory.com/" target="_blank" rel="noreferrer">
+              <strong>Blog</strong>
+              <span>분석 기록</span>
+            </a>
           </div>
         </aside>
       </div>
