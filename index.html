@@ -3,46 +3,375 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>전연주 | Portfolio</title>
+  <meta name="description" content="데이터분석가 전연주의 포트폴리오" />
+  <title>전연주 | Data Analyst Portfolio</title>
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --ink: #171a22;
+      --muted: #5d6472;
+      --line: #dfe3ea;
+      --paper: #ffffff;
+      --soft: #f5f7fb;
+      --teal: #0f766e;
+      --teal-dark: #0b4f4a;
+      --coral: #e85d4f;
+      --gold: #f4b740;
+      --shadow: 0 18px 50px rgba(20, 26, 38, 0.1);
     }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f7f8fb;
-      color: #171a22;
       font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.88);
+      border-bottom: 1px solid rgba(223, 227, 234, 0.86);
     }
 
-    main {
-      width: min(720px, calc(100% - 40px));
-      padding: 56px 0;
+    .nav {
+      width: min(1120px, calc(100% - 40px));
+      min-height: 64px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
 
-    p {
-      margin: 0 0 12px;
-      color: #5d6472;
-      font-size: 16px;
+    .brand { font-weight: 800; white-space: nowrap; }
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 14px; font-weight: 700; }
+    .nav-links a:hover { color: var(--teal); }
+
+    .hero {
+      background:
+        linear-gradient(120deg, rgba(15, 118, 110, 0.09), transparent 35%),
+        linear-gradient(300deg, rgba(232, 93, 79, 0.1), transparent 36%),
+        var(--soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      width: min(1120px, calc(100% - 40px));
+      min-height: calc(100vh - 64px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+      align-items: center;
+      gap: 52px;
+      padding: 72px 0 64px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-size: 14px;
       font-weight: 800;
+      text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(44px, 9vw, 88px);
-      line-height: 0.98;
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: 0.95;
       letter-spacing: 0;
+    }
+
+    .role {
+      margin: 22px 0 0;
+      font-size: clamp(24px, 4vw, 42px);
+      line-height: 1.15;
+      font-weight: 800;
+      color: var(--teal-dark);
+    }
+
+    .lead {
+      max-width: 680px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border-radius: 8px;
+      border: 1px solid var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .button.primary { color: #ffffff; background: var(--ink); }
+    .button.secondary { background: #ffffff; }
+
+    .profile-visual { position: relative; min-height: 420px; display: grid; align-items: center; }
+    .portrait-wrap {
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      background: #d7dde7;
+      aspect-ratio: 4 / 5;
+    }
+    .portrait-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.92) contrast(1.02);
+    }
+
+    .metric-strip {
+      position: absolute;
+      right: -18px;
+      bottom: 24px;
+      width: min(280px, 76%);
+      padding: 18px;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+    .metric-strip strong { display: block; font-size: 28px; line-height: 1; color: var(--coral); }
+    .metric-strip span { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; font-weight: 700; }
+
+    section { padding: 86px 0; }
+    .section-inner { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); line-height: 1.1; letter-spacing: 0; }
+    .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .panel { border: 1px solid var(--line); border-radius: 8px; background: #ffffff; padding: 28px; }
+    .panel h3 { margin: 0 0 12px; font-size: 20px; }
+    .panel p { margin: 0; color: var(--muted); }
+    .skill-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 18px 0 0; list-style: none; }
+    .skill-list li {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--soft);
+      color: #323846;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .projects { background: #10131a; color: #ffffff; }
+    .projects .section-note, .projects .project-card p, .projects .project-meta { color: #b8c0cf; }
+    .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .project-card {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 8px;
+      background: #171b24;
+      padding: 24px;
+    }
+    .project-card h3 { margin: 0 0 12px; font-size: 22px; line-height: 1.25; }
+    .project-card p { margin: 0; font-size: 15px; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; font-size: 12px; font-weight: 800; }
+    .project-meta span { border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; padding: 6px 9px; }
+
+    .contact-band { background: var(--soft); }
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 28px;
+      border-top: 4px solid var(--gold);
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+    }
+    .contact-box p { margin: 10px 0 0; color: var(--muted); }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+    footer { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); }
+
+    @media (max-width: 860px) {
+      .nav, .hero-inner, .section-inner { width: min(100% - 28px, 1120px); }
+      .nav-links { gap: 12px; font-size: 13px; }
+      .hero-inner { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
+      .profile-visual { min-height: 0; }
+      .portrait-wrap { max-height: 520px; }
+      .metric-strip { right: 12px; bottom: 12px; }
+      section { padding: 64px 0; }
+      .section-heading, .contact-box { display: block; }
+      .section-note { margin-top: 12px; }
+      .about-grid, .project-grid { grid-template-columns: 1fr; }
+      .contact-links { justify-content: flex-start; margin-top: 22px; }
+    }
+
+    @media (max-width: 560px) {
+      .nav { align-items: flex-start; flex-direction: column; padding: 14px 0; gap: 8px; }
+      .nav-links { width: 100%; justify-content: space-between; }
+      .lead { font-size: 16px; }
+      .button { width: 100%; }
+      .metric-strip { position: static; width: 100%; margin-top: 12px; }
+      .panel, .project-card, .contact-box { padding: 22px; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <p>Data Analyst Portfolio</p>
-    <h1>전연주</h1>
+  <header class="site-header">
+    <nav class="nav" aria-label="주요 메뉴">
+      <a class="brand" href="#top">전연주</a>
+      <div class="nav-links">
+        <a href="#about">소개</a>
+        <a href="#skills">역량</a>
+        <a href="#projects">프로젝트</a>
+        <a href="#contact">연락</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div>
+          <p class="eyebrow">Data Analyst Portfolio</p>
+          <h1 id="hero-title">전연주</h1>
+          <p class="role">데이터분석가</p>
+          <p class="lead">
+            데이터를 읽고, 흐름을 정리하고, 더 나은 의사결정으로 이어지는 인사이트를 만드는 분석가를 목표로 합니다.
+            숫자 너머의 맥락을 놓치지 않는 포트폴리오를 차근차근 채워가고 있습니다.
+          </p>
+          <div class="hero-actions" aria-label="바로가기">
+            <a class="button primary" href="#projects">프로젝트 보기</a>
+            <a class="button secondary" href="https://github.com/jyj1204" target="_blank" rel="noreferrer">GitHub</a>
+          </div>
+        </div>
+
+        <div class="profile-visual" aria-label="전연주 프로필 이미지 영역">
+          <div class="portrait-wrap">
+            <img src="https://avatars.githubusercontent.com/u/218120834?v=4" alt="전연주 GitHub 프로필 이미지" />
+          </div>
+          <div class="metric-strip" aria-label="포트폴리오 핵심 방향">
+            <strong>01</strong>
+            <span>데이터 기반 문제 정의와 분석 결과 전달에 집중합니다.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="about-title">소개</h2>
+          <p class="section-note">아직 초안입니다. 프로젝트와 경험을 추가하면서 더 선명한 이야기로 다듬어갈 예정입니다.</p>
+        </div>
+        <div class="about-grid">
+          <article class="panel">
+            <h3>분석으로 답을 찾는 사람</h3>
+            <p>
+              복잡한 데이터를 목적에 맞게 정리하고, 핵심 지표를 통해 현재 상황을 설명하는 일에 관심이 있습니다.
+              가설을 세우고 검증하며, 결과를 이해하기 쉬운 언어와 시각 자료로 전달하는 분석가를 지향합니다.
+            </p>
+          </article>
+          <article class="panel">
+            <h3>차근차근 쌓는 포트폴리오</h3>
+            <p>
+              이 페이지는 전연주의 데이터 분석 포트폴리오 공간입니다. 앞으로 분석 프로젝트, 대시보드, 학습 기록,
+              협업 경험을 업데이트해 실제 역량이 잘 보이도록 개선할 예정입니다.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" aria-labelledby="skills-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="skills-title">핵심 역량</h2>
+          <p class="section-note">현재는 데이터분석가 포지션에 맞춘 기본 역량 중심으로 구성했습니다.</p>
+        </div>
+        <article class="panel">
+          <h3>Data Analysis Toolkit</h3>
+          <p>데이터 수집, 정제, 탐색, 시각화, 리포팅까지 분석 흐름 전반을 다루는 역량을 키우고 있습니다.</p>
+          <ul class="skill-list" aria-label="기술 스택">
+            <li>Python</li>
+            <li>SQL</li>
+            <li>Excel</li>
+            <li>Pandas</li>
+            <li>Data Visualization</li>
+            <li>Dashboard</li>
+            <li>Business Insight</li>
+            <li>Report Writing</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <h2 id="projects-title">프로젝트</h2>
+          <p class="section-note">상세 프로젝트는 추후 실제 분석 결과와 링크로 교체할 수 있게 구조를 잡아두었습니다.</p>
+        </div>
+        <div class="project-grid">
+          <article class="project-card">
+            <div>
+              <h3>고객 행동 데이터 분석</h3>
+              <p>고객 이용 패턴을 분석해 주요 지표를 정의하고, 개선 기회를 도출하는 프로젝트 영역입니다.</p>
+            </div>
+            <div class="project-meta"><span>EDA</span><span>Python</span><span>Insight</span></div>
+          </article>
+          <article class="project-card">
+            <div>
+              <h3>매출 지표 대시보드</h3>
+              <p>매출, 전환율, 재구매율 등 핵심 지표를 한눈에 볼 수 있는 대시보드 프로젝트 영역입니다.</p>
+            </div>
+            <div class="project-meta"><span>Dashboard</span><span>SQL</span><span>Visualization</span></div>
+          </article>
+          <article class="project-card">
+            <div>
+              <h3>공공데이터 인사이트</h3>
+              <p>공공데이터를 활용해 사회 현상이나 생활 문제를 분석하는 프로젝트 영역입니다.</p>
+            </div>
+            <div class="project-meta"><span>Open Data</span><span>Report</span><span>Storytelling</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-band" id="contact" aria-labelledby="contact-title">
+      <div class="section-inner">
+        <div class="contact-box">
+          <div>
+            <h2 id="contact-title">함께 이야기해요</h2>
+            <p>데이터를 통해 문제를 발견하고 해결하는 일에 관심이 있습니다. 프로젝트와 연락처 정보는 계속 업데이트됩니다.</p>
+          </div>
+          <div class="contact-links">
+            <a class="button primary" href="https://github.com/jyj1204" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="button secondary" href="mailto:your-email@example.com">Email</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <span>© 2026 전연주. Data Analyst Portfolio.</span>
+  </footer>
 </body>
 </html>
