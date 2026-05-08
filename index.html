@@ -54,6 +54,7 @@
     .nav-links a:hover { color: var(--teal); }
 
     .hero {
+      padding: 0;
       background:
         linear-gradient(120deg, rgba(15, 118, 110, 0.09), transparent 35%),
         linear-gradient(300deg, rgba(232, 93, 79, 0.1), transparent 36%),
@@ -63,13 +64,18 @@
 
     .hero-inner {
       width: min(1120px, calc(100% - 40px));
-      min-height: calc(100vh - 64px);
+      min-height: auto;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
-      align-items: center;
+      grid-template-columns: minmax(280px, 440px) minmax(0, 1fr);
+      align-items: start;
+      align-content: start;
       gap: 52px;
-      padding: 72px 0 64px;
+      padding: 38px 0 34px;
+    }
+
+    .hero-profile {
+      width: min(100%, 440px);
     }
 
     .eyebrow {
@@ -82,14 +88,14 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(48px, 8vw, 92px);
+      font-size: clamp(42px, 5vw, 60px);
       line-height: 0.95;
       letter-spacing: 0;
     }
 
     .role {
-      margin: 22px 0 0;
-      font-size: clamp(24px, 4vw, 42px);
+      margin: 12px 0 0;
+      font-size: clamp(24px, 3vw, 34px);
       line-height: 1.15;
       font-weight: 800;
       color: var(--teal-dark);
@@ -97,12 +103,12 @@
 
     .lead {
       max-width: 680px;
-      margin: 24px 0 0;
+      margin: 14px 0 0;
       color: var(--muted);
-      font-size: 18px;
+      font-size: 17px;
     }
 
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
     .button {
       min-height: 46px;
       display: inline-flex;
@@ -125,6 +131,10 @@
       box-shadow: var(--shadow);
       background: #d7dde7;
       aspect-ratio: 4 / 5;
+    }
+    .hero-profile .portrait-wrap {
+      width: min(100%, 220px);
+      margin-bottom: 16px;
     }
     .portrait-wrap img {
       width: 100%;
@@ -212,6 +222,7 @@
       .nav, .hero-inner, .section-inner { width: min(100% - 28px, 1120px); }
       .nav-links { gap: 12px; font-size: 13px; }
       .hero-inner { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
+      .hero-profile .portrait-wrap { width: min(100%, 360px); }
       .profile-visual { min-height: 0; }
       .portrait-wrap { max-height: 520px; }
       .metric-strip { right: 12px; bottom: 12px; }
@@ -237,10 +248,10 @@
     <nav class="nav" aria-label="주요 메뉴">
       <a class="brand" href="#top">전연주</a>
       <div class="nav-links">
-        <a href="#about">소개</a>
-        <a href="#skills">역량</a>
-        <a href="#projects">프로젝트</a>
-        <a href="#contact">연락</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
       </div>
     </nav>
   </header>
@@ -248,27 +259,17 @@
   <main id="top">
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
-        <div>
-          <p class="eyebrow">Data Analyst Portfolio</p>
+        <div class="hero-profile">
+          <div class="portrait-wrap">
+            <img src="assets/profile.jpeg" alt="전연주 프로필 사진" />
+          </div>
           <h1 id="hero-title">전연주</h1>
-          <p class="role">데이터분석가</p>
+          <p class="role">데이터 분석가</p>
           <p class="lead">
-            데이터를 읽고, 흐름을 정리하고, 더 나은 의사결정으로 이어지는 인사이트를 만드는 분석가를 목표로 합니다.
-            숫자 너머의 맥락을 놓치지 않는 포트폴리오를 차근차근 채워가고 있습니다.
+            데이터로 흐름을 읽고, 결정을 설계합니다.
           </p>
           <div class="hero-actions" aria-label="바로가기">
             <a class="button primary" href="#projects">프로젝트 보기</a>
-            <a class="button secondary" href="https://github.com/jyj1204" target="_blank" rel="noreferrer">GitHub</a>
-          </div>
-        </div>
-
-        <div class="profile-visual" aria-label="전연주 프로필 이미지 영역">
-          <div class="portrait-wrap">
-            <img src="https://avatars.githubusercontent.com/u/218120834?v=4" alt="전연주 GitHub 프로필 이미지" />
-          </div>
-          <div class="metric-strip" aria-label="포트폴리오 핵심 방향">
-            <strong>01</strong>
-            <span>데이터 기반 문제 정의와 분석 결과 전달에 집중합니다.</span>
           </div>
         </div>
       </div>
