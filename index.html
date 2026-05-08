@@ -25,7 +25,7 @@
       margin: 0;
       font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       color: var(--ink);
-      background: var(--paper);
+      background: var(--soft);
       line-height: 1.6;
     }
     a { color: inherit; text-decoration: none; }
@@ -55,7 +55,9 @@
 
     .hero {
       padding: 0;
-      min-height: calc(100vh + 96px);
+      min-height: calc(100vh - 64px);
+      display: grid;
+      align-items: center;
       background:
         linear-gradient(120deg, rgba(15, 118, 110, 0.09), transparent 35%),
         linear-gradient(300deg, rgba(232, 93, 79, 0.1), transparent 36%),
@@ -65,14 +67,14 @@
 
     .hero-inner {
       width: min(1120px, calc(100% - 40px));
-      min-height: calc(100vh - 64px);
+      min-height: auto;
       margin: 0 auto;
       display: grid;
       grid-template-columns: minmax(280px, 430px) minmax(360px, 1fr);
-      align-items: start;
-      align-content: start;
+      align-items: center;
+      align-content: center;
       gap: 52px;
-      padding: 54px 0 46px;
+      padding: 40px 0;
     }
 
     .hero-profile {
@@ -216,6 +218,7 @@
     }
 
     section { padding: 86px 0; }
+    #about, #skills { background: var(--paper); }
     .section-inner { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     .section-heading {
       display: flex;
