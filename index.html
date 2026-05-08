@@ -166,51 +166,32 @@
       width: 100%;
     }
 
-    .showcase-label {
-      margin: 0 0 16px;
-      color: var(--teal);
-      font-size: 14px;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .snapshot-stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .snapshot-stat {
+    .intro-card {
+      max-width: 440px;
+      padding: 28px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 18px;
-      background: rgba(255, 255, 255, 0.78);
-      box-shadow: 0 12px 32px rgba(20, 26, 38, 0.07);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
     }
 
-    .snapshot-stat strong {
-      display: block;
-      font-size: 32px;
-      line-height: 1;
+    .intro-title {
+      display: inline-block;
+      margin: 0 0 18px;
+      border-bottom: 1px solid currentColor;
+      color: var(--coral);
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
     }
 
-    .snapshot-stat span {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .profile-links {
+    .intro-list {
       display: grid;
       gap: 10px;
-      border-top: 1px solid var(--line);
-      padding-top: 16px;
+      margin: 0;
     }
 
-    .profile-link {
+    .intro-row {
       display: grid;
       grid-template-columns: 130px 1fr;
       gap: 18px;
@@ -219,19 +200,24 @@
       font-size: 14px;
     }
 
-    .profile-link span {
+    .intro-row dt {
       color: var(--muted);
       font-weight: 800;
     }
 
-    .profile-link strong {
+    .intro-row dd {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .intro-row a {
       width: fit-content;
       border-bottom: 1px solid currentColor;
-      font-weight: 900;
       line-height: 1.35;
     }
 
-    .profile-link strong::after {
+    .intro-row a::after {
       content: " ↗";
       color: var(--teal);
       font-weight: 900;
@@ -324,8 +310,8 @@
       }
       .lead { font-size: 16px; }
       .button { width: 100%; }
-      .snapshot-stats { grid-template-columns: 1fr; }
-      .profile-link { grid-template-columns: 1fr; gap: 2px; }
+      .intro-card { max-width: none; padding: 22px; }
+      .intro-row { grid-template-columns: 96px 1fr; gap: 12px; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
       .panel, .project-card, .contact-box { padding: 22px; }
     }
@@ -360,31 +346,27 @@
             <a class="button primary" href="#projects">프로젝트 보기</a>
           </div>
         </div>
-        <aside class="hero-showcase" aria-label="포트폴리오 요약">
-          <p class="showcase-label">Portfolio Snapshot</p>
-          <div class="snapshot-stats">
-            <a class="snapshot-stat" href="#projects">
-              <strong>4</strong>
-              <span>Projects</span>
-            </a>
-            <div class="snapshot-stat">
-              <strong>3</strong>
-              <span>Certificates</span>
-            </div>
-          </div>
-          <div class="profile-links">
-            <a class="profile-link" href="mailto:duswn0852@gmail.com">
-              <span>Email</span>
-              <strong>duswn0852@gmail.com</strong>
-            </a>
-            <a class="profile-link" href="https://public.tableau.com/app/profile/.10463744/vizzes" target="_blank" rel="noreferrer">
-              <span>Tableau Public</span>
-              <strong>public.tableau.com</strong>
-            </a>
-            <a class="profile-link" href="https://duswn1204.tistory.com/" target="_blank" rel="noreferrer">
-              <span>Blog</span>
-              <strong>duswn1204.tistory.com</strong>
-            </a>
+        <aside class="hero-showcase" aria-label="전연주 소개 정보">
+          <div class="intro-card">
+            <p class="intro-title">Intro</p>
+            <dl class="intro-list">
+              <div class="intro-row">
+                <dt>이름</dt>
+                <dd>전연주</dd>
+              </div>
+              <div class="intro-row">
+                <dt>연락처</dt>
+                <dd>010-4442-4218</dd>
+              </div>
+              <div class="intro-row">
+                <dt>블로그</dt>
+                <dd><a href="https://duswn1204.tistory.com/" target="_blank" rel="noreferrer">duswn1204.tistory.com</a></dd>
+              </div>
+              <div class="intro-row">
+                <dt>태블로퍼블릭</dt>
+                <dd><a href="https://public.tableau.com/app/profile/.10463744/vizzes" target="_blank" rel="noreferrer">public.tableau.com</a></dd>
+              </div>
+            </dl>
           </div>
         </aside>
       </div>
