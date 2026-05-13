@@ -286,7 +286,13 @@
       padding: 28px;
       box-shadow: 0 18px 44px rgba(31, 36, 48, 0.045);
       transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      appearance: none;
     }
+    button.project-card { width: 100%; }
     .project-card:hover {
       transform: translateY(-3px);
       border-color: rgba(13, 111, 104, 0.42);
@@ -311,144 +317,217 @@
     .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; font-size: 12px; font-weight: 600; }
     .project-meta span { border: 1px solid #d8dde7; border-radius: 999px; padding: 6px 9px; background: rgba(255, 255, 255, 0.64); }
 
-    .project-detail {
-      margin-top: 28px;
-      border: 1px solid #d9dee8;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.84);
-      box-shadow: 0 18px 44px rgba(31, 36, 48, 0.045);
-      overflow: hidden;
+    body.modal-open { overflow: hidden; }
+    .project-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px;
+      background: rgba(15, 18, 25, 0.72);
     }
-
-    .detail-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: 34px;
-      padding: 34px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .detail-label {
-      margin: 0 0 12px;
-      color: var(--teal);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .detail-hero h3 {
-      margin: 0;
-      font-size: clamp(28px, 3.6vw, 42px);
-      line-height: 1.18;
-      font-weight: 600;
-    }
-
-    .detail-summary {
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
-    .detail-stats {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      align-content: start;
-    }
-
-    .detail-stat {
-      min-height: 96px;
+    .project-modal[aria-hidden="true"] { display: none; }
+    .modal-dialog {
+      width: calc(100vw - 40px);
+      max-width: 1080px;
+      max-height: min(88vh, 920px);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
+      outline: none;
+    }
+    .modal-header {
+      position: relative;
+      display: grid;
+      grid-template-columns: 56px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      padding: 26px 82px 20px 30px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+    .modal-header > div:nth-child(2) { min-width: 0; }
+    .modal-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(13, 111, 104, 0.24);
+      border-radius: 8px;
+      color: var(--teal);
+      font-weight: 700;
+      background: rgba(13, 111, 104, 0.08);
+    }
+    .modal-kicker {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+    .modal-header h3 {
+      margin: 0;
+      font-size: clamp(23px, 3vw, 32px);
+      line-height: 1.25;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+    .modal-subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+    .modal-close {
+      position: absolute;
+      top: 26px;
+      right: 30px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .modal-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px 30px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 248, 251, 0.82);
+    }
+    .modal-tabs a {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 12px;
+      color: var(--muted);
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .modal-tabs a:hover {
+      color: var(--teal);
+      border-color: rgba(13, 111, 104, 0.34);
+    }
+    .modal-content {
+      overflow: auto;
+      padding: 28px 30px 34px;
+      scroll-behavior: smooth;
+    }
+    .modal-section {
+      padding: 0;
+      margin: 0 0 28px;
+    }
+    .modal-section:last-child { margin-bottom: 0; }
+    .modal-section h4 {
+      margin: 0 0 14px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .modal-lead {
+      margin: 0 0 18px;
+      border-left: 3px solid var(--teal);
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      background: var(--soft);
+      color: #414857;
+      font-size: 15px;
+    }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .modal-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .modal-card {
       border: 1px solid var(--line);
       border-radius: 8px;
       padding: 16px;
       background: #ffffff;
     }
-
-    .detail-stat strong {
+    .modal-card strong {
       display: block;
-      font-size: 25px;
-      line-height: 1.1;
+      margin-bottom: 7px;
       font-weight: 600;
     }
-
-    .detail-stat span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .detail-body {
-      display: grid;
-      gap: 26px;
-      padding: 34px;
-    }
-
-    .detail-section {
-      padding: 0;
-    }
-
-    .detail-section h4 {
-      margin: 0 0 14px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .detail-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 18px;
-      background: #ffffff;
-    }
-
-    .detail-card strong {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .detail-card p {
+    .modal-card p {
       margin: 0;
       color: var(--muted);
       font-size: 14px;
+      overflow-wrap: anywhere;
     }
-
-    .method-list {
+    .modal-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+    .modal-stat {
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 15px;
+      background: #fbfcfe;
+    }
+    .modal-stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 600;
+    }
+    .modal-stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .modal-method-list {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
       margin: 0;
       padding: 0;
       list-style: none;
+      counter-reset: step;
     }
-
-    .method-list li {
+    .modal-method-list li {
+      counter-increment: step;
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 12px;
+      padding: 14px;
       background: #ffffff;
       color: #323846;
       font-size: 13px;
       font-weight: 600;
-      text-align: center;
     }
-
-    .visual-grid {
+    .modal-method-list li::before {
+      content: counter(step, decimal-leading-zero);
+      display: block;
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .modal-visual-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
     }
-
     .visual-placeholder {
       min-height: 230px;
+      margin: 0;
       border: 1px dashed #b9c2d0;
       border-radius: 8px;
       padding: 18px;
@@ -457,14 +536,12 @@
         linear-gradient(315deg, rgba(217, 95, 87, 0.08), transparent 42%),
         #ffffff;
     }
-
     .visual-placeholder figcaption {
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 13px;
       font-weight: 600;
     }
-
     .mock-bars {
       display: flex;
       align-items: end;
@@ -472,13 +549,11 @@
       height: 126px;
       padding-top: 20px;
     }
-
     .mock-bars span {
       flex: 1;
       border-radius: 6px 6px 0 0;
       background: rgba(13, 111, 104, 0.68);
     }
-
     .mock-line {
       height: 126px;
       border-bottom: 1px solid var(--line);
@@ -487,7 +562,6 @@
         linear-gradient(30deg, transparent 34%, rgba(13, 111, 104, 0.42) 35%, transparent 36%),
         linear-gradient(150deg, transparent 58%, rgba(217, 95, 87, 0.42) 59%, transparent 60%);
     }
-
     .priority-table {
       width: 100%;
       border-collapse: collapse;
@@ -536,8 +610,8 @@
       .section-heading, .contact-box { display: block; }
       .section-note { margin-top: 12px; }
       .about-grid, .project-grid { grid-template-columns: 1fr; }
-      .detail-hero, .detail-grid, .visual-grid { grid-template-columns: 1fr; }
-      .method-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .modal-grid, .modal-grid.two, .modal-visual-grid { grid-template-columns: 1fr; }
+      .modal-stat-grid, .modal-method-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .contact-links { justify-content: flex-start; margin-top: 22px; }
     }
 
@@ -553,8 +627,14 @@
       .button { width: 100%; }
       .intro-card { max-width: none; padding: 22px; }
       .intro-row { grid-template-columns: 96px 1fr; gap: 12px; }
-      .detail-hero, .detail-body { padding: 22px; }
-      .detail-stats, .method-list { grid-template-columns: 1fr; }
+      .project-modal { padding: 18px 12px; }
+      .modal-dialog { width: 100%; max-width: 100%; max-height: 92vh; }
+      .modal-header { grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 20px 62px 18px 20px; }
+      .modal-close { top: 20px; right: 20px; }
+      .modal-icon { width: 40px; height: 40px; }
+      .modal-tabs { display: none; }
+      .modal-content { padding: 22px 20px 26px; }
+      .modal-stat-grid, .modal-method-list { grid-template-columns: 1fr; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
       .panel, .project-card, .contact-box { padding: 22px; }
     }
@@ -625,7 +705,7 @@
           <p class="section-note">진행한 4개의 프로젝트를 하나씩 열어볼 수 있는 영역입니다. 상세 내용은 추후 프로젝트별로 채워갈 예정입니다.</p>
         </div>
         <div class="project-grid">
-          <a class="project-card" id="project-01" href="#warehouse-detail" aria-label="창고 로봇 시스템 출고 지연 원인 분석 상세 보기">
+          <button class="project-card" id="project-01" type="button" data-modal-open="warehouse-modal" aria-label="창고 로봇 시스템 출고 지연 원인 분석 상세 보기">
             <div>
               <div class="project-card-top">
                 <span class="project-number">01</span>
@@ -635,7 +715,7 @@
               <p>250,000건 운영 데이터를 기반으로 출고 지연의 원인과 개선 우선순위를 도출한 분석 프로젝트입니다.</p>
             </div>
             <div class="project-meta"><span>Python</span><span>LightGBM</span><span>PSM</span><span>Clustering</span></div>
-          </a>
+          </button>
           <a class="project-card" id="project-02" href="#project-02" aria-label="Project 02 상세 보기">
             <div>
               <div class="project-card-top">
@@ -671,154 +751,172 @@
           </a>
         </div>
 
-        <article class="project-detail" id="warehouse-detail" aria-labelledby="warehouse-title">
-          <div class="detail-hero">
-            <div>
-              <p class="detail-label">Project 01 · Root Cause Analysis</p>
-              <h3 id="warehouse-title">창고 로봇 시스템 출고 지연 원인 분석</h3>
-              <p class="detail-summary">
-                250개 창고의 로봇 운영 데이터를 분석해 출고 지연이 발생하는 구조를 추적했습니다.
-                단순히 지연과 상관이 높은 변수를 찾는 데서 멈추지 않고, EDA, 예측 모델, 경보 규칙,
-                군집화, PSM 인과 검증을 연결해 운영 개선 우선순위까지 도출했습니다.
-              </p>
-              <div class="project-meta">
-                <span>Python</span><span>Pandas</span><span>LightGBM</span><span>GroupKFold</span><span>K-Means</span><span>PSM</span>
+        <div class="project-modal" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
+          <div class="modal-dialog" tabindex="-1">
+            <div class="modal-header">
+              <div class="modal-icon" aria-hidden="true">01</div>
+              <div>
+                <p class="modal-kicker">Data Analysis Project · Warehouse Robot Delay Study</p>
+                <h3 id="warehouse-modal-title">창고 로봇 시스템 출고 지연 원인 분석</h3>
+                <p class="modal-subtitle">250개 창고 · 250,000건 · EDA → 모델링 → 경보 규칙 → 군집화 → PSM 인과 검증</p>
               </div>
+              <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
             </div>
-            <div class="detail-stats" aria-label="프로젝트 핵심 수치">
-              <div class="detail-stat"><strong>250,000</strong><span>운영 스냅샷 데이터</span></div>
-              <div class="detail-stat"><strong>6.6x</strong><span>idle 최저/최고 구간 지연 차이</span></div>
-              <div class="detail-stat"><strong>21.77분</strong><span>LightGBM OOF RMSE</span></div>
-              <div class="detail-stat"><strong>p=0.783</strong><span>PSM 후 hub_spoke 효과 소멸</span></div>
+
+            <nav class="modal-tabs" aria-label="프로젝트 상세 목차">
+              <a href="#warehouse-overview">Overview</a>
+              <a href="#warehouse-design">Analysis Design</a>
+              <a href="#warehouse-findings">Findings</a>
+              <a href="#warehouse-visuals">Visuals</a>
+              <a href="#warehouse-action">Action</a>
+              <a href="#warehouse-limits">Limits</a>
+            </nav>
+
+            <div class="modal-content">
+              <section class="modal-section" id="warehouse-overview" aria-labelledby="warehouse-overview-title">
+                <h4 id="warehouse-overview-title">프로젝트 개요</h4>
+                <p class="modal-lead">
+                  이 프로젝트는 “창고 운영에서 어떤 조건이 겹칠 때 다음 30분 출고 지연이 커지는가?”를 분석한 작업입니다.
+                  단순히 높은 상관 변수를 찾는 데서 끝내지 않고, 가설을 세우고 반례를 확인하며 결론을 수정한 과정을 보여주는 포트폴리오형 분석입니다.
+                </p>
+                <div class="modal-stat-grid" aria-label="프로젝트 핵심 수치">
+                  <div class="modal-stat"><strong>250,000</strong><span>250개 창고 × 1,000 시나리오 × 25 스냅샷</span></div>
+                  <div class="modal-stat"><strong>19.0분</strong><span>다음 30분 평균 출고 지연 평균값</span></div>
+                  <div class="modal-stat"><strong>715분</strong><span>극단적 수요 폭증 케이스 최대 지연</span></div>
+                  <div class="modal-stat"><strong>3번</strong><span>분석 과정에서 수정된 핵심 결론</span></div>
+                </div>
+                <div class="modal-grid">
+                  <div class="modal-card">
+                    <strong>타겟 변수</strong>
+                    <p><code>avg_delay_minutes_next_30m</code>를 기준으로 다음 30분 평균 출고 지연을 설명했습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>핵심 메시지</strong>
+                    <p>지연은 단일 원인이 아니라 idle, 배터리, 혼잡, pack 병목이 함께 누적될 때 폭발했습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>분석 방향</strong>
+                    <p>원인 탐색에서 운영 전략까지 연결하기 위해 EDA, 모델링, 경보, 군집화, PSM을 순차적으로 사용했습니다.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="modal-section" id="warehouse-design" aria-labelledby="warehouse-design-title">
+                <h4 id="warehouse-design-title">분석 설계</h4>
+                <ul class="modal-method-list" aria-label="분석 단계">
+                  <li>EDA로 idle, 배터리, 혼잡, 레이아웃별 지연 패턴 탐색</li>
+                  <li>목적에 맞게 crisis_actual, snap_idx, alarm_cond, consec_alarm 변수 생성</li>
+                  <li>LightGBM과 GroupKFold로 창고 단위 누출을 막고 변수 중요도 확인</li>
+                  <li>연속 경보 규칙과 ML 스코어를 비교해 실용 임계값 검토</li>
+                  <li>K-Means로 250개 창고를 운영 특성별 유형으로 분류</li>
+                  <li>PSM으로 hub_spoke 지연이 레이아웃 때문인지 운영 때문인지 검증</li>
+                  <li>반례 창고를 따로 확인해 EDA가 놓친 pack 병목 재검증</li>
+                  <li>위기 직전 6스냅샷을 추적해 단일 시점 경보의 한계 확인</li>
+                  <li>6개 운영 유형별 개입 우선순위 매트릭스 구성</li>
+                  <li>개선 효과는 가정 기반 시뮬레이션으로 상대 우선순위만 제시</li>
+                </ul>
+              </section>
+
+              <section class="modal-section" id="warehouse-findings" aria-labelledby="warehouse-findings-title">
+                <h4 id="warehouse-findings-title">핵심 발견</h4>
+                <div class="modal-grid two">
+                  <div class="modal-card">
+                    <strong>1. idle 30%는 1차 방어선</strong>
+                    <p>idle 최저 구간 평균 지연은 36.3분, 최고 구간은 5.5분으로 6.6배 차이가 났습니다. 30% 아래에서 지연이 고착됐습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>2. 배터리는 연쇄 반응의 시작점</strong>
+                    <p>방전과 충전 대기의 상관계수는 r=0.949였습니다. 저배터리 10% 초과 시 추가 지연이 커지고, 노후 배터리는 +7.0분 영향을 보였습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>3. 혼잡은 단일 요인 중 최대 영향</strong>
+                    <p>혼잡 최저·최고 구간 차이는 +24.8분이었고, 교착 상태는 39.3분으로 단순 고장 35.3분보다 더 심각했습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>4. pack_utilization은 숨은 병목</strong>
+                    <p>상관계수는 0.105로 낮았지만 모델 중요도 1위였습니다. 저가동과 고가동 모두 지연이 커지는 U자형 패턴이 확인됐습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>5. hub_spoke는 원인이 아니었다</strong>
+                    <p>단순 비교에서는 +3.69분, p=0.007이었지만 운영 조건을 통제한 PSM 후 -0.55분, p=0.783으로 효과가 사라졌습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>6. 경보는 순간보다 누적을 봐야 한다</strong>
+                    <p>규칙 기반과 ML 모두 Precision이 0.113~0.118 수준에 머물렀습니다. 위기는 6스냅샷 전부터 신호가 쌓이는 누적 현상이었습니다.</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="modal-section" id="warehouse-visuals" aria-labelledby="warehouse-visuals-title">
+                <h4 id="warehouse-visuals-title">시각화 자리</h4>
+                <p class="modal-lead">아래 영역은 실제 차트 이미지로 교체할 자리입니다. 우선 분석 흐름이 보이도록 임시 그래프를 넣어두었습니다.</p>
+                <div class="modal-visual-grid">
+                  <figure class="visual-placeholder">
+                    <figcaption>복합 병목 조합별 평균 지연: 정상 10.2분 → 3개 동시 38.1분</figcaption>
+                    <div class="mock-bars" aria-hidden="true">
+                      <span style="height: 27%"></span><span style="height: 34%"></span><span style="height: 62%"></span><span style="height: 100%"></span>
+                    </div>
+                  </figure>
+                  <figure class="visual-placeholder">
+                    <figcaption>pack_utilization U자형 패턴: 적정 구간 50~80%</figcaption>
+                    <div class="mock-line" aria-hidden="true"></div>
+                  </figure>
+                  <figure class="visual-placeholder">
+                    <figcaption>PSM 전후 hub_spoke 효과: +3.69분 → -0.55분</figcaption>
+                    <div class="mock-bars" aria-hidden="true">
+                      <span style="height: 82%"></span><span style="height: 18%; background: rgba(217, 95, 87, 0.62)"></span>
+                    </div>
+                  </figure>
+                  <figure class="visual-placeholder">
+                    <figcaption>위기 직전 6스냅샷 누적 패턴: congestion 상승, idle 하락</figcaption>
+                    <div class="mock-line" aria-hidden="true"></div>
+                  </figure>
+                </div>
+              </section>
+
+              <section class="modal-section" id="warehouse-action" aria-labelledby="warehouse-action-title">
+                <h4 id="warehouse-action-title">운영 전략으로 연결</h4>
+                <table class="priority-table">
+                  <thead>
+                    <tr>
+                      <th>우선순위</th>
+                      <th>운영 유형</th>
+                      <th>창고 수</th>
+                      <th>평균 지연</th>
+                      <th>핵심 조치</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>즉시개입형</td><td>49개</td><td>24.6분</td><td>경로 재배정, 충전 스케줄 긴급 조정으로 idle 30% 회복</td></tr>
+                    <tr><td>2</td><td>배터리위기형</td><td>23개</td><td>23.3분</td><td>저배터리 10% 이하 유지, 사전 충전 스케줄 적용</td></tr>
+                    <tr><td>3</td><td>포장병목형</td><td>40개</td><td>27.0분</td><td>pack 60~80% 구간 유지, 포장 부하 분산</td></tr>
+                    <tr><td>4</td><td>혼잡관리형</td><td>29개</td><td>15.4분</td><td>피크타임 경로 분산, 혼잡도 임계 관리</td></tr>
+                    <tr><td>5</td><td>배터리최적화형</td><td>6개</td><td>17.0분</td><td>정기 충전 스케줄 최적화, 배터리 교체 점검</td></tr>
+                    <tr><td>6</td><td>모니터링형</td><td>103개</td><td>13.5분</td><td>정기 모니터링과 이상 징후 조기 감지</td></tr>
+                  </tbody>
+                </table>
+              </section>
+
+              <section class="modal-section" id="warehouse-limits" aria-labelledby="warehouse-limits-title">
+                <h4 id="warehouse-limits-title">검증과 한계</h4>
+                <div class="modal-grid">
+                  <div class="modal-card">
+                    <strong>GroupKFold 검증</strong>
+                    <p>같은 창고의 스냅샷이 학습과 검증에 동시에 들어가지 않도록 창고 단위로 분리했습니다. OOF RMSE는 21.77분, R²는 약 0.54였습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>PSM 결론은 잠정적</strong>
+                    <p>매칭 후 일부 공변량 균형이 완벽하지 않아 hub_spoke 효과 없음은 현재 데이터 범위의 잠정 결론으로 해석했습니다.</p>
+                  </div>
+                  <div class="modal-card">
+                    <strong>개선 효과는 상대 비교</strong>
+                    <p>전체 적용 시 19.0분 → 4.1분 추정은 가정 기반입니다. 절대 금액보다 배터리 사전 충전의 우선순위가 핵심입니다.</p>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
-
-          <div class="detail-body">
-            <section class="detail-section" aria-labelledby="warehouse-question">
-              <h4 id="warehouse-question">문제 정의</h4>
-              <div class="detail-grid">
-                <div class="detail-card">
-                  <strong>분석 질문</strong>
-                  <p>창고 운영에서 어떤 조건이 겹칠 때 다음 30분 평균 출고 지연이 커지는가?</p>
-                </div>
-                <div class="detail-card">
-                  <strong>데이터 범위</strong>
-                  <p>250개 창고 × 1,000개 시나리오 × 25개 스냅샷으로 구성된 250,000건 데이터를 사용했습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>타겟 변수</strong>
-                  <p><code>avg_delay_minutes_next_30m</code>를 기준으로 지연 원인과 위험 창고를 분석했습니다.</p>
-                </div>
-              </div>
-            </section>
-
-            <section class="detail-section" aria-labelledby="warehouse-process">
-              <h4 id="warehouse-process">분석 흐름</h4>
-              <ul class="method-list" aria-label="분석 방법">
-                <li>EDA</li>
-                <li>Feature Engineering</li>
-                <li>LightGBM Modeling</li>
-                <li>Alert Rule Test</li>
-                <li>K-Means Clustering</li>
-                <li>PSM Causal Check</li>
-                <li>Counterexample Review</li>
-                <li>Time-Series Pattern</li>
-                <li>Priority Matrix</li>
-                <li>Action Plan</li>
-              </ul>
-            </section>
-
-            <section class="detail-section" aria-labelledby="warehouse-findings">
-              <h4 id="warehouse-findings">핵심 발견</h4>
-              <div class="detail-grid">
-                <div class="detail-card">
-                  <strong>idle은 1차 방어선</strong>
-                  <p>idle 비율이 30% 아래로 떨어질 때 지연이 급격히 고착되며, 최저/최고 구간의 지연 차이는 6.6배였습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>pack_utilization은 숨은 병목</strong>
-                  <p>선형 상관계수는 0.105로 낮았지만, 모델과 반례 분석에서 U자형 병목 패턴이 확인됐습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>레이아웃보다 운영이 문제</strong>
-                  <p>hub_spoke는 단순 비교에서 +3.69분이었지만, PSM 후 -0.55분으로 효과가 사라졌습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>경보 규칙의 한계</strong>
-                  <p>임계값 조합과 ML 스코어 모두 Precision이 약 0.12에 머물러 단일 시점 경보의 한계를 확인했습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>위기는 누적된다</strong>
-                  <p>위기 직전 6스냅샷 전부터 혼잡이 높고 idle이 낮은 상태가 유지되어 추세 기반 감지가 필요했습니다.</p>
-                </div>
-                <div class="detail-card">
-                  <strong>개입 우선순위 도출</strong>
-                  <p>250개 창고를 6개 운영 유형으로 나누고, 배터리 사전 충전과 pack 60~80% 유지 전략을 제안했습니다.</p>
-                </div>
-              </div>
-            </section>
-
-            <section class="detail-section" aria-labelledby="warehouse-visuals">
-              <h4 id="warehouse-visuals">시각화 자리</h4>
-              <div class="visual-grid">
-                <figure class="visual-placeholder">
-                  <figcaption>복합 병목 조합별 평균 지연</figcaption>
-                  <div class="mock-bars" aria-hidden="true">
-                    <span style="height: 28%"></span><span style="height: 36%"></span><span style="height: 62%"></span><span style="height: 100%"></span>
-                  </div>
-                </figure>
-                <figure class="visual-placeholder">
-                  <figcaption>pack_utilization U자형 패턴</figcaption>
-                  <div class="mock-line" aria-hidden="true"></div>
-                </figure>
-                <figure class="visual-placeholder">
-                  <figcaption>PSM 전후 hub_spoke 지연 효과 비교</figcaption>
-                  <div class="mock-bars" aria-hidden="true">
-                    <span style="height: 82%"></span><span style="height: 18%; background: rgba(217, 95, 87, 0.62)"></span>
-                  </div>
-                </figure>
-                <figure class="visual-placeholder">
-                  <figcaption>위기 직전 6스냅샷 누적 패턴</figcaption>
-                  <div class="mock-line" aria-hidden="true"></div>
-                </figure>
-              </div>
-            </section>
-
-            <section class="detail-section" aria-labelledby="warehouse-priority">
-              <h4 id="warehouse-priority">운영 우선순위</h4>
-              <table class="priority-table">
-                <thead>
-                  <tr>
-                    <th>우선순위</th>
-                    <th>유형</th>
-                    <th>핵심 조치</th>
-                    <th>목표</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>즉시개입형</td>
-                    <td>경로 재배정, 충전 스케줄 긴급 조정</td>
-                    <td>idle 30% 회복</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>배터리위기형</td>
-                    <td>저배터리 10% 기준 사전 충전</td>
-                    <td>충전 대기 감소</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>포장병목형</td>
-                    <td>포장 부하 분산, pack 60~80% 조정</td>
-                    <td>숨은 병목 완화</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
-          </div>
-        </article>
+        </div>
       </div>
     </section>
 
@@ -889,5 +987,47 @@
   <footer>
     <span>© 2026 전연주. Data Analyst Portfolio.</span>
   </footer>
+  <script>
+    (() => {
+      const openButtons = document.querySelectorAll("[data-modal-open]");
+      const closeModal = (modal) => {
+        if (!modal) return;
+        modal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("modal-open");
+      };
+      const openModal = (id) => {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+        const dialog = modal.querySelector(".modal-dialog");
+        if (dialog) dialog.focus();
+      };
+
+      openButtons.forEach((button) => {
+        button.addEventListener("click", () => openModal(button.dataset.modalOpen));
+      });
+
+      document.querySelectorAll("[data-modal-close]").forEach((button) => {
+        button.addEventListener("click", () => closeModal(button.closest(".project-modal")));
+      });
+
+      document.querySelectorAll(".project-modal").forEach((modal) => {
+        modal.addEventListener("click", (event) => {
+          if (event.target === modal) closeModal(modal);
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        const open = document.querySelector('.project-modal[aria-hidden="false"]');
+        closeModal(open);
+      });
+
+      if (window.location.hash === "#warehouse-modal") {
+        openModal("warehouse-modal");
+      }
+    })();
+  </script>
 </body>
 </html>
