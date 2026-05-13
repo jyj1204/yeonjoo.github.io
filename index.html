@@ -7,7 +7,7 @@
   <title>전연주 | Data Analyst Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --ink: #1f2430;
@@ -317,6 +317,11 @@
     .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; font-size: 12px; font-weight: 600; }
     .project-meta span { border: 1px solid #d8dde7; border-radius: 999px; padding: 6px 9px; background: rgba(255, 255, 255, 0.64); }
 
+    @keyframes caseFadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     body.modal-open { overflow: hidden; }
     .project-modal {
       position: fixed;
@@ -325,260 +330,642 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 36px 20px;
-      background: rgba(15, 18, 25, 0.72);
+      padding: 32px 20px;
+      background: rgba(14, 17, 24, 0.68);
     }
     .project-modal[aria-hidden="true"] { display: none; }
     .modal-dialog {
+      --case-bg: #f8f9fd;
+      --case-surface: #ffffff;
+      --case-panel: #f0f3f9;
+      --case-border: #dfe4ee;
+      --case-border-strong: #c9d1df;
+      --case-text: #151922;
+      --case-muted: #697182;
+      --case-accent: #5264f6;
+      --case-accent-soft: rgba(82, 100, 246, 0.1);
+      --case-red: #d84d4d;
+      --case-red-soft: rgba(216, 77, 77, 0.1);
+      --case-green: #158f61;
+      --case-green-soft: rgba(21, 143, 97, 0.1);
+      --case-amber: #c98618;
+      --case-amber-soft: rgba(201, 134, 24, 0.12);
+      position: relative;
       width: calc(100vw - 40px);
-      max-width: 1080px;
-      max-height: min(88vh, 920px);
+      min-width: 0;
+      max-width: 1140px;
+      max-height: min(90vh, 940px);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      border-radius: 8px;
-      background: #ffffff;
-      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      background: var(--case-bg);
+      color: var(--case-text);
+      box-shadow: 0 32px 92px rgba(0, 0, 0, 0.34);
       outline: none;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
     }
-    .modal-header {
-      position: relative;
-      display: grid;
-      grid-template-columns: 56px minmax(0, 1fr);
-      gap: 16px;
-      align-items: start;
-      padding: 26px 82px 20px 30px;
-      border-bottom: 1px solid var(--line);
-      background: #ffffff;
-    }
-    .modal-header > div:nth-child(2) { min-width: 0; }
-    .modal-icon {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(13, 111, 104, 0.24);
-      border-radius: 8px;
-      color: var(--teal);
-      font-weight: 700;
-      background: rgba(13, 111, 104, 0.08);
-    }
-    .modal-kicker {
-      margin: 0 0 6px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-    .modal-header h3 {
-      margin: 0;
-      font-size: clamp(23px, 3vw, 32px);
-      line-height: 1.25;
-      font-weight: 600;
-      overflow-wrap: anywhere;
-    }
-    .modal-subtitle {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      overflow-wrap: anywhere;
+    .project-modal.theme-dark .modal-dialog {
+      --case-bg: #0a0a0f;
+      --case-surface: #111118;
+      --case-panel: #171724;
+      --case-border: #222235;
+      --case-border-strong: #343456;
+      --case-text: #e8e8f0;
+      --case-muted: #8585aa;
+      --case-accent: #7474ff;
+      --case-accent-soft: rgba(116, 116, 255, 0.16);
+      --case-red: #f05a5a;
+      --case-red-soft: rgba(240, 90, 90, 0.16);
+      --case-green: #43c985;
+      --case-green-soft: rgba(67, 201, 133, 0.15);
+      --case-amber: #f0b040;
+      --case-amber-soft: rgba(240, 176, 64, 0.16);
+      border-color: rgba(116, 116, 255, 0.24);
     }
     .modal-close {
       position: absolute;
-      top: 26px;
-      right: 30px;
+      top: 22px;
+      right: 24px;
+      z-index: 3;
       width: 36px;
       height: 36px;
-      border: 0;
+      border: 1px solid var(--case-border);
       border-radius: 50%;
-      background: var(--soft);
-      color: var(--muted);
+      background: var(--case-surface);
+      color: var(--case-muted);
       font-size: 22px;
       line-height: 1;
       cursor: pointer;
+      transition: transform 160ms ease, color 160ms ease, border-color 160ms ease;
     }
-    .modal-tabs {
+    .modal-close:hover {
+      transform: rotate(90deg);
+      color: var(--case-text);
+      border-color: var(--case-border-strong);
+    }
+    .case-hero {
+      position: relative;
+      padding: 38px 42px 30px;
+      border-bottom: 1px solid var(--case-border);
+      background:
+        radial-gradient(circle at top right, var(--case-accent-soft), transparent 34%),
+        var(--case-bg);
+    }
+    .case-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 50px 24px 0;
+    }
+    .case-label {
+      color: var(--case-muted);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .case-theme-toggle {
+      min-height: 34px;
+      border: 1px solid var(--case-border);
+      border-radius: 999px;
+      padding: 0 14px;
+      background: var(--case-surface);
+      color: var(--case-muted);
+      font: 600 12px "Outfit", sans-serif;
+      cursor: pointer;
+    }
+    .case-badges {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      padding: 12px 30px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(247, 248, 251, 0.82);
+      margin-bottom: 18px;
     }
-    .modal-tabs a {
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
+    .case-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      border: 1px solid var(--case-border);
       border-radius: 999px;
-      padding: 7px 12px;
-      color: var(--muted);
-      background: #ffffff;
-      font-size: 13px;
+      padding: 0 10px;
+      background: var(--case-surface);
+      color: var(--case-muted);
+      font-size: 12px;
       font-weight: 600;
     }
-    .modal-tabs a:hover {
-      color: var(--teal);
-      border-color: rgba(13, 111, 104, 0.34);
+    .case-badge.accent {
+      border-color: color-mix(in srgb, var(--case-accent) 35%, var(--case-border));
+      background: var(--case-accent-soft);
+      color: var(--case-accent);
     }
-    .modal-content {
-      overflow: auto;
-      padding: 28px 30px 34px;
-      scroll-behavior: smooth;
-    }
-    .modal-section {
-      padding: 0;
-      margin: 0 0 28px;
-    }
-    .modal-section:last-child { margin-bottom: 0; }
-    .modal-section h4 {
-      margin: 0 0 14px;
-      font-size: 20px;
-      font-weight: 600;
-    }
-    .modal-lead {
+    .case-title {
+      max-width: 720px;
       margin: 0 0 18px;
-      border-left: 3px solid var(--teal);
-      padding: 12px 14px;
-      border-radius: 0 8px 8px 0;
-      background: var(--soft);
-      color: #414857;
-      font-size: 15px;
+      font-family: "DM Serif Display", "Noto Sans KR", serif;
+      font-size: clamp(34px, 5vw, 60px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: 0;
+      color: var(--case-text);
     }
-    .modal-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-    .modal-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .modal-card {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      background: #ffffff;
-    }
-    .modal-card strong {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: 600;
-    }
-    .modal-card p {
+    .case-title span { color: var(--case-accent); }
+    .case-summary {
+      max-width: 680px;
       margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      overflow-wrap: anywhere;
+      color: var(--case-muted);
+      font-size: 17px;
+      line-height: 1.8;
     }
-    .modal-stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin: 18px 0;
-    }
-    .modal-stat {
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 15px;
-      background: #fbfcfe;
-    }
-    .modal-stat strong {
-      display: block;
-      font-size: 24px;
-      line-height: 1.1;
-      font-weight: 600;
-    }
-    .modal-stat span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-    .modal-method-list {
+    .case-summary strong { color: var(--case-text); font-weight: 600; }
+    .case-kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      counter-reset: step;
+      margin-top: 34px;
     }
-    .modal-method-list li {
-      counter-increment: step;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 14px;
-      background: #ffffff;
-      color: #323846;
-      font-size: 13px;
+    .case-kpi {
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--case-border);
+      border-radius: 10px;
+      padding: 18px;
+      background: var(--case-surface);
+    }
+    .case-kpi small {
+      color: var(--case-muted);
+      font-size: 12px;
       font-weight: 600;
     }
-    .modal-method-list li::before {
-      content: counter(step, decimal-leading-zero);
+    .case-kpi strong {
+      color: var(--case-text);
+      font-family: "DM Serif Display", serif;
+      font-size: 34px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .case-kpi.is-accent strong { color: var(--case-accent); }
+    .case-kpi span {
+      color: var(--case-muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .modal-tabs {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 34px;
+      border-bottom: 1px solid var(--case-border);
+      background: var(--case-surface);
+    }
+    .modal-tabs a {
+      flex: 0 0 auto;
+      border-bottom: 2px solid transparent;
+      padding: 15px 16px 13px;
+      color: var(--case-muted);
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .modal-tabs a:hover {
+      color: var(--case-accent);
+      border-bottom-color: var(--case-accent);
+    }
+    .modal-content {
+      overflow: auto;
+      padding: 38px 42px 44px;
+      background: var(--case-bg);
+      scroll-behavior: smooth;
+    }
+    .case-section {
+      padding: 0;
+      margin: 0 0 64px;
+    }
+    .case-section:last-child { margin-bottom: 0; }
+    .case-animate { animation: caseFadeUp 560ms ease both; }
+    .case-section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--case-muted);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .case-section-label::before {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: var(--case-border-strong);
+    }
+    .case-section h4 {
+      margin: 0 0 12px;
+      color: var(--case-text);
+      font-family: "DM Serif Display", "Noto Sans KR", serif;
+      font-size: clamp(28px, 3vw, 38px);
+      font-weight: 400;
+      line-height: 1.15;
+    }
+    .case-intro {
+      max-width: 760px;
+      margin: 0 0 30px;
+      color: var(--case-muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+    .case-story-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .case-story-grid::before {
+      content: "";
+      position: absolute;
+      top: 35px;
+      left: 9%;
+      right: 9%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--case-border), var(--case-accent), var(--case-border));
+    }
+    .story-step {
+      position: relative;
+      z-index: 1;
+      min-height: 230px;
+      border: 1px solid var(--case-border);
+      border-radius: 10px;
+      padding: 18px;
+      background: var(--case-surface);
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+    .story-step:hover {
+      transform: translateY(-4px);
+      border-color: var(--case-accent);
+    }
+    .story-num {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      border: 1px solid var(--tone, var(--case-accent));
+      border-radius: 50%;
+      background: var(--case-bg);
+      color: var(--tone, var(--case-accent));
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .story-phase {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--case-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .story-step strong {
       display: block;
       margin-bottom: 8px;
-      color: var(--teal);
+      color: var(--case-text);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .story-step p {
+      margin: 0 0 14px;
+      color: var(--case-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .story-badge {
+      display: inline-flex;
+      border: 1px solid color-mix(in srgb, var(--tone, var(--case-accent)) 35%, transparent);
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: color-mix(in srgb, var(--tone, var(--case-accent)) 10%, transparent);
+      color: var(--tone, var(--case-accent));
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .case-finding-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .finding-card {
+      border: 1px solid var(--case-border);
+      border-left: 3px solid var(--tone, var(--case-accent));
+      border-radius: 10px;
+      padding: 24px;
+      background: var(--case-surface);
+    }
+    .finding-card small {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--case-muted);
       font-size: 12px;
       font-weight: 700;
     }
-    .modal-visual-grid {
+    .finding-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--tone, var(--case-accent));
+      font-family: "DM Serif Display", serif;
+      font-size: 30px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .finding-card p {
+      margin: 0;
+      color: var(--case-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .visual-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--case-border);
+    }
+    .visual-tab {
+      border: 0;
+      border-bottom: 2px solid transparent;
+      padding: 12px 18px;
+      background: transparent;
+      color: var(--case-muted);
+      font: 700 13px "Outfit", sans-serif;
+      cursor: pointer;
+    }
+    .visual-tab[aria-selected="true"] {
+      color: var(--case-accent);
+      border-bottom-color: var(--case-accent);
+    }
+    .visual-panel {
+      min-height: 360px;
+      border: 1px solid var(--case-border);
+      border-radius: 12px;
+      padding: 26px;
+      background: var(--case-surface);
+    }
+    .visual-panel[hidden] { display: none; }
+    .chart-caption {
+      margin: 0 0 22px;
+      color: var(--case-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .chart-caption strong { color: var(--case-text); }
+    .bar-chart {
+      display: grid;
+      grid-template-columns: repeat(var(--bars, 5), minmax(0, 1fr));
+      align-items: end;
+      gap: 13px;
+      min-height: 245px;
+      padding-top: 16px;
+      border-bottom: 1px solid var(--case-border);
+    }
+    .chart-bar {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      align-items: end;
+      min-height: 230px;
+      text-align: center;
+      color: var(--case-muted);
+      font-size: 12px;
+    }
+    .chart-bar strong {
+      margin-bottom: 8px;
+      color: var(--case-text);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .chart-bar i {
+      display: block;
+      width: 100%;
+      height: var(--h);
+      min-height: 12px;
+      border-radius: 7px 7px 0 0;
+      background: var(--tone, var(--case-accent));
+      opacity: 0.82;
+      transform-origin: bottom;
+      animation: caseGrow 800ms ease both;
+    }
+    @keyframes caseGrow {
+      from { transform: scaleY(0.12); opacity: 0.35; }
+      to { transform: scaleY(1); opacity: 0.82; }
+    }
+    .chart-bar span {
+      margin-top: 9px;
+      line-height: 1.35;
+    }
+    .line-chart {
+      width: 100%;
+      min-height: 265px;
+      color: var(--case-accent);
+    }
+    .line-chart svg {
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+    .line-chart text {
+      fill: var(--case-muted);
+      font: 11px "DM Mono", monospace;
+    }
+    .line-chart .axis { stroke: var(--case-border); stroke-width: 1; }
+    .line-chart .grid { stroke: var(--case-border); stroke-width: 1; stroke-dasharray: 3 6; }
+    .line-chart .line { fill: none; stroke: var(--case-accent); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .line-chart .point { fill: var(--case-accent); stroke: var(--case-bg); stroke-width: 4; }
+    .psm-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 16px;
     }
-    .visual-placeholder {
-      min-height: 230px;
-      margin: 0;
-      border: 1px dashed #b9c2d0;
-      border-radius: 8px;
-      padding: 18px;
-      background:
-        linear-gradient(135deg, rgba(13, 111, 104, 0.08), transparent 42%),
-        linear-gradient(315deg, rgba(217, 95, 87, 0.08), transparent 42%),
-        #ffffff;
+    .psm-card {
+      border: 1px solid var(--case-border);
+      border-radius: 10px;
+      padding: 20px;
+      background: var(--case-panel);
     }
-    .visual-placeholder figcaption {
-      margin: 0 0 18px;
-      color: var(--muted);
+    .psm-card h5 {
+      margin: 0 0 14px;
+      color: var(--case-text);
+      font-size: 15px;
+    }
+    .psm-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 58px;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--case-muted);
       font-size: 13px;
-      font-weight: 600;
     }
-    .mock-bars {
-      display: flex;
-      align-items: end;
+    .psm-row i {
+      height: 12px;
+      border-radius: 999px;
+      background: var(--tone, var(--case-accent));
+      width: var(--w);
+    }
+    .delta {
+      display: inline-flex;
+      margin-top: 10px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--tone, var(--case-accent));
+      background: color-mix(in srgb, var(--tone, var(--case-accent)) 12%, transparent);
+      font-family: "DM Mono", monospace;
+      font-size: 12px;
+    }
+    .method-list {
+      display: grid;
       gap: 10px;
-      height: 126px;
-      padding-top: 20px;
     }
-    .mock-bars span {
-      flex: 1;
-      border-radius: 6px 6px 0 0;
-      background: rgba(13, 111, 104, 0.68);
+    .method-item {
+      overflow: hidden;
+      border: 1px solid var(--case-border);
+      border-radius: 10px;
+      background: var(--case-surface);
     }
-    .mock-line {
-      height: 126px;
-      border-bottom: 1px solid var(--line);
-      background:
-        linear-gradient(120deg, transparent 8%, rgba(217, 95, 87, 0.36) 9%, transparent 10%),
-        linear-gradient(30deg, transparent 34%, rgba(13, 111, 104, 0.42) 35%, transparent 36%),
-        linear-gradient(150deg, transparent 58%, rgba(217, 95, 87, 0.42) 59%, transparent 60%);
-    }
-    .priority-table {
+    .method-toggle {
       width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .priority-table th,
-    .priority-table td {
-      border-bottom: 1px solid var(--line);
-      padding: 12px 10px;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border: 0;
+      padding: 0 20px;
+      background: transparent;
+      color: var(--case-text);
       text-align: left;
-      vertical-align: top;
+      font: 700 15px "Outfit", "Noto Sans KR", sans-serif;
+      cursor: pointer;
     }
-
-    .priority-table th {
-      color: var(--muted);
-      font-weight: 600;
+    .method-toggle span:last-child {
+      color: var(--case-muted);
+      font-size: 22px;
+      transition: transform 180ms ease;
+    }
+    .method-item.is-open .method-toggle span:last-child { transform: rotate(45deg); }
+    .method-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 0 20px 20px;
+    }
+    .method-body[hidden] { display: none; }
+    .method-note {
+      border: 1px solid var(--case-border);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--case-panel);
+    }
+    .method-note.bad { border-color: color-mix(in srgb, var(--case-red) 24%, var(--case-border)); background: var(--case-red-soft); }
+    .method-note.good { border-color: color-mix(in srgb, var(--case-green) 24%, var(--case-border)); background: var(--case-green-soft); }
+    .method-note strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--tone, var(--case-text));
+      font-size: 12px;
+    }
+    .method-note p {
+      margin: 0;
+      color: var(--case-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .case-priority-grid {
+      display: grid;
+      gap: 8px;
+    }
+    .priority-head,
+    .priority-row {
+      display: grid;
+      grid-template-columns: 92px 132px 70px 82px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+    }
+    .priority-head {
+      padding: 0 18px 8px;
+      color: var(--case-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .priority-row {
+      border: 1px solid var(--case-border);
+      border-left: 3px solid var(--tone, var(--case-accent));
+      border-radius: 9px;
+      padding: 14px 18px;
+      background: var(--case-surface);
+      color: var(--case-muted);
+      font-size: 13px;
+      transition: transform 160ms ease, background 160ms ease;
+    }
+    .priority-row:hover {
+      transform: translateX(3px);
+      background: var(--case-panel);
+    }
+    .priority-rank {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: color-mix(in srgb, var(--tone, var(--case-accent)) 12%, transparent);
+      color: var(--tone, var(--case-accent));
+      font-weight: 700;
+    }
+    .priority-type,
+    .priority-delay {
+      color: var(--case-text);
+      font-weight: 700;
+    }
+    .case-conclusion-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+    .conclusion-card {
+      border: 1px solid var(--case-border);
+      border-radius: 12px;
+      padding: 22px;
+      background: var(--case-surface);
+    }
+    .conclusion-box {
+      border-radius: 8px;
+      padding: 13px 15px;
+      background: var(--case-panel);
+    }
+    .conclusion-box strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--case-muted);
+      font-size: 12px;
+    }
+    .conclusion-box p {
+      margin: 0;
+      color: var(--case-text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .conclusion-arrow {
+      margin: 12px 0;
+      color: var(--tone, var(--case-accent));
+      font-size: 22px;
+      text-align: center;
+    }
+    .conclusion-box.after {
+      border: 1px solid color-mix(in srgb, var(--tone, var(--case-accent)) 35%, var(--case-border));
+      background: color-mix(in srgb, var(--tone, var(--case-accent)) 10%, transparent);
     }
 
     .contact-band { background: var(--soft); }
@@ -610,8 +997,15 @@
       .section-heading, .contact-box { display: block; }
       .section-note { margin-top: 12px; }
       .about-grid, .project-grid { grid-template-columns: 1fr; }
-      .modal-grid, .modal-grid.two, .modal-visual-grid { grid-template-columns: 1fr; }
-      .modal-stat-grid, .modal-method-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .case-kpi-grid, .case-finding-grid, .case-conclusion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .case-story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .case-story-grid::before { display: none; }
+      .method-body, .psm-grid { grid-template-columns: 1fr; }
+      .priority-head { display: none; }
+      .priority-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+      }
       .contact-links { justify-content: flex-start; margin-top: 22px; }
     }
 
@@ -627,14 +1021,33 @@
       .button { width: 100%; }
       .intro-card { max-width: none; padding: 22px; }
       .intro-row { grid-template-columns: 96px 1fr; gap: 12px; }
-      .project-modal { padding: 18px 12px; }
-      .modal-dialog { width: 100%; max-width: 100%; max-height: 92vh; }
-      .modal-header { grid-template-columns: 44px minmax(0, 1fr); gap: 12px; padding: 20px 62px 18px 20px; }
-      .modal-close { top: 20px; right: 20px; }
-      .modal-icon { width: 40px; height: 40px; }
-      .modal-tabs { display: none; }
-      .modal-content { padding: 22px 20px 26px; }
-      .modal-stat-grid, .modal-method-list { grid-template-columns: 1fr; }
+      .project-modal { justify-content: flex-start; padding: 12px; }
+      .modal-dialog {
+        width: calc(min(100vw, 390px) - 24px);
+        max-width: calc(100vw - 24px);
+        max-height: 92vh;
+      }
+      .case-hero { padding: 28px 20px 22px; }
+      .case-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+        margin: 0 48px 20px 0;
+        gap: 10px;
+      }
+      .case-title { font-size: clamp(28px, 9vw, 36px); }
+      .case-summary { font-size: 15px; }
+      .case-kpi-grid, .case-story-grid, .case-finding-grid, .case-conclusion-grid { grid-template-columns: 1fr; }
+      .case-kpi { min-height: 104px; }
+      .modal-close { top: 18px; right: 18px; }
+      .modal-tabs { padding: 0 16px; }
+      .modal-tabs a { padding: 13px 12px 11px; }
+      .modal-content { padding: 26px 18px 32px; }
+      .visual-tabs { overflow-x: auto; }
+      .visual-tab { flex: 0 0 auto; padding: 11px 14px; white-space: nowrap; }
+      .visual-panel { min-height: 0; padding: 18px; }
+      .bar-chart { gap: 7px; min-height: 220px; }
+      .chart-bar { min-height: 205px; }
+      .priority-row { grid-template-columns: 1fr; gap: 5px; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
       .panel, .project-card, .contact-box { padding: 22px; }
     }
@@ -751,167 +1164,299 @@
           </a>
         </div>
 
-        <div class="project-modal" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
+        <div class="project-modal theme-light" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
           <div class="modal-dialog" tabindex="-1">
-            <div class="modal-header">
-              <div class="modal-icon" aria-hidden="true">01</div>
-              <div>
-                <p class="modal-kicker">Data Analysis Project · Warehouse Robot Delay Study</p>
-                <h3 id="warehouse-modal-title">창고 로봇 시스템 출고 지연 원인 분석</h3>
-                <p class="modal-subtitle">250개 창고 · 250,000건 · EDA → 모델링 → 경보 규칙 → 군집화 → PSM 인과 검증</p>
+            <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+
+            <header class="case-hero case-animate">
+              <div class="case-toolbar">
+                <span class="case-label">Data Analysis Case Study</span>
+                <button class="case-theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark mode</button>
               </div>
-              <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            </div>
+              <div class="case-badges" aria-label="프로젝트 사용 기술">
+                <span class="case-badge accent">물류 · 운영 분석</span>
+                <span class="case-badge">LightGBM</span>
+                <span class="case-badge">PSM 인과 검증</span>
+                <span class="case-badge">K-Means</span>
+                <span class="case-badge">Python</span>
+              </div>
+              <h3 class="case-title" id="warehouse-modal-title">
+                창고 로봇 시스템<br />
+                <span>출고 지연</span> 원인 분석
+              </h3>
+              <p class="case-summary">
+                250개 창고, 25만 건 데이터. 처음에는 레이아웃이 문제라고 생각했지만,
+                운영 조건을 통제하자 결론이 바뀌었습니다. <strong>이 프로젝트는 결과보다 “결론이 바뀌는 과정”을 보여주는 분석 케이스스터디입니다.</strong>
+              </p>
+              <div class="case-kpi-grid" aria-label="프로젝트 핵심 지표">
+                <div class="case-kpi"><small>분석 데이터</small><strong>250K</strong><span>250개 창고 × 1,000 시나리오 × 25 스냅샷</span></div>
+                <div class="case-kpi is-accent"><small>지연 최대 차이</small><strong>6.6×</strong><span>idle 최저 구간과 최고 구간 비교</span></div>
+                <div class="case-kpi"><small>모델 성능</small><strong>21.77</strong><span>LightGBM OOF RMSE, GroupKFold 검증</span></div>
+                <div class="case-kpi"><small>취약 창고</small><strong>102</strong><span>K-Means로 분류한 vulnerable 그룹</span></div>
+                <div class="case-kpi"><small>결론 수정</small><strong>3회</strong><span>EDA, 모델링, PSM에서 가설 재검토</span></div>
+              </div>
+            </header>
 
             <nav class="modal-tabs" aria-label="프로젝트 상세 목차">
-              <a href="#warehouse-overview">Overview</a>
-              <a href="#warehouse-design">Analysis Design</a>
+              <a href="#warehouse-story">Story</a>
               <a href="#warehouse-findings">Findings</a>
               <a href="#warehouse-visuals">Visuals</a>
-              <a href="#warehouse-action">Action</a>
-              <a href="#warehouse-limits">Limits</a>
+              <a href="#warehouse-methods">Methods</a>
+              <a href="#warehouse-priority">Priority</a>
+              <a href="#warehouse-conclusion">Conclusion</a>
             </nav>
 
             <div class="modal-content">
-              <section class="modal-section" id="warehouse-overview" aria-labelledby="warehouse-overview-title">
-                <h4 id="warehouse-overview-title">프로젝트 개요</h4>
-                <p class="modal-lead">
-                  이 프로젝트는 “창고 운영에서 어떤 조건이 겹칠 때 다음 30분 출고 지연이 커지는가?”를 분석한 작업입니다.
-                  단순히 높은 상관 변수를 찾는 데서 끝내지 않고, 가설을 세우고 반례를 확인하며 결론을 수정한 과정을 보여주는 포트폴리오형 분석입니다.
+              <section class="case-section case-animate" id="warehouse-story" aria-labelledby="warehouse-story-title">
+                <p class="case-section-label">Analysis Story</p>
+                <h4 id="warehouse-story-title">결론이 세 번 바뀐 과정</h4>
+                <p class="case-intro">
+                  분석은 하나의 정답을 바로 찾는 식으로 진행되지 않았습니다. EDA에서 보인 강한 신호, 모델이 발견한 숨은 변수,
+                  경보 규칙의 한계, 군집화로 만든 가설, PSM 검증까지 이어지며 결론을 계속 수정했습니다.
                 </p>
-                <div class="modal-stat-grid" aria-label="프로젝트 핵심 수치">
-                  <div class="modal-stat"><strong>250,000</strong><span>250개 창고 × 1,000 시나리오 × 25 스냅샷</span></div>
-                  <div class="modal-stat"><strong>19.0분</strong><span>다음 30분 평균 출고 지연 평균값</span></div>
-                  <div class="modal-stat"><strong>715분</strong><span>극단적 수요 폭증 케이스 최대 지연</span></div>
-                  <div class="modal-stat"><strong>3번</strong><span>분석 과정에서 수정된 핵심 결론</span></div>
+                <div class="case-story-grid">
+                  <article class="story-step" style="--tone: var(--case-accent)">
+                    <span class="story-num">01</span>
+                    <span class="story-phase">EDA</span>
+                    <strong>idle이 핵심이다</strong>
+                    <p>idle 30% 이하에서 지연이 급격히 커지고, 배터리·혼잡 신호가 함께 움직였습니다.</p>
+                    <span class="story-badge">첫 발견</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-amber)">
+                    <span class="story-num">02</span>
+                    <span class="story-phase">Modeling</span>
+                    <strong>EDA가 놓친 변수</strong>
+                    <p>상관계수 0.105에 불과했던 pack_utilization이 모델 중요도 1위로 올라왔습니다.</p>
+                    <span class="story-badge">한계 발견</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-red)">
+                    <span class="story-num">03</span>
+                    <span class="story-phase">Alert</span>
+                    <strong>Precision 상한</strong>
+                    <p>단일 시점 경보는 Precision 0.113~0.118 수준에서 막혔고, 누적 신호가 더 중요했습니다.</p>
+                    <span class="story-badge">실패 후 전환</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-accent)">
+                    <span class="story-num">04</span>
+                    <span class="story-phase">Clustering</span>
+                    <strong>취약형 102개</strong>
+                    <p>취약 창고 102개 중 hub_spoke 비중이 높아 레이아웃 원인 가설이 생겼습니다.</p>
+                    <span class="story-badge">가설 형성</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-green)">
+                    <span class="story-num">05</span>
+                    <span class="story-phase">PSM</span>
+                    <strong>결론이 뒤집혔다</strong>
+                    <p>운영 조건을 통제하자 hub_spoke 효과가 사라져, 원인은 레이아웃보다 운영 조건으로 정리됐습니다.</p>
+                    <span class="story-badge">결론 수정</span>
+                  </article>
                 </div>
-                <div class="modal-grid">
-                  <div class="modal-card">
-                    <strong>타겟 변수</strong>
-                    <p><code>avg_delay_minutes_next_30m</code>를 기준으로 다음 30분 평균 출고 지연을 설명했습니다.</p>
+              </section>
+
+              <section class="case-section case-animate" id="warehouse-findings" aria-labelledby="warehouse-findings-title">
+                <p class="case-section-label">Key Findings</p>
+                <h4 id="warehouse-findings-title">4가지 핵심 발견</h4>
+                <div class="case-finding-grid">
+                  <article class="finding-card" style="--tone: var(--case-red)">
+                    <small>idle 비율</small>
+                    <strong>6.6×</strong>
+                    <p>idle 최저 20% 구간 평균 지연은 36.3분, 최고 20% 구간은 5.5분이었습니다. 30%가 운영상 1차 방어선으로 보였습니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-amber)">
+                    <small>숨은 병목</small>
+                    <strong>r=0.105 → 1위</strong>
+                    <p>pack_utilization은 선형 상관으로 보면 약했지만 LightGBM에서는 가장 중요한 변수였습니다. U자형 관계라 EDA에서 놓치기 쉬웠습니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-green)">
+                    <small>인과 검증</small>
+                    <strong>p=0.783</strong>
+                    <p>단순 비교에서는 hub_spoke가 +3.69분 지연처럼 보였지만, PSM 매칭 후 -0.55분으로 효과가 사라졌습니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-accent)">
+                    <small>운영 우선순위</small>
+                    <strong>6개 유형</strong>
+                    <p>창고를 6개 운영 유형으로 나눠 개입 우선순위를 설계했습니다. 특히 포장병목형은 평균 지연이 27.0분으로 높은 반례였습니다.</p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="case-section case-animate" id="warehouse-visuals" aria-labelledby="warehouse-visuals-title">
+                <p class="case-section-label">Visualization</p>
+                <h4 id="warehouse-visuals-title">데이터로 보는 발견들</h4>
+                <p class="case-intro">
+                  아래 차트는 보내준 분석 내용을 바탕으로 임시 구현한 시각화입니다. 나중에 실제 그래프 이미지나 Tableau 캡처를 보내주면 같은 자리에 교체할 수 있습니다.
+                </p>
+                <div class="visual-tabs" role="tablist" aria-label="시각화 선택">
+                  <button class="visual-tab" type="button" data-chart-tab="idle" aria-selected="true">idle 비율</button>
+                  <button class="visual-tab" type="button" data-chart-tab="pack" aria-selected="false">U자형 병목</button>
+                  <button class="visual-tab" type="button" data-chart-tab="combo" aria-selected="false">복합 병목</button>
+                  <button class="visual-tab" type="button" data-chart-tab="psm" aria-selected="false">PSM 전후</button>
+                </div>
+                <div class="visual-panel" data-chart-panel="idle">
+                  <p class="chart-caption">여유 로봇 비율이 낮을수록 다음 30분 출고 지연이 급격히 증가했습니다. <strong>최저 구간과 최고 구간의 차이는 6.6배</strong>입니다.</p>
+                  <div class="bar-chart" style="--bars: 5" aria-label="idle 구간별 평균 지연">
+                    <div class="chart-bar" style="--h: 100%; --tone: var(--case-red)"><strong>36.3</strong><i></i><span>최저<br />20%</span></div>
+                    <div class="chart-bar" style="--h: 77%; --tone: var(--case-amber)"><strong>28.1</strong><i></i><span>20~40%</span></div>
+                    <div class="chart-bar" style="--h: 51%; --tone: var(--case-accent)"><strong>18.4</strong><i></i><span>40~60%</span></div>
+                    <div class="chart-bar" style="--h: 28%; --tone: var(--case-green)"><strong>10.2</strong><i></i><span>60~80%</span></div>
+                    <div class="chart-bar" style="--h: 15%; --tone: var(--case-green)"><strong>5.5</strong><i></i><span>최고<br />20%</span></div>
                   </div>
-                  <div class="modal-card">
-                    <strong>핵심 메시지</strong>
-                    <p>지연은 단일 원인이 아니라 idle, 배터리, 혼잡, pack 병목이 함께 누적될 때 폭발했습니다.</p>
+                </div>
+                <div class="visual-panel" data-chart-panel="pack" hidden>
+                  <p class="chart-caption">pack_utilization은 선형 상관계수만 보면 낮지만, <strong>저가동과 고가동 양쪽에서 지연이 커지는 U자형</strong>이었습니다.</p>
+                  <div class="line-chart" aria-label="pack utilization 구간별 평균 지연">
+                    <svg viewBox="0 0 700 280" role="img" aria-labelledby="pack-chart-title">
+                      <title id="pack-chart-title">pack utilization U자형 패턴</title>
+                      <line class="axis" x1="36" y1="235" x2="668" y2="235"></line>
+                      <line class="axis" x1="36" y1="40" x2="36" y2="235"></line>
+                      <line class="grid" x1="36" y1="95" x2="668" y2="95"></line>
+                      <line class="grid" x1="36" y1="160" x2="668" y2="160"></line>
+                      <polyline class="line" points="42,108 112,125 182,137 252,148 322,151 392,160 462,159 532,160 602,160 668,43"></polyline>
+                      <circle class="point" cx="42" cy="108" r="6"></circle><circle class="point" cx="392" cy="160" r="6"></circle><circle class="point" cx="668" cy="43" r="8"></circle>
+                      <text x="36" y="262">0~10%</text><text x="355" y="262">50~60%</text><text x="632" y="262">90%+</text>
+                      <text x="612" y="34">29.6분</text><text x="340" y="182">12.0분</text>
+                    </svg>
                   </div>
-                  <div class="modal-card">
-                    <strong>분석 방향</strong>
-                    <p>원인 탐색에서 운영 전략까지 연결하기 위해 EDA, 모델링, 경보, 군집화, PSM을 순차적으로 사용했습니다.</p>
+                </div>
+                <div class="visual-panel" data-chart-panel="combo" hidden>
+                  <p class="chart-caption">idle 부족, 혼잡, 배터리 문제가 겹칠수록 지연이 폭발했습니다. <strong>3개 조건 동시 발생 시 평균 38.1분</strong>으로 정상의 3.7배입니다.</p>
+                  <div class="bar-chart" style="--bars: 4" aria-label="복합 병목 수별 평균 지연">
+                    <div class="chart-bar" style="--h: 27%; --tone: var(--case-green)"><strong>10.2</strong><i></i><span>0개<br />정상</span></div>
+                    <div class="chart-bar" style="--h: 47%; --tone: var(--case-amber)"><strong>17.9</strong><i></i><span>1개</span></div>
+                    <div class="chart-bar" style="--h: 78%; --tone: var(--case-red)"><strong>29.9</strong><i></i><span>2개</span></div>
+                    <div class="chart-bar" style="--h: 100%; --tone: var(--case-red)"><strong>38.1</strong><i></i><span>3개<br />최악</span></div>
+                  </div>
+                </div>
+                <div class="visual-panel" data-chart-panel="psm" hidden>
+                  <p class="chart-caption">단순 비교에서는 hub_spoke가 문제처럼 보였지만, 운영 조건을 맞춰 비교하자 <strong>레이아웃 효과가 통계적으로 사라졌습니다.</strong></p>
+                  <div class="psm-grid">
+                    <article class="psm-card" style="--tone: var(--case-red)">
+                      <h5>매칭 전 단순 비교</h5>
+                      <div class="psm-row"><span>hub_spoke</span><i style="--w: 88%"></i><strong>22.09</strong></div>
+                      <div class="psm-row"><span>나머지</span><i style="--w: 74%"></i><strong>18.40</strong></div>
+                      <span class="delta">+3.69분 · p=0.007</span>
+                    </article>
+                    <article class="psm-card" style="--tone: var(--case-green)">
+                      <h5>PSM 매칭 후</h5>
+                      <div class="psm-row"><span>hub_spoke</span><i style="--w: 87%"></i><strong>21.68</strong></div>
+                      <div class="psm-row"><span>나머지</span><i style="--w: 89%"></i><strong>22.24</strong></div>
+                      <span class="delta">-0.55분 · p=0.783</span>
+                    </article>
                   </div>
                 </div>
               </section>
 
-              <section class="modal-section" id="warehouse-design" aria-labelledby="warehouse-design-title">
-                <h4 id="warehouse-design-title">분석 설계</h4>
-                <ul class="modal-method-list" aria-label="분석 단계">
-                  <li>EDA로 idle, 배터리, 혼잡, 레이아웃별 지연 패턴 탐색</li>
-                  <li>목적에 맞게 crisis_actual, snap_idx, alarm_cond, consec_alarm 변수 생성</li>
-                  <li>LightGBM과 GroupKFold로 창고 단위 누출을 막고 변수 중요도 확인</li>
-                  <li>연속 경보 규칙과 ML 스코어를 비교해 실용 임계값 검토</li>
-                  <li>K-Means로 250개 창고를 운영 특성별 유형으로 분류</li>
-                  <li>PSM으로 hub_spoke 지연이 레이아웃 때문인지 운영 때문인지 검증</li>
-                  <li>반례 창고를 따로 확인해 EDA가 놓친 pack 병목 재검증</li>
-                  <li>위기 직전 6스냅샷을 추적해 단일 시점 경보의 한계 확인</li>
-                  <li>6개 운영 유형별 개입 우선순위 매트릭스 구성</li>
-                  <li>개선 효과는 가정 기반 시뮬레이션으로 상대 우선순위만 제시</li>
-                </ul>
-              </section>
-
-              <section class="modal-section" id="warehouse-findings" aria-labelledby="warehouse-findings-title">
-                <h4 id="warehouse-findings-title">핵심 발견</h4>
-                <div class="modal-grid two">
-                  <div class="modal-card">
-                    <strong>1. idle 30%는 1차 방어선</strong>
-                    <p>idle 최저 구간 평균 지연은 36.3분, 최고 구간은 5.5분으로 6.6배 차이가 났습니다. 30% 아래에서 지연이 고착됐습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>2. 배터리는 연쇄 반응의 시작점</strong>
-                    <p>방전과 충전 대기의 상관계수는 r=0.949였습니다. 저배터리 10% 초과 시 추가 지연이 커지고, 노후 배터리는 +7.0분 영향을 보였습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>3. 혼잡은 단일 요인 중 최대 영향</strong>
-                    <p>혼잡 최저·최고 구간 차이는 +24.8분이었고, 교착 상태는 39.3분으로 단순 고장 35.3분보다 더 심각했습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>4. pack_utilization은 숨은 병목</strong>
-                    <p>상관계수는 0.105로 낮았지만 모델 중요도 1위였습니다. 저가동과 고가동 모두 지연이 커지는 U자형 패턴이 확인됐습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>5. hub_spoke는 원인이 아니었다</strong>
-                    <p>단순 비교에서는 +3.69분, p=0.007이었지만 운영 조건을 통제한 PSM 후 -0.55분, p=0.783으로 효과가 사라졌습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>6. 경보는 순간보다 누적을 봐야 한다</strong>
-                    <p>규칙 기반과 ML 모두 Precision이 0.113~0.118 수준에 머물렀습니다. 위기는 6스냅샷 전부터 신호가 쌓이는 누적 현상이었습니다.</p>
-                  </div>
-                </div>
-              </section>
-
-              <section class="modal-section" id="warehouse-visuals" aria-labelledby="warehouse-visuals-title">
-                <h4 id="warehouse-visuals-title">시각화 자리</h4>
-                <p class="modal-lead">아래 영역은 실제 차트 이미지로 교체할 자리입니다. 우선 분석 흐름이 보이도록 임시 그래프를 넣어두었습니다.</p>
-                <div class="modal-visual-grid">
-                  <figure class="visual-placeholder">
-                    <figcaption>복합 병목 조합별 평균 지연: 정상 10.2분 → 3개 동시 38.1분</figcaption>
-                    <div class="mock-bars" aria-hidden="true">
-                      <span style="height: 27%"></span><span style="height: 34%"></span><span style="height: 62%"></span><span style="height: 100%"></span>
+              <section class="case-section case-animate" id="warehouse-methods" aria-labelledby="warehouse-methods-title">
+                <p class="case-section-label">Method Choice</p>
+                <h4 id="warehouse-methods-title">왜 이 방법을 선택했는가</h4>
+                <p class="case-intro">
+                  방법론은 “써봤다”가 아니라 잘못된 결론을 피하기 위해 선택했다는 흐름으로 정리했습니다.
+                </p>
+                <div class="method-list">
+                  <article class="method-item is-open">
+                    <button class="method-toggle" type="button" data-accordion aria-expanded="true">
+                      <span>왜 GroupKFold?</span><span>+</span>
+                    </button>
+                    <div class="method-body">
+                      <div class="method-note bad" style="--tone: var(--case-red)">
+                        <strong>다른 방법을 썼다면</strong>
+                        <p>일반 KFold는 같은 창고의 스냅샷이 학습과 검증에 동시에 들어가 성능이 과대평가될 수 있습니다.</p>
+                      </div>
+                      <div class="method-note good" style="--tone: var(--case-green)">
+                        <strong>이 방법을 쓴 이유</strong>
+                        <p>창고 단위로 완전히 분리해 실제 새로운 창고를 예측하는 상황과 더 가까운 검증 구조를 만들었습니다.</p>
+                      </div>
                     </div>
-                  </figure>
-                  <figure class="visual-placeholder">
-                    <figcaption>pack_utilization U자형 패턴: 적정 구간 50~80%</figcaption>
-                    <div class="mock-line" aria-hidden="true"></div>
-                  </figure>
-                  <figure class="visual-placeholder">
-                    <figcaption>PSM 전후 hub_spoke 효과: +3.69분 → -0.55분</figcaption>
-                    <div class="mock-bars" aria-hidden="true">
-                      <span style="height: 82%"></span><span style="height: 18%; background: rgba(217, 95, 87, 0.62)"></span>
+                  </article>
+                  <article class="method-item">
+                    <button class="method-toggle" type="button" data-accordion aria-expanded="false">
+                      <span>왜 모델 중요도?</span><span>+</span>
+                    </button>
+                    <div class="method-body" hidden>
+                      <div class="method-note bad" style="--tone: var(--case-red)">
+                        <strong>상관계수만 봤다면</strong>
+                        <p>pack_utilization은 r=0.105라 관계가 약하다고 보고 지나쳤을 가능성이 큽니다.</p>
+                      </div>
+                      <div class="method-note good" style="--tone: var(--case-green)">
+                        <strong>이 방법을 쓴 이유</strong>
+                        <p>비선형 U자형 패턴을 포착하면서 숨은 병목을 찾아냈고, 반례 분석과도 결론이 수렴했습니다.</p>
+                      </div>
                     </div>
-                  </figure>
-                  <figure class="visual-placeholder">
-                    <figcaption>위기 직전 6스냅샷 누적 패턴: congestion 상승, idle 하락</figcaption>
-                    <div class="mock-line" aria-hidden="true"></div>
-                  </figure>
+                  </article>
+                  <article class="method-item">
+                    <button class="method-toggle" type="button" data-accordion aria-expanded="false">
+                      <span>왜 PSM?</span><span>+</span>
+                    </button>
+                    <div class="method-body" hidden>
+                      <div class="method-note bad" style="--tone: var(--case-red)">
+                        <strong>단순 비교만 했다면</strong>
+                        <p>hub_spoke가 +3.69분 지연을 만든다고 보고 레이아웃 개선이라는 고비용 결론으로 갈 수 있었습니다.</p>
+                      </div>
+                      <div class="method-note good" style="--tone: var(--case-green)">
+                        <strong>이 방법을 쓴 이유</strong>
+                        <p>운영 조건을 맞춰 비교하자 효과가 사라져, 레이아웃보다 운영 개선이 우선이라는 판단으로 바뀌었습니다.</p>
+                      </div>
+                    </div>
+                  </article>
+                  <article class="method-item">
+                    <button class="method-toggle" type="button" data-accordion aria-expanded="false">
+                      <span>왜 반례 분석?</span><span>+</span>
+                    </button>
+                    <div class="method-body" hidden>
+                      <div class="method-note bad" style="--tone: var(--case-red)">
+                        <strong>전체 경향만 봤다면</strong>
+                        <p>idle이 높으면 안전하다는 단순한 결론으로 끝났을 수 있습니다.</p>
+                      </div>
+                      <div class="method-note good" style="--tone: var(--case-green)">
+                        <strong>이 방법을 쓴 이유</strong>
+                        <p>idle이 높아도 지연이 큰 창고에서 pack 과포화가 반복되어 모델의 U자형 발견을 다시 확인했습니다.</p>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </section>
 
-              <section class="modal-section" id="warehouse-action" aria-labelledby="warehouse-action-title">
-                <h4 id="warehouse-action-title">운영 전략으로 연결</h4>
-                <table class="priority-table">
-                  <thead>
-                    <tr>
-                      <th>우선순위</th>
-                      <th>운영 유형</th>
-                      <th>창고 수</th>
-                      <th>평균 지연</th>
-                      <th>핵심 조치</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>1</td><td>즉시개입형</td><td>49개</td><td>24.6분</td><td>경로 재배정, 충전 스케줄 긴급 조정으로 idle 30% 회복</td></tr>
-                    <tr><td>2</td><td>배터리위기형</td><td>23개</td><td>23.3분</td><td>저배터리 10% 이하 유지, 사전 충전 스케줄 적용</td></tr>
-                    <tr><td>3</td><td>포장병목형</td><td>40개</td><td>27.0분</td><td>pack 60~80% 구간 유지, 포장 부하 분산</td></tr>
-                    <tr><td>4</td><td>혼잡관리형</td><td>29개</td><td>15.4분</td><td>피크타임 경로 분산, 혼잡도 임계 관리</td></tr>
-                    <tr><td>5</td><td>배터리최적화형</td><td>6개</td><td>17.0분</td><td>정기 충전 스케줄 최적화, 배터리 교체 점검</td></tr>
-                    <tr><td>6</td><td>모니터링형</td><td>103개</td><td>13.5분</td><td>정기 모니터링과 이상 징후 조기 감지</td></tr>
-                  </tbody>
-                </table>
+              <section class="case-section case-animate" id="warehouse-priority" aria-labelledby="warehouse-priority-title">
+                <p class="case-section-label">Operational Priority</p>
+                <h4 id="warehouse-priority-title">어떤 창고부터 개입하는가</h4>
+                <p class="case-intro">
+                  분석 결과를 운영 의사결정으로 연결하기 위해 창고를 6개 유형으로 분류했습니다.
+                  포장병목형은 3순위지만 평균 지연이 27.0분으로 가장 높아, 실제 운영에서는 별도 관리가 필요합니다.
+                </p>
+                <div class="case-priority-grid" aria-label="운영 우선순위">
+                  <div class="priority-head"><span>Rank</span><span>Type</span><span>Count</span><span>Delay</span><span>Signal</span><span>Action</span></div>
+                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">1순위</span><span class="priority-type">즉시개입형</span><span>49개</span><span class="priority-delay">24.6분</span><span>고혼잡 + 저idle</span><span>경로 재배정, 충전 긴급 조정</span></div>
+                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">2순위</span><span class="priority-type">배터리위기형</span><span>23개</span><span class="priority-delay">23.3분</span><span>저idle + 배터리 나쁨</span><span>사전 충전 스케줄 적용</span></div>
+                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">3순위</span><span class="priority-type">포장병목형</span><span>40개</span><span class="priority-delay">27.0분</span><span>pack 고가동</span><span>pack 60~80% 구간 유지</span></div>
+                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">4순위</span><span class="priority-type">혼잡관리형</span><span>29개</span><span class="priority-delay">15.4분</span><span>idle 정상 + 고혼잡</span><span>피크타임 경로 분산</span></div>
+                  <div class="priority-row" style="--tone: var(--case-accent)"><span class="priority-rank">5순위</span><span class="priority-type">배터리최적화형</span><span>6개</span><span class="priority-delay">17.0분</span><span>idle 정상 + 배터리 나쁨</span><span>정기 충전 최적화</span></div>
+                  <div class="priority-row" style="--tone: var(--case-green)"><span class="priority-rank">6순위</span><span class="priority-type">모니터링형</span><span>103개</span><span class="priority-delay">13.5분</span><span>전반적 정상</span><span>정기 모니터링</span></div>
+                </div>
               </section>
 
-              <section class="modal-section" id="warehouse-limits" aria-labelledby="warehouse-limits-title">
-                <h4 id="warehouse-limits-title">검증과 한계</h4>
-                <div class="modal-grid">
-                  <div class="modal-card">
-                    <strong>GroupKFold 검증</strong>
-                    <p>같은 창고의 스냅샷이 학습과 검증에 동시에 들어가지 않도록 창고 단위로 분리했습니다. OOF RMSE는 21.77분, R²는 약 0.54였습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>PSM 결론은 잠정적</strong>
-                    <p>매칭 후 일부 공변량 균형이 완벽하지 않아 hub_spoke 효과 없음은 현재 데이터 범위의 잠정 결론으로 해석했습니다.</p>
-                  </div>
-                  <div class="modal-card">
-                    <strong>개선 효과는 상대 비교</strong>
-                    <p>전체 적용 시 19.0분 → 4.1분 추정은 가정 기반입니다. 절대 금액보다 배터리 사전 충전의 우선순위가 핵심입니다.</p>
-                  </div>
+              <section class="case-section case-animate" id="warehouse-conclusion" aria-labelledby="warehouse-conclusion-title">
+                <p class="case-section-label">Conclusion</p>
+                <h4 id="warehouse-conclusion-title">결론이 바뀐 지점이 분석의 가치입니다</h4>
+                <p class="case-intro">
+                  최종 결론은 “레이아웃을 바꾸자”가 아니라 “운영 조건을 먼저 개선하자”였습니다.
+                  배터리 사전 충전, idle 30% 회복, pack 병목 분산이 우선순위로 정리됐고, 개선 효과는 가정 기반 시뮬레이션에서 평균 지연 19.0분에서 4.1분으로 감소하는 방향을 보였습니다.
+                </p>
+                <div class="case-conclusion-grid">
+                  <article class="conclusion-card" style="--tone: var(--case-accent)">
+                    <div class="conclusion-box"><strong>처음엔 의심했다</strong><p>hub_spoke 구조가 지연 원인일 것이다.</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>PSM으로 확인했다</strong><p>운영 조건을 통제하면 레이아웃 효과는 사라진다.</p></div>
+                  </article>
+                  <article class="conclusion-card" style="--tone: var(--case-amber)">
+                    <div class="conclusion-box"><strong>EDA로는 약했다</strong><p>pack_utilization은 상관계수 0.105라 중요하지 않아 보였다.</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>모델이 발견했다</strong><p>비선형 U자형 병목으로 모델 중요도 1위였다.</p></div>
+                  </article>
+                  <article class="conclusion-card" style="--tone: var(--case-red)">
+                    <div class="conclusion-box"><strong>기대했던 것</strong><p>단순 경보 규칙으로 위기 창고를 잘 잡을 수 있을 것이다.</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>발견한 것</strong><p>Precision 상한이 있어 누적 패턴과 운영 유형화가 더 중요했다.</p></div>
+                  </article>
                 </div>
               </section>
             </div>
@@ -1000,6 +1545,8 @@
         if (!modal) return;
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
+        const content = modal.querySelector(".modal-content");
+        if (content) content.scrollTop = 0;
         const dialog = modal.querySelector(".modal-dialog");
         if (dialog) dialog.focus();
       };
@@ -1015,6 +1562,51 @@
       document.querySelectorAll(".project-modal").forEach((modal) => {
         modal.addEventListener("click", (event) => {
           if (event.target === modal) closeModal(modal);
+        });
+      });
+
+      document.querySelectorAll(".modal-tabs a").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const modal = link.closest(".project-modal");
+          const target = modal?.querySelector(link.getAttribute("href"));
+          if (!target) return;
+          event.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      document.querySelectorAll("[data-chart-tab]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const modal = button.closest(".project-modal");
+          const target = button.dataset.chartTab;
+          modal.querySelectorAll("[data-chart-tab]").forEach((tab) => {
+            tab.setAttribute("aria-selected", String(tab === button));
+          });
+          modal.querySelectorAll("[data-chart-panel]").forEach((panel) => {
+            panel.hidden = panel.dataset.chartPanel !== target;
+          });
+        });
+      });
+
+      document.querySelectorAll("[data-accordion]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = button.closest(".method-item");
+          const body = item?.querySelector(".method-body");
+          if (!item || !body) return;
+          const isOpen = item.classList.toggle("is-open");
+          button.setAttribute("aria-expanded", String(isOpen));
+          body.hidden = !isOpen;
+        });
+      });
+
+      document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const modal = button.closest(".project-modal");
+          const isDark = !modal.classList.contains("theme-dark");
+          modal.classList.toggle("theme-dark", isDark);
+          modal.classList.toggle("theme-light", !isDark);
+          button.setAttribute("aria-pressed", String(isDark));
+          button.textContent = isDark ? "Light mode" : "Dark mode";
         });
       });
 
