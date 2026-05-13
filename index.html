@@ -7,7 +7,7 @@
   <title>전연주 | Data Analyst Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --ink: #1f2430;
@@ -26,12 +26,25 @@
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Noto Sans KR", "Pretendard", "Inter", "Segoe UI", "Apple SD Gothic Neo", Arial, sans-serif;
+      font-family: "Outfit", "IBM Plex Sans KR", "Noto Sans KR", "Pretendard", "Inter", "Segoe UI", "Apple SD Gothic Neo", Arial, sans-serif;
       color: var(--ink);
       background: var(--soft);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      transition: background 180ms ease, color 180ms ease;
+    }
+    body.theme-dark {
+      --ink: #eef1f7;
+      --muted: #9aa2b4;
+      --line: #262c3c;
+      --paper: #10131a;
+      --soft: #0a0d13;
+      --teal: #74d7cd;
+      --teal-dark: #94eee6;
+      --coral: #ff9288;
+      --gold: #f3c76a;
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
     }
     a { color: inherit; text-decoration: none; }
 
@@ -42,6 +55,10 @@
       backdrop-filter: blur(14px);
       background: rgba(255, 255, 255, 0.88);
       border-bottom: 1px solid rgba(223, 227, 234, 0.86);
+    }
+    body.theme-dark .site-header {
+      background: rgba(10, 13, 19, 0.86);
+      border-bottom-color: rgba(38, 44, 60, 0.92);
     }
 
     .nav {
@@ -57,6 +74,21 @@
     .brand { font-weight: 600; white-space: nowrap; }
     .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 14px; font-weight: 500; }
     .nav-links a:hover { color: var(--teal); }
+    .theme-toggle {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--muted);
+      font: 600 12px "Outfit", "IBM Plex Sans KR", sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    body.theme-dark .theme-toggle {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--ink);
+    }
 
     .hero {
       padding: 0;
@@ -133,6 +165,11 @@
 
     .button.primary { color: #ffffff; background: var(--ink); }
     .button.secondary { background: #ffffff; }
+    body.theme-dark .button.primary { color: #0a0d13; background: var(--ink); }
+    body.theme-dark .button.secondary {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.05);
+    }
 
     .profile-visual { position: relative; min-height: 420px; display: grid; align-items: center; }
     .portrait-wrap {
@@ -181,6 +218,11 @@
       background: rgba(255, 255, 255, 0.72);
       box-shadow: 0 20px 60px rgba(31, 36, 48, 0.06);
       backdrop-filter: blur(10px);
+    }
+    body.theme-dark .intro-card {
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(16, 19, 26, 0.82);
+      box-shadow: var(--shadow);
     }
 
     .intro-title {
@@ -253,6 +295,7 @@
     .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     .panel { border: 1px solid var(--line); border-radius: 8px; background: #ffffff; padding: 28px; }
+    body.theme-dark .panel { background: #11151e; }
     .panel h3 { margin: 0 0 12px; font-size: 20px; font-weight: 700; }
     .panel p { margin: 0; color: var(--muted); }
     .skill-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 18px 0 0; list-style: none; }
@@ -265,6 +308,7 @@
       font-size: 13px;
       font-weight: 600;
     }
+    body.theme-dark .skill-list li { color: var(--ink); background: rgba(255, 255, 255, 0.04); }
 
     .projects {
       background: #f3f5f9;
@@ -272,6 +316,7 @@
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
+    body.theme-dark .projects { background: #0d1017; }
     .projects .section-heading { align-items: flex-start; }
     .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
     .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
@@ -291,6 +336,11 @@
       text-align: left;
       cursor: pointer;
       appearance: none;
+    }
+    body.theme-dark .project-card {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.045);
+      box-shadow: var(--shadow);
     }
     button.project-card { width: 100%; }
     .project-card:hover {
@@ -316,6 +366,10 @@
     .project-card p { margin: 0; font-size: 15px; }
     .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; font-size: 12px; font-weight: 600; }
     .project-meta span { border: 1px solid #d8dde7; border-radius: 999px; padding: 6px 9px; background: rgba(255, 255, 255, 0.64); }
+    body.theme-dark .project-meta span {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.04);
+    }
 
     @keyframes caseFadeUp {
       from { opacity: 0; transform: translateY(18px); }
@@ -355,17 +409,17 @@
       min-width: 0;
       max-width: 1140px;
       max-height: min(90vh, 940px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      display: block;
+      overflow: auto;
       border: 1px solid rgba(255, 255, 255, 0.8);
       border-radius: 12px;
       background: var(--case-bg);
       color: var(--case-text);
       box-shadow: 0 32px 92px rgba(0, 0, 0, 0.34);
       outline: none;
-      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-family: "Outfit", "IBM Plex Sans KR", "Noto Sans KR", sans-serif;
     }
+    body.theme-dark .modal-dialog,
     .project-modal.theme-dark .modal-dialog {
       --case-bg: #0a0a0f;
       --case-surface: #111118;
@@ -407,7 +461,7 @@
     }
     .case-hero {
       position: relative;
-      padding: 38px 42px 30px;
+      padding: 30px 42px 24px;
       border-bottom: 1px solid var(--case-border);
       background:
         radial-gradient(circle at top right, var(--case-accent-soft), transparent 34%),
@@ -418,7 +472,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin: 0 50px 24px 0;
+      margin: 0 50px 18px 0;
     }
     .case-label {
       color: var(--case-muted);
@@ -437,11 +491,12 @@
       font: 600 12px "Outfit", sans-serif;
       cursor: pointer;
     }
+    .case-theme-toggle { display: none; }
     .case-badges {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
     .case-badge {
       display: inline-flex;
@@ -462,10 +517,10 @@
     }
     .case-title {
       max-width: 720px;
-      margin: 0 0 18px;
-      font-family: "DM Serif Display", "Noto Sans KR", serif;
-      font-size: clamp(34px, 5vw, 60px);
-      font-weight: 400;
+      margin: 0 0 14px;
+      font-family: "Gowun Batang", "DM Serif Display", "IBM Plex Sans KR", serif;
+      font-size: clamp(31px, 4.4vw, 52px);
+      font-weight: 700;
       line-height: 1.08;
       letter-spacing: 0;
       color: var(--case-text);
@@ -475,42 +530,42 @@
       max-width: 680px;
       margin: 0;
       color: var(--case-muted);
-      font-size: 17px;
+      font-size: 15px;
       line-height: 1.8;
     }
     .case-summary strong { color: var(--case-text); font-weight: 600; }
     .case-kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 34px;
+      gap: 8px;
+      margin-top: 22px;
     }
     .case-kpi {
-      min-height: 120px;
+      min-height: 76px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       border: 1px solid var(--case-border);
-      border-radius: 10px;
-      padding: 18px;
+      border-radius: 8px;
+      padding: 11px 12px;
       background: var(--case-surface);
     }
     .case-kpi small {
       color: var(--case-muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
     }
     .case-kpi strong {
       color: var(--case-text);
       font-family: "DM Serif Display", serif;
-      font-size: 34px;
+      font-size: 24px;
       font-weight: 400;
       line-height: 1;
     }
     .case-kpi.is-accent strong { color: var(--case-accent); }
     .case-kpi span {
       color: var(--case-muted);
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.45;
     }
     .modal-tabs {
@@ -535,8 +590,8 @@
       border-bottom-color: var(--case-accent);
     }
     .modal-content {
-      overflow: auto;
-      padding: 38px 42px 44px;
+      overflow: visible;
+      padding: 34px 42px 44px;
       background: var(--case-bg);
       scroll-behavior: smooth;
     }
@@ -566,10 +621,16 @@
     .case-section h4 {
       margin: 0 0 12px;
       color: var(--case-text);
-      font-family: "DM Serif Display", "Noto Sans KR", serif;
+      font-family: "Gowun Batang", "DM Serif Display", "IBM Plex Sans KR", serif;
       font-size: clamp(28px, 3vw, 38px);
-      font-weight: 400;
+      font-weight: 700;
       line-height: 1.15;
+    }
+    .detective-case .case-title span { color: var(--case-amber); font-style: italic; }
+    .detective-case .case-badge.accent {
+      border-color: color-mix(in srgb, var(--case-amber) 36%, var(--case-border));
+      background: var(--case-amber-soft);
+      color: var(--case-amber);
     }
     .case-intro {
       max-width: 760px;
@@ -685,6 +746,125 @@
       color: var(--case-muted);
       font-size: 14px;
       line-height: 1.65;
+    }
+    .type-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 6px 0 24px;
+      color: var(--case-amber);
+      font-family: "DM Mono", monospace;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+    .type-line::before {
+      content: ">";
+      color: var(--case-muted);
+    }
+    .type-cursor {
+      width: 2px;
+      height: 17px;
+      display: inline-block;
+      background: var(--case-amber);
+      animation: blinkCursor 1.1s step-end infinite;
+    }
+    @keyframes blinkCursor {
+      50% { opacity: 0; }
+    }
+    .case-split-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .case-info-card {
+      border: 1px solid var(--case-border);
+      border-radius: 10px;
+      padding: 20px;
+      background: var(--case-surface);
+    }
+    .case-info-card h5 {
+      margin: 0 0 12px;
+      color: var(--tone, var(--case-accent));
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .case-info-card p,
+    .case-info-card li {
+      color: var(--case-muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .case-info-card ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 18px;
+    }
+    .tech-row-list {
+      display: grid;
+      gap: 8px;
+    }
+    .tech-row {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      align-items: start;
+      gap: 16px;
+      border: 1px solid var(--case-border);
+      border-radius: 9px;
+      padding: 14px 16px;
+      background: var(--case-surface);
+    }
+    .tech-row strong {
+      color: var(--case-muted);
+      font-family: "DM Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .tech-row span {
+      color: var(--case-text);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .score-card {
+      border: 1px solid var(--case-border);
+      border-radius: 9px;
+      padding: 14px;
+      background: var(--case-panel);
+    }
+    .score-card small {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--case-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .score-bar {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--case-border);
+    }
+    .score-bar i {
+      display: block;
+      width: var(--score);
+      height: 100%;
+      border-radius: inherit;
+      background: var(--tone, var(--case-accent));
+    }
+    .score-card strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--tone, var(--case-accent));
+      font-family: "DM Mono", monospace;
+      font-size: 13px;
     }
     .visual-tabs {
       display: flex;
@@ -980,6 +1160,7 @@
       padding: 34px;
       box-shadow: var(--shadow);
     }
+    body.theme-dark .contact-box { background: #11151e; }
     .contact-box p { margin: 10px 0 0; color: var(--muted); }
     .contact-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
     footer { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); }
@@ -997,10 +1178,11 @@
       .section-heading, .contact-box { display: block; }
       .section-note { margin-top: 12px; }
       .about-grid, .project-grid { grid-template-columns: 1fr; }
-      .case-kpi-grid, .case-finding-grid, .case-conclusion-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .case-kpi-grid, .case-finding-grid, .case-conclusion-grid, .case-split-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .case-story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .case-story-grid::before { display: none; }
       .method-body, .psm-grid { grid-template-columns: 1fr; }
+      .score-grid { grid-template-columns: 1fr; }
       .priority-head { display: none; }
       .priority-row {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1027,17 +1209,18 @@
         max-width: calc(100vw - 24px);
         max-height: 92vh;
       }
-      .case-hero { padding: 28px 20px 22px; }
+      .case-hero { padding: 26px 20px 20px; }
       .case-toolbar {
         align-items: flex-start;
         flex-direction: column;
         margin: 0 48px 20px 0;
         gap: 10px;
       }
-      .case-title { font-size: clamp(28px, 9vw, 36px); }
+      .case-title { font-size: clamp(27px, 8.5vw, 34px); }
       .case-summary { font-size: 15px; }
-      .case-kpi-grid, .case-story-grid, .case-finding-grid, .case-conclusion-grid { grid-template-columns: 1fr; }
-      .case-kpi { min-height: 104px; }
+      .case-kpi-grid, .case-story-grid, .case-finding-grid, .case-conclusion-grid, .case-split-grid { grid-template-columns: 1fr; }
+      .case-kpi { min-height: 72px; }
+      .tech-row { grid-template-columns: 1fr; gap: 6px; }
       .modal-close { top: 18px; right: 18px; }
       .modal-tabs { padding: 0 16px; }
       .modal-tabs a { padding: 13px 12px 11px; }
@@ -1062,6 +1245,7 @@
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark</button>
       </div>
     </nav>
   </header>
@@ -1151,17 +1335,17 @@
             </div>
             <div class="project-meta"><span>EDA</span><span>Modeling</span><span>Report</span></div>
           </a>
-          <a class="project-card" id="project-04" href="#project-04" aria-label="Project 04 상세 보기">
+          <button class="project-card" id="project-04" type="button" data-modal-open="detective-modal" aria-label="AI 탐정게임 개발 상세 보기">
             <div>
               <div class="project-card-top">
                 <span class="project-number">04</span>
                 <span class="project-arrow" aria-hidden="true">↗</span>
               </div>
-              <h3>Project 04</h3>
-              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+              <h3>AI 탐정게임 개발</h3>
+              <p>GPT API 기반 AI 용의자와 대화하며 단서를 수집하고 최종 추리를 완성하는 인터랙티브 웹 게임입니다.</p>
             </div>
-            <div class="project-meta"><span>Tableau</span><span>Storytelling</span><span>Business</span></div>
-          </a>
+            <div class="project-meta"><span>JavaScript</span><span>GPT API</span><span>Prompt Engineering</span><span>Vibe Coding</span></div>
+          </button>
         </div>
 
         <div class="project-modal theme-light" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
@@ -1171,7 +1355,7 @@
             <header class="case-hero case-animate">
               <div class="case-toolbar">
                 <span class="case-label">Data Analysis Case Study</span>
-                <button class="case-theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark mode</button>
+                <span class="case-label">Project 01</span>
               </div>
               <div class="case-badges" aria-label="프로젝트 사용 기술">
                 <span class="case-badge accent">물류 · 운영 분석</span>
@@ -1462,6 +1646,218 @@
             </div>
           </div>
         </div>
+
+        <div class="project-modal theme-light detective-case" id="detective-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detective-modal-title">
+          <div class="modal-dialog" tabindex="-1">
+            <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+
+            <header class="case-hero case-animate">
+              <div class="case-toolbar">
+                <span class="case-label">Interactive AI Game Case Study</span>
+                <span class="case-label">Project 04</span>
+              </div>
+              <div class="case-badges" aria-label="프로젝트 사용 기술">
+                <span class="case-badge accent">캡스톤 디자인</span>
+                <span class="case-badge">JavaScript</span>
+                <span class="case-badge">GPT API</span>
+                <span class="case-badge">Prompt Engineering</span>
+                <span class="case-badge">Vibe Coding</span>
+              </div>
+              <h3 class="case-title" id="detective-modal-title">
+                AI 탐정게임 개발<br />
+                <span>Detective</span>
+              </h3>
+              <p class="type-line"><span data-typewriter="용의자를 심문하라. AI가 거짓말한다.">용의자를 심문하라. AI가 거짓말한다.</span><i class="type-cursor" aria-hidden="true"></i></p>
+              <p class="case-summary">
+                HTML, CSS, JavaScript만으로 구현한 인터랙티브 웹 추리게임입니다. 플레이어는 GPT API 기반 AI 용의자를 심문하고,
+                수집한 단서를 바탕으로 최종 추리를 제출합니다. <strong>핵심은 AI가 단순히 답하는 것이 아니라, 용의자의 알리바이와 거짓말 패턴을 유지하도록 설계한 점입니다.</strong>
+              </p>
+              <div class="case-kpi-grid" aria-label="프로젝트 핵심 지표">
+                <div class="case-kpi"><small>시나리오</small><strong>2개</strong><span>아파트 살인사건, 놀이공원 화재사건</span></div>
+                <div class="case-kpi is-accent"><small>AI 심문</small><strong>GPT</strong><span>단서와 대화 맥락을 반영한 용의자 응답</span></div>
+                <div class="case-kpi"><small>평가 방식</small><strong>S/A</strong><span>논리, 단서 활용, 범인 특정 정확도 채점</span></div>
+                <div class="case-kpi"><small>개발 방식</small><strong>AI</strong><span>ChatGPT, Claude와 설계·구현·디버깅</span></div>
+                <div class="case-kpi"><small>구현 범위</small><strong>Web</strong><span>씬 전환, 단서 상태, 오디오, 타이머</span></div>
+              </div>
+            </header>
+
+            <nav class="modal-tabs" aria-label="프로젝트 상세 목차">
+              <a href="#detective-story">Story</a>
+              <a href="#detective-features">AI System</a>
+              <a href="#detective-scenarios">Scenarios</a>
+              <a href="#detective-tech">Tech</a>
+              <a href="#detective-conclusion">Conclusion</a>
+            </nav>
+
+            <div class="modal-content">
+              <section class="case-section case-animate" id="detective-story" aria-labelledby="detective-story-title">
+                <p class="case-section-label">Project Flow</p>
+                <h4 id="detective-story-title">어떻게 만들었는가</h4>
+                <div class="case-story-grid">
+                  <article class="story-step" style="--tone: var(--case-accent)">
+                    <span class="story-num">01</span>
+                    <span class="story-phase">Planning</span>
+                    <strong>두 개의 독립 시나리오</strong>
+                    <p>아파트 살인사건과 놀이공원 화재사건을 분리해 장소, 단서, 용의자 흐름을 따로 설계했습니다.</p>
+                    <span class="story-badge">설계</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-amber)">
+                    <span class="story-num">02</span>
+                    <span class="story-phase">AI Design</span>
+                    <strong>프롬프트 엔지니어링</strong>
+                    <p>직업, 알리바이, 숨기는 비밀, 말투, 회피 반응을 시스템 프롬프트에 넣었습니다.</p>
+                    <span class="story-badge">핵심 기술</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-green)">
+                    <span class="story-num">03</span>
+                    <span class="story-phase">Build</span>
+                    <strong>Vibe Coding 실험</strong>
+                    <p>ChatGPT와 Claude를 활용해 코드 구조 설계, 구현, 디버깅을 반복했습니다.</p>
+                    <span class="story-badge">AI 협업</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-accent)">
+                    <span class="story-num">04</span>
+                    <span class="story-phase">Scoring</span>
+                    <strong>최종 추리 자동 채점</strong>
+                    <p>플레이어의 추리문을 GPT가 논리, 단서 활용, 정확도 기준으로 평가합니다.</p>
+                    <span class="story-badge">자동화</span>
+                  </article>
+                  <article class="story-step" style="--tone: var(--case-red)">
+                    <span class="story-num">05</span>
+                    <span class="story-phase">UX</span>
+                    <strong>몰입형 경험 설계</strong>
+                    <p>BGM, 페이드, 타이머, 타자 효과를 씬 전환과 동기화했습니다.</p>
+                    <span class="story-badge">완성</span>
+                  </article>
+                </div>
+              </section>
+
+              <section class="case-section case-animate" id="detective-features" aria-labelledby="detective-features-title">
+                <p class="case-section-label">AI Interrogation System</p>
+                <h4 id="detective-features-title">AI 용의자를 어떻게 설계했는가</h4>
+                <div class="case-finding-grid">
+                  <article class="finding-card" style="--tone: var(--case-accent)">
+                    <small>시스템 프롬프트</small>
+                    <strong>역할 주입</strong>
+                    <p>용의자의 직업, 알리바이, 숨기는 비밀, 성격을 프롬프트로 구성해 각 인물이 다르게 반응하도록 만들었습니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-green)">
+                    <small>단서 연동</small>
+                    <strong>맥락 반응</strong>
+                    <p>플레이어가 수집한 단서와 관련 키워드를 언급하면 해당 내용이 프롬프트에 추가되어 자연스럽게 당황하거나 회피합니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-amber)">
+                    <small>응답 규칙</small>
+                    <strong>거짓말 패턴</strong>
+                    <p>범인임을 바로 인정하지 않고, 단서 압박이 들어올 때 말투가 흔들리도록 답변 규칙을 설정했습니다.</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-red)">
+                    <small>대화 기록</small>
+                    <strong>흐름 유지</strong>
+                    <p>이전 대화를 함께 전달해 심문이 끊기지 않고, 플레이어의 추궁 흐름을 이어가도록 구성했습니다.</p>
+                  </article>
+                </div>
+              </section>
+
+              <section class="case-section case-animate" id="detective-scenarios" aria-labelledby="detective-scenarios-title">
+                <p class="case-section-label">Scenario Design</p>
+                <h4 id="detective-scenarios-title">두 개의 독립 사건</h4>
+                <p class="case-intro">각 시나리오는 독립적인 장소, 용의자, 단서 수집 방식을 가집니다.</p>
+                <div class="visual-tabs" role="tablist" aria-label="시나리오 선택">
+                  <button class="visual-tab" type="button" data-chart-tab="apartment" aria-selected="true">개나리아파트 살인사건</button>
+                  <button class="visual-tab" type="button" data-chart-tab="park" aria-selected="false">놀이공원 화재사건</button>
+                </div>
+                <div class="visual-panel" data-chart-panel="apartment">
+                  <div class="case-split-grid">
+                    <article class="case-info-card" style="--tone: var(--case-red)">
+                      <h5>사건 배경</h5>
+                      <p>한적한 아파트 단지에서 발생한 의문의 살인사건. 플레이어는 현장 증거를 분석하고 용의자를 심문해 진범을 추적합니다.</p>
+                    </article>
+                    <article class="case-info-card" style="--tone: var(--case-accent)">
+                      <h5>구성 요소</h5>
+                      <ul>
+                        <li>탐색 장소: 13층 복도, 거실, 주차장, 관리실</li>
+                        <li>용의자: 아내, 동료, 할머니, 군인</li>
+                        <li>단서 방식: 장소 클릭 후 이미지·텍스트 단서 획득</li>
+                      </ul>
+                    </article>
+                  </div>
+                </div>
+                <div class="visual-panel" data-chart-panel="park" hidden>
+                  <div class="case-split-grid">
+                    <article class="case-info-card" style="--tone: var(--case-amber)">
+                      <h5>사건 배경</h5>
+                      <p>놀이공원에서 발생한 의문의 화재사건. 숨겨진 동기와 의도를 파헤치며, 지도 UI를 통해 현장을 직접 탐색합니다.</p>
+                    </article>
+                    <article class="case-info-card" style="--tone: var(--case-green)">
+                      <h5>구성 요소</h5>
+                      <ul>
+                        <li>탐색 장소: 무대, 회전목마, 스태프 휴게실, 티켓부스</li>
+                        <li>용의자: AI 그룹 다수</li>
+                        <li>단서 방식: 현장 지도 클릭, 씬별 BGM 변경</li>
+                      </ul>
+                    </article>
+                  </div>
+                </div>
+                <div class="score-grid" aria-label="최종 추리 평가 기준">
+                  <article class="score-card" style="--tone: var(--case-accent)"><small>논리적 근거의 타당성</small><div class="score-bar"><i style="--score: 40%"></i></div><strong>40점</strong></article>
+                  <article class="score-card" style="--tone: var(--case-green)"><small>단서 활용도</small><div class="score-bar"><i style="--score: 30%"></i></div><strong>30점</strong></article>
+                  <article class="score-card" style="--tone: var(--case-amber)"><small>범인 특정 정확도</small><div class="score-bar"><i style="--score: 30%"></i></div><strong>30점</strong></article>
+                </div>
+              </section>
+
+              <section class="case-section case-animate" id="detective-tech" aria-labelledby="detective-tech-title">
+                <p class="case-section-label">Technical Implementation</p>
+                <h4 id="detective-tech-title">어떻게 구현했는가</h4>
+                <div class="case-split-grid">
+                  <div class="tech-row-list">
+                    <div class="tech-row"><strong>Frontend</strong><span>HTML5, CSS3, Vanilla JavaScript</span></div>
+                    <div class="tech-row"><strong>AI API</strong><span>OpenAI GPT API 기반 용의자 대화</span></div>
+                    <div class="tech-row"><strong>State</strong><span>JS Object로 단서, 씬, 대화 상태 관리</span></div>
+                    <div class="tech-row"><strong>Scene</strong><span>switchScene() 커스텀 씬 전환 엔진</span></div>
+                    <div class="tech-row"><strong>Audio</strong><span>Web Audio API로 BGM과 효과음 제어</span></div>
+                  </div>
+                  <div class="case-info-card" style="--tone: var(--case-accent)">
+                    <h5>Vibe Coding 실험</h5>
+                    <p>
+                      이 프로젝트는 AI 협업 개발을 실험한 작업입니다. AI에게 단순 구현만 맡긴 것이 아니라,
+                      기능 단위 설계, 버그 원인 추적, 프롬프트 개선, UX 조정까지 반복하며 개발 흐름을 만들었습니다.
+                    </p>
+                    <p>
+                      결과적으로 정적인 웹페이지가 아니라, 단서 상태와 대화 맥락이 이어지는 플레이 가능한 추리 경험을 만드는 데 집중했습니다.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="case-section case-animate" id="detective-conclusion" aria-labelledby="detective-conclusion-title">
+                <p class="case-section-label">Conclusion</p>
+                <h4 id="detective-conclusion-title">AI가 거짓말하도록 설계했습니다</h4>
+                <p class="case-intro">
+                  이 프로젝트의 핵심은 GPT를 단순 채팅봇으로 쓰지 않고, 게임 세계관 안에서 “모순을 숨기는 인물”로 작동하게 만든 점입니다.
+                  단서, 심문, 추리, 평가가 하나의 흐름으로 이어지도록 설계하면서 AI API를 사용자 경험 안에 녹이는 방식을 실험했습니다.
+                </p>
+                <div class="case-conclusion-grid">
+                  <article class="conclusion-card" style="--tone: var(--case-accent)">
+                    <div class="conclusion-box"><strong>처음 시도</strong><p>단순 Q&A 기반 용의자 대화</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>실제 구현</strong><p>맥락 유지와 단서 연동이 되는 AI 용의자</p></div>
+                  </article>
+                  <article class="conclusion-card" style="--tone: var(--case-green)">
+                    <div class="conclusion-box"><strong>예상한 어려움</strong><p>용의자별 말투와 거짓말 패턴 유지</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>해결 방식</strong><p>시스템 프롬프트와 대화 기록 전달로 제어</p></div>
+                  </article>
+                  <article class="conclusion-card" style="--tone: var(--case-amber)">
+                    <div class="conclusion-box"><strong>개발 목표</strong><p>캡스톤 게임 완성</p></div>
+                    <div class="conclusion-arrow">↓</div>
+                    <div class="conclusion-box after"><strong>실험적 성과</strong><p>AI 협업 개발과 GPT 기반 평가 시스템 검증</p></div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1545,10 +1941,11 @@
         if (!modal) return;
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
-        const content = modal.querySelector(".modal-content");
-        if (content) content.scrollTop = 0;
         const dialog = modal.querySelector(".modal-dialog");
-        if (dialog) dialog.focus();
+        if (dialog) {
+          dialog.scrollTop = 0;
+          dialog.focus();
+        }
       };
 
       openButtons.forEach((button) => {
@@ -1599,15 +1996,35 @@
         });
       });
 
-      document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const modal = button.closest(".project-modal");
-          const isDark = !modal.classList.contains("theme-dark");
-          modal.classList.toggle("theme-dark", isDark);
-          modal.classList.toggle("theme-light", !isDark);
+      const themeButtons = document.querySelectorAll("[data-theme-toggle]");
+      const syncThemeButtons = (isDark) => {
+        themeButtons.forEach((button) => {
           button.setAttribute("aria-pressed", String(isDark));
-          button.textContent = isDark ? "Light mode" : "Dark mode";
+          button.textContent = isDark ? "Light" : "Dark";
         });
+      };
+      const applyTheme = (theme) => {
+        const isDark = theme === "dark";
+        document.body.classList.toggle("theme-dark", isDark);
+        localStorage.setItem("portfolio-theme", isDark ? "dark" : "light");
+        syncThemeButtons(isDark);
+      };
+      applyTheme(localStorage.getItem("portfolio-theme") || "light");
+      themeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          applyTheme(document.body.classList.contains("theme-dark") ? "light" : "dark");
+        });
+      });
+
+      document.querySelectorAll("[data-typewriter]").forEach((target) => {
+        const full = target.dataset.typewriter;
+        let index = 0;
+        target.textContent = "";
+        const timer = window.setInterval(() => {
+          target.textContent = full.slice(0, index + 1);
+          index += 1;
+          if (index >= full.length) window.clearInterval(timer);
+        }, 55);
       });
 
       document.addEventListener("keydown", (event) => {
@@ -1618,6 +2035,9 @@
 
       if (window.location.hash === "#warehouse-modal") {
         openModal("warehouse-modal");
+      }
+      if (window.location.hash === "#detective-modal") {
+        openModal("detective-modal");
       }
     })();
   </script>
