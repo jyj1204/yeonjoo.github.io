@@ -1,176 +1,204 @@
 import { useState, useEffect, useRef } from "react";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import {
+  LineChart, Line, BarChart, Bar, XAxis, YAxis,
+  CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine
+} from "recharts";
 
-/* ─── 색상 팔레트 ─────────────────────────────── */
+/* ─── 색상 시스템 ─────────────────────────────── */
 const C = {
-  bg: "#0A0A0F",
-  surface: "#111118",
-  border: "#1E1E2E",
-  borderBright: "#2E2E4E",
-  text: "#E8E8F0",
-  muted: "#7070A0",
-  accent: "#6C6CF8",
-  accentDim: "#3A3A8A",
-  red: "#F05050",
-  redDim: "#4A1818",
-  green: "#3FD68A",
-  greenDim: "#0D3D2A",
-  amber: "#F0B040",
-  amberDim: "#3D2D0A",
-  white: "#FFFFFF",
+  bg:       "#F4F5F7",
+  surface:  "#FFFFFF",
+  surfaceAlt: "#F9FAFB",
+  border:   "#E5E7EB",
+  borderDark: "#D1D5DB",
+  text:     "#1A1A2E",
+  muted:    "#6B7280",
+  faint:    "#9CA3AF",
+  accent:   "#2563EB",
+  accentBg: "#EFF6FF",
+  accentDim:"#BFDBFE",
+  green:    "#10B981",
+  greenBg:  "#ECFDF5",
+  greenDim: "#A7F3D0",
+  red:      "#EF4444",
+  redBg:    "#FEF2F2",
+  redDim:   "#FECACA",
+  amber:    "#F59E0B",
+  amberBg:  "#FFFBEB",
+  amberDim: "#FDE68A",
+  purple:   "#7C3AED",
+  purpleBg: "#F5F3FF",
+  purpleDim:"#DDD6FE",
 };
 
-/* ─── 폰트 로드 ───────────────────────────────── */
-const FontLink = () => (
+/* ─── 폰트 ───────────────────────────────────── */
+const Fonts = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: ${C.bg}; color: ${C.text}; font-family: 'Outfit', sans-serif; }
-    ::-webkit-scrollbar { width: 4px; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: ${C.bg}; color: ${C.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: ${C.bg}; }
-    ::-webkit-scrollbar-thumb { background: ${C.accentDim}; border-radius: 2px; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
-    }
-    .fade-up { animation: fadeUp 0.6s ease forwards; }
-    .fade-up-1 { animation-delay: 0.1s; opacity: 0; }
-    .fade-up-2 { animation-delay: 0.25s; opacity: 0; }
-    .fade-up-3 { animation-delay: 0.4s; opacity: 0; }
-    .fade-up-4 { animation-delay: 0.55s; opacity: 0; }
+    ::-webkit-scrollbar-thumb { background: ${C.borderDark}; border-radius: 3px; }
+    a { color: inherit; text-decoration: none; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    .fu { animation: fadeUp 0.5s ease forwards; }
+    .fu1 { animation-delay:0.05s; opacity:0; }
+    .fu2 { animation-delay:0.15s; opacity:0; }
+    .fu3 { animation-delay:0.25s; opacity:0; }
+    .fu4 { animation-delay:0.38s; opacity:0; }
+    .fu5 { animation-delay:0.50s; opacity:0; }
   `}</style>
 );
 
-/* ─── 데이터 ─────────────────────────────────── */
-const idleData = [
-  { group: "최저 20%", delay: 36.3 },
-  { group: "20~40%",   delay: 28.1 },
-  { group: "40~60%",   delay: 18.4 },
-  { group: "60~80%",   delay: 10.2 },
-  { group: "최고 20%", delay: 5.5  },
-];
-
-const packData = [
-  { range: "0~10%",   delay: 19.8 },
-  { range: "10~20%",  delay: 17.2 },
-  { range: "20~30%",  delay: 15.4 },
-  { range: "30~40%",  delay: 13.8 },
-  { range: "40~50%",  delay: 13.3 },
-  { range: "50~60%",  delay: 12.0 },
-  { range: "60~70%",  delay: 12.1 },
-  { range: "70~80%",  delay: 12.0 },
-  { range: "80~90%",  delay: 12.0 },
-  { range: "90%+",    delay: 29.6 },
-];
-
-const comboData = [
-  { label: "0개 (정상)", delay: 10.2, crisis: 2.4 },
-  { label: "1개",        delay: 17.9, crisis: 5.1 },
-  { label: "2개",        delay: 29.9, crisis: 8.2 },
-  { label: "3개 (최악)", delay: 38.1, crisis: 11.3 },
-];
-
-const psmData = [
-  { group: "hub_spoke", before: 22.09, after: 21.68 },
-  { group: "나머지",    before: 18.40, after: 22.24 },
-];
-
-const storySteps = [
-  { num: "01", phase: "EDA",      title: "idle이 핵심이다",         desc: "30% 임계점, 배터리 연쇄 구조", badge: "발견",       bColor: C.accent },
-  { num: "02", phase: "모델링",   title: "EDA가 놓친 변수",         desc: "pack_util r=0.105 → 모델 1위", badge: "한계 발견",   bColor: C.amber  },
-  { num: "03", phase: "경보",     title: "Precision 상한 발견",     desc: "어떤 방법도 12% 돌파 불가",   badge: "실패→전환",   bColor: C.red    },
-  { num: "04", phase: "군집화",   title: "취약형 102개 발견",       desc: "hub_spoke 67% 취약 → 가설",   badge: "가설 형성",   bColor: C.accent },
-  { num: "05", phase: "PSM",      title: "결론이 뒤집혔다",         desc: "운영 통제 후 효과 소멸",       badge: "결론 수정",   bColor: C.green  },
-];
-
-const findings = [
-  { icon: "⚡", title: "idle 비율이 핵심", val: "6.6×", sub: "최저 vs 최고 구간 지연 차이", color: C.red },
-  { icon: "🔍", title: "숨은 병목 발견",   val: "r=0.105 → 1위", sub: "EDA 오판, 모델로 재발견", color: C.amber },
-  { icon: "🧪", title: "PSM 인과 검증",   val: "p=0.783", sub: "운영 통제 후 레이아웃 효과 소멸", color: C.green },
-  { icon: "🗺️", title: "운영 우선순위",   val: "6개 유형", sub: "포장병목형이 즉시개입형보다 위험", color: C.accent },
-];
-
-const methodReasons = [
-  { q: "왜 GroupKFold?", bad: "일반 KFold → 같은 창고 스냅샷 누출 → 성능 과대평가", good: "창고 단위 완전 분리 → 실제 배포 환경 시뮬레이션" },
-  { q: "왜 모델 중요도?", bad: "상관계수만 → pack r=0.105 '관계 없음' → 핵심 변수 누락", good: "비선형 U자형 포착 → 모델 1위 재발견 → 반례 수렴" },
-  { q: "왜 PSM?", bad: "단순 비교 → hub_spoke +3.69분 → 레이아웃 개선 추진 (고비용 오판)", good: "운영 조건 통제 → 효과 소멸(p=0.783) → 레이아웃 X, 운영 O" },
-  { q: "왜 반례 분석?", bad: "전체 경향만 → 'idle 높으면 안전' 단순 결론", good: "공통 원인: pack 과포화 → U자형 분석과 수렴 → 신뢰도↑" },
-];
-
-const priorityTypes = [
-  { rank: "1순위", type: "즉시개입형",    n: 49,  delay: 24.6, feature: "고혼잡 + 저idle",          action: "경로 재배정 + 충전 긴급", color: C.red    },
-  { rank: "2순위", type: "배터리위기형",  n: 23,  delay: 23.3, feature: "저idle + 배터리 나쁨",     action: "사전 충전 스케줄",        color: C.red    },
-  { rank: "3순위★", type: "포장병목형",  n: 40,  delay: 27.0, feature: "pack 고가동 (숨은 병목)",  action: "pack 60~80% 조정",        color: C.amber  },
-  { rank: "4순위", type: "혼잡관리형",    n: 29,  delay: 15.4, feature: "idle 정상 + 고혼잡",       action: "경로 모니터링",           color: C.amber  },
-  { rank: "5순위", type: "배터리최적화형", n: 6,  delay: 17.0, feature: "idle 정상 + 배터리 나쁨",  action: "정기 충전 최적화",        color: C.accent },
-  { rank: "6순위", type: "모니터링형",    n: 103, delay: 13.5, feature: "전반적 정상",               action: "정기 모니터링",           color: C.green  },
-];
-
 /* ─── 공통 컴포넌트 ─────────────────────────── */
-const Mono = ({ children, style }) => (
-  <span style={{ fontFamily: "'DM Mono', monospace", ...style }}>{children}</span>
+const Mono = ({ children, color, size = 13 }) => (
+  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: size, color: color || C.muted }}>{children}</span>
 );
 
-const Badge = ({ children, color }) => (
+const Tag = ({ children, color = C.accent, bg }) => (
   <span style={{
-    fontSize: 11, fontWeight: 500, padding: "3px 8px",
-    borderRadius: 4, background: color + "22", color,
-    border: `0.5px solid ${color}44`, letterSpacing: "0.03em",
+    fontSize: 11, fontWeight: 500, padding: "3px 8px", borderRadius: 4,
+    background: bg || color + "15", color,
+    border: `1px solid ${color}25`, letterSpacing: "0.02em", whiteSpace: "nowrap",
   }}>{children}</span>
 );
 
-const SectionLabel = ({ children }) => (
-  <div style={{
-    fontSize: 11, fontWeight: 500, color: C.muted,
-    letterSpacing: "0.12em", textTransform: "uppercase",
-    marginBottom: 20,
-    display: "flex", alignItems: "center", gap: 10,
-  }}>
-    <span style={{ width: 24, height: 0.5, background: C.border, display: "inline-block" }} />
-    {children}
+const SecLabel = ({ children }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+    <div style={{ width: 3, height: 14, background: C.accent, borderRadius: 2 }} />
+    <span style={{ fontSize: 12, fontWeight: 600, color: C.accent, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+      {children}
+    </span>
   </div>
 );
 
-const Divider = () => (
-  <div style={{ height: 0.5, background: C.border, margin: "0 0" }} />
-);
+const Card = ({ children, style, hover = true }) => {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      style={{
+        background: C.surface, borderRadius: 12,
+        border: `1px solid ${hov && hover ? C.borderDark : C.border}`,
+        transition: "border-color 0.2s, box-shadow 0.2s",
+        boxShadow: hov && hover ? "0 4px 20px rgba(0,0,0,0.06)" : "0 1px 4px rgba(0,0,0,0.04)",
+        ...style,
+      }}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+    >
+      {children}
+    </div>
+  );
+};
+
+const Divider = () => <div style={{ height: 1, background: C.border, margin: "0" }} />;
+
+/* ─── 커스텀 툴팁 ────────────────────────────── */
+const ChartTip = ({ active, payload, label, unit = "분" }) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{
+      background: C.surface, border: `1px solid ${C.border}`,
+      borderRadius: 8, padding: "8px 12px",
+      boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+    }}>
+      <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{label}</div>
+      {payload.map((p, i) => (
+        <div key={i} style={{ fontSize: 13, fontWeight: 500, color: p.color || C.text }}>
+          {p.name}: {typeof p.value === "number" ? p.value.toFixed(1) : p.value}{unit}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+/* ─── 데이터 ─────────────────────────────────── */
+const DATA = {
+  idle: [
+    { group: "최저 20%", delay: 36.3 },
+    { group: "20~40%",   delay: 28.1 },
+    { group: "40~60%",   delay: 18.4 },
+    { group: "60~80%",   delay: 10.2 },
+    { group: "최고 20%", delay: 5.5  },
+  ],
+  pack: [
+    { range: "0~10%",  delay: 19.8 },
+    { range: "10~20%", delay: 17.2 },
+    { range: "20~30%", delay: 15.4 },
+    { range: "30~40%", delay: 13.8 },
+    { range: "40~50%", delay: 13.3 },
+    { range: "50~60%", delay: 12.0 },
+    { range: "60~70%", delay: 12.1 },
+    { range: "70~80%", delay: 12.0 },
+    { range: "80~90%", delay: 12.0 },
+    { range: "90%+",   delay: 29.6 },
+  ],
+  combo: [
+    { label: "0개 (모두 정상)", delay: 10.2, crisis: 2.4 },
+    { label: "1개",             delay: 17.9, crisis: 5.1 },
+    { label: "2개",             delay: 29.9, crisis: 8.2 },
+    { label: "3개 (모두 나쁨)", delay: 38.1, crisis: 11.3 },
+  ],
+  psm: [
+    { group: "hub_spoke", before: 22.09, after: 21.68 },
+    { group: "나머지",    before: 18.40, after: 22.24 },
+  ],
+  timeline: [
+    { snap: "-6", idle: 0.226, congestion: 18.09, battery: 0.266 },
+    { snap: "-5", idle: 0.223, congestion: 18.15, battery: 0.274 },
+    { snap: "-4", idle: 0.221, congestion: 18.08, battery: 0.281 },
+    { snap: "-3", idle: 0.219, congestion: 18.07, battery: 0.283 },
+    { snap: "-2", idle: 0.217, congestion: 18.05, battery: 0.284 },
+    { snap: "-1", idle: 0.215, congestion: 18.13, battery: 0.282 },
+    { snap: "위기\n직전", idle: 0.214, congestion: 18.37, battery: 0.280 },
+  ],
+};
 
 /* ─── NAV ────────────────────────────────────── */
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 20);
+    const h = () => setScrolled(window.scrollY > 30);
     window.addEventListener("scroll", h);
     return () => window.removeEventListener("scroll", h);
   }, []);
   return (
     <nav style={{
       position: "sticky", top: 0, zIndex: 100,
-      background: scrolled ? C.surface + "EE" : "transparent",
+      background: scrolled ? "rgba(255,255,255,0.92)" : "transparent",
       backdropFilter: scrolled ? "blur(12px)" : "none",
-      borderBottom: scrolled ? `0.5px solid ${C.border}` : "none",
-      transition: "all 0.3s ease",
-      padding: "16px 40px", display: "flex", alignItems: "center",
-      justifyContent: "space-between",
+      borderBottom: scrolled ? `1px solid ${C.border}` : "none",
+      transition: "all 0.25s ease",
+      padding: "0 40px",
     }}>
-      <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 16, letterSpacing: "-0.01em" }}>
-        분석 포트폴리오
-      </div>
-      <div style={{ display: "flex", gap: 28 }}>
-        {["스토리", "발견", "시각화", "방법론", "우선순위"].map(t => (
-          <a key={t} href={`#${t}`} style={{
-            fontSize: 13, color: C.muted, textDecoration: "none",
-            transition: "color 0.2s",
-            onMouseEnter: e => e.target.style.color = C.text,
-            onMouseLeave: e => e.target.style.color = C.muted,
-          }}
-            onMouseEnter={e => e.target.style.color = C.text}
-            onMouseLeave={e => e.target.style.color = C.muted}
-          >{t}</a>
-        ))}
+      <div style={{
+        maxWidth: 1100, margin: "0 auto",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: 56,
+      }}>
+        <div style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 500, color: C.text }}>
+          데이터 분석 포트폴리오
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {[
+            { label: "분석 과정", href: "#story" },
+            { label: "핵심 발견", href: "#findings" },
+            { label: "시각화", href: "#viz" },
+            { label: "방법론", href: "#method" },
+            { label: "운영 전략", href: "#priority" },
+          ].map(({ label, href }) => (
+            <a key={label} href={href} style={{
+              fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
+              transition: "background 0.15s, color 0.15s",
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.text; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.muted; }}
+            >{label}</a>
+          ))}
+        </div>
       </div>
     </nav>
   );
@@ -178,251 +206,353 @@ const Nav = () => {
 
 /* ─── HERO ───────────────────────────────────── */
 const Hero = () => (
-  <section style={{
-    padding: "80px 40px 60px",
-    borderBottom: `0.5px solid ${C.border}`,
-    position: "relative", overflow: "hidden",
-  }}>
-    {/* 배경 그라데이션 장식 */}
-    <div style={{
-      position: "absolute", top: -100, right: -100,
-      width: 500, height: 500, borderRadius: "50%",
-      background: `radial-gradient(circle, ${C.accentDim}30 0%, transparent 70%)`,
-      pointerEvents: "none",
-    }} />
-
-    <div style={{ maxWidth: 720, position: "relative" }}>
-      <div className="fade-up fade-up-1" style={{ marginBottom: 20, display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <Badge color={C.accent}>물류 · 운영 분석</Badge>
-        <Badge color={C.muted}>LightGBM</Badge>
-        <Badge color={C.muted}>PSM 인과 검증</Badge>
-        <Badge color={C.muted}>K-Means</Badge>
-        <Badge color={C.muted}>Python</Badge>
+  <section style={{ padding: "64px 40px 48px", borderBottom: `1px solid ${C.border}` }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div className="fu fu1" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
+        {["물류 · 운영 분석", "LightGBM", "PSM 인과 검증", "K-Means 군집화", "Python · Tableau"].map((t, i) => (
+          <Tag key={t} color={i === 0 ? C.accent : C.muted} bg={i === 0 ? C.accentBg : C.bg}>{t}</Tag>
+        ))}
       </div>
 
-      <h1 className="fade-up fade-up-2" style={{
-        fontFamily: "'DM Serif Display', serif",
-        fontSize: 52, lineHeight: 1.12, letterSpacing: "-0.02em",
-        marginBottom: 20, color: C.white,
+      <h1 className="fu fu2" style={{
+        fontFamily: "'Lora', serif", fontSize: 48, fontWeight: 500,
+        lineHeight: 1.15, letterSpacing: "-0.02em", color: C.text,
+        marginBottom: 16, maxWidth: 700,
       }}>
         창고 로봇 시스템<br />
         <span style={{ color: C.accent }}>출고 지연</span> 원인 분석
       </h1>
 
-      <p className="fade-up fade-up-3" style={{
+      <p className="fu fu3" style={{
         fontSize: 17, color: C.muted, lineHeight: 1.7,
-        marginBottom: 32, maxWidth: 560,
+        marginBottom: 28, maxWidth: 580,
       }}>
-        250개 창고, 25만 건 데이터.
-        레이아웃이 문제라고 생각했는데 운영이었고,
+        250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고,
         중요하지 않다고 본 변수가 핵심이었습니다.
-        <strong style={{ color: C.text }}> 분석 과정에서 결론이 세 번 바뀌었습니다.</strong>
+        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀌었습니다.</strong>
       </p>
 
-      <div className="fade-up fade-up-4" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+      <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
         {[
-          { label: "GitHub", icon: "↗" },
-          { label: "보고서 PDF", icon: "↓" },
-          { label: "태블로 대시보드", icon: "↗", primary: true },
-        ].map(({ label, icon, primary }) => (
+          { label: "태블로 대시보드", primary: true },
+          { label: "GitHub ↗" },
+          { label: "보고서 PDF ↓" },
+          { label: "발표 PPT ↓" },
+        ].map(({ label, primary }) => (
           <button key={label} style={{
-            padding: "10px 20px", borderRadius: 6, cursor: "pointer",
-            fontSize: 13, fontWeight: 500, display: "flex", alignItems: "center", gap: 6,
-            background: primary ? C.accent : "transparent",
-            color: primary ? C.white : C.text,
-            border: primary ? "none" : `0.5px solid ${C.borderBright}`,
-            transition: "all 0.2s",
-            fontFamily: "'Outfit', sans-serif",
+            padding: "9px 18px", borderRadius: 7, cursor: "pointer",
+            fontSize: 13, fontWeight: 500,
+            background: primary ? C.accent : C.surface,
+            color: primary ? "#fff" : C.text,
+            border: primary ? "none" : `1px solid ${C.border}`,
+            transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
           }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.8"; }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-          >
-            {label} <span style={{ fontSize: 12 }}>{icon}</span>
-          </button>
+          >{label}</button>
         ))}
       </div>
-    </div>
 
-    {/* KPI 4개 */}
-    <div style={{
-      display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-      gap: 12, marginTop: 60,
-    }}>
-      {[
-        { label: "분석 창고", val: "250개", sub: "4개 레이아웃 유형" },
-        { label: "지연 최대 차이", val: "6.6×", sub: "idle 최저 vs 최고", accent: true },
-        { label: "결론 수정 횟수", val: "3회", sub: "가설→검증→수정" },
-        { label: "지연 감소 추정", val: "78%", sub: "가정 기반 시뮬레이션" },
-      ].map(({ label, val, sub, accent }) => (
-        <div key={label} style={{
-          background: C.surface, border: `0.5px solid ${C.border}`,
-          borderRadius: 8, padding: "20px 24px",
-        }}>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>{label}</div>
-          <div style={{
-            fontFamily: "'DM Serif Display', serif",
-            fontSize: 34, color: accent ? C.accent : C.white,
-            letterSpacing: "-0.02em", lineHeight: 1,
-          }}>{val}</div>
-          <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>{sub}</div>
-        </div>
-      ))}
+      {/* KPI 4개 */}
+      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+        {[
+          { label: "분석 창고 수", val: "250개", sub: "4개 레이아웃 유형", color: C.text },
+          { label: "지연 최대 차이", val: "6.6×", sub: "idle 최저 vs 최고", color: C.accent },
+          { label: "결론 수정 횟수", val: "3회", sub: "가설 → 검증 → 수정", color: C.text },
+          { label: "지연 감소 추정", val: "78%", sub: "가정 기반 시뮬레이션", color: C.green },
+        ].map(({ label, val, sub, color }) => (
+          <Card key={label} style={{ padding: "20px 24px" }}>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 500 }}>{label}</div>
+            <div style={{
+              fontFamily: "'Lora', serif", fontSize: 36,
+              color, letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 6,
+            }}>{val}</div>
+            <div style={{ fontSize: 12, color: C.faint }}>{sub}</div>
+          </Card>
+        ))}
+      </div>
     </div>
   </section>
 );
 
 /* ─── STORY FLOW ─────────────────────────────── */
-const StoryFlow = () => (
-  <section id="스토리" style={{ padding: "60px 40px", borderBottom: `0.5px solid ${C.border}` }}>
-    <SectionLabel>분석 스토리</SectionLabel>
-    <h2 style={{
-      fontFamily: "'DM Serif Display', serif",
-      fontSize: 32, color: C.white, marginBottom: 8,
-    }}>결론이 세 번 바뀐 과정</h2>
-    <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6 }}>
-      각 단계는 이전 결론을 의심하고 검증하는 방향으로 진행됐습니다.
-    </p>
+const StoryFlow = () => {
+  const steps = [
+    { num: "01", phase: "EDA", title: "idle이 핵심이다", desc: "30% 임계점 발견. 배터리 소모→충전 대기→idle 감소 연쇄 구조 확인.", badge: "발견", bc: C.accent },
+    { num: "02", phase: "모델링", title: "EDA가 놓친 변수", desc: "pack_utilization 상관계수 0.105 → '관계 없음' 판단했는데 모델 중요도 1위(14.2%).", badge: "한계 발견", bc: C.amber },
+    { num: "03", phase: "경보 규칙", title: "임계값 방식 실패", desc: "규칙·ML 모두 Precision ~0.12 상한. 단일 시점으론 위기 예측 불가 확인.", badge: "실패→전환", bc: C.red },
+    { num: "04", phase: "군집화", title: "취약형 102개 발견", desc: "hub_spoke 창고 67%가 취약 군집 → 레이아웃이 원인인가? 가설 형성.", badge: "가설 형성", bc: C.accent },
+    { num: "05", phase: "PSM", title: "결론이 뒤집혔다", desc: "운영 조건 통제 후 hub_spoke 효과 소멸(p=0.783). 레이아웃이 아닌 운영이 원인.", badge: "결론 수정", bc: C.green },
+  ];
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 0, position: "relative" }}>
-      {/* 연결선 */}
-      <div style={{
-        position: "absolute", top: 28, left: "10%", right: "10%",
-        height: 0.5, background: `linear-gradient(to right, ${C.border}, ${C.accent}50, ${C.border})`,
-        zIndex: 0,
-      }} />
+  return (
+    <section id="story" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>분석 스토리</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+          결론이 세 번 바뀐 과정
+        </h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 560 }}>
+          각 단계는 이전 결론을 의심하고 검증하는 방향으로 이어졌습니다.
+          분석이 깊어질수록 결론이 더 정확해졌습니다.
+        </p>
 
-      {storySteps.map((s, i) => (
-        <div key={i} style={{
-          position: "relative", zIndex: 1,
-          padding: "0 12px",
-          display: "flex", flexDirection: "column", alignItems: "flex-start",
-        }}>
-          {/* 번호 원 */}
+        <div style={{ position: "relative" }}>
+          {/* 연결선 */}
           <div style={{
-            width: 48, height: 48, borderRadius: "50%",
-            background: C.surface, border: `0.5px solid ${s.bColor}`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            marginBottom: 16,
-            boxShadow: `0 0 20px ${s.bColor}30`,
-          }}>
-            <Mono style={{ fontSize: 12, color: s.bColor }}>{s.num}</Mono>
-          </div>
+            position: "absolute", top: 20, left: "5%", right: "5%", height: 1,
+            background: `linear-gradient(to right, ${C.border}, ${C.accentDim}, ${C.greenDim}, ${C.border})`,
+            zIndex: 0,
+          }} />
 
-          <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>{s.phase}</div>
-          <div style={{ fontSize: 14, fontWeight: 500, color: C.white, marginBottom: 6, lineHeight: 1.3 }}>{s.title}</div>
-          <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5, marginBottom: 10 }}>{s.desc}</div>
-          <Badge color={s.bColor}>{s.badge}</Badge>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 16, position: "relative", zIndex: 1 }}>
+            {steps.map((s, i) => (
+              <Card key={i} style={{ padding: "20px 18px" }}>
+                {/* 번호 */}
+                <div style={{
+                  width: 40, height: 40, borderRadius: "50%",
+                  background: s.bc + "15", border: `1px solid ${s.bc}30`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  marginBottom: 14,
+                }}>
+                  <Mono color={s.bc} size={12}>{s.num}</Mono>
+                </div>
+                <div style={{ fontSize: 11, color: C.faint, marginBottom: 4, fontWeight: 500 }}>{s.phase}</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 8, lineHeight: 1.4 }}>{s.title}</div>
+                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.55, marginBottom: 12 }}>{s.desc}</div>
+                <Tag color={s.bc}>{s.badge}</Tag>
+              </Card>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </section>
-);
+
+        {/* 결론 수정 3개 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginTop: 24 }}>
+          {[
+            { from: "처음엔 의심했다", fv: "hub_spoke 구조가 지연 원인 (+3.69분, p=0.007)", to: "PSM으로 확인했다", tv: "운영이 원인 — 레이아웃 효과 없음 (p=0.783)", color: C.accent },
+            { from: "EDA로는 몰랐다", fv: "pack_utilization r=0.105 → '관계 없음'으로 오판", to: "모델이 발견했다", tv: "비선형 U자형 패턴 — 모델 중요도 1위 (14.2%)", color: C.amber },
+            { from: "기대했던 것", fv: "임계값 조합으로 경보 규칙 만들 수 있을 것", to: "발견한 것", tv: "Precision ~0.12 구조적 상한 — 단일 시점의 한계", color: C.red },
+          ].map(({ from, fv, to, tv, color }, i) => (
+            <Card key={i} style={{ overflow: "hidden" }}>
+              <div style={{ borderLeft: `3px solid ${color}`, padding: "16px 18px 16px 14px" }}>
+                <div style={{ fontSize: 11, color: C.faint, marginBottom: 3, fontWeight: 500 }}>{from}</div>
+                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5, marginBottom: 12 }}>{fv}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
+                  <div style={{ width: 16, height: 1, background: C.border }} />
+                  <span style={{ fontSize: 11, color: color, fontWeight: 600 }}>→ 수정</span>
+                </div>
+                <div style={{ fontSize: 11, color: C.faint, marginBottom: 3, fontWeight: 500 }}>{to}</div>
+                <div style={{ fontSize: 12, color: C.text, fontWeight: 500, lineHeight: 1.5 }}>{tv}</div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 /* ─── FINDINGS ───────────────────────────────── */
-const Findings = () => (
-  <section id="발견" style={{ padding: "60px 40px", borderBottom: `0.5px solid ${C.border}` }}>
-    <SectionLabel>핵심 발견</SectionLabel>
-    <h2 style={{
-      fontFamily: "'DM Serif Display', serif",
-      fontSize: 32, color: C.white, marginBottom: 40,
-    }}>4가지 핵심 발견</h2>
+const Findings = () => {
+  const items = [
+    { icon: "⚡", title: "idle 비율이 1차 방어선", val: "6.6×", sub: "최저 36.3분 vs 최고 5.5분. 30% 아래로 떨어지면 즉각 고착. 배터리 소모→충전 대기→idle 감소 연쇄.", color: C.accent },
+    { icon: "🔍", title: "숨은 병목 — pack_utilization", val: "r=0.105 → 1위", sub: "EDA 상관계수로는 '관계 없음'. 비선형 U자형: 저가동=처리 부족, 고가동=후처리 병목. 반례 분석과 수렴.", color: C.amber },
+    { icon: "🧪", title: "PSM 인과 검증", val: "p=0.783", sub: "hub_spoke +3.69분(p=0.007) → 운영 조건 통제 후 -0.55분(p=0.783). 레이아웃 효과 소멸. 운영 개선이 우선.", color: C.green },
+    { icon: "⏱", title: "위기는 누적된다", val: "6스냅샷 전", sub: "경보 규칙 실패 원인. 위기 6스냅샷 전부터 이미 신호가 쌓임. 단일 시점 탐지보다 누적 감지가 필요.", color: C.purple },
+    { icon: "🗺", title: "복합 병목 조합", val: "3.7배", sub: "모두 정상 10.2분 → 3개 동시 나쁨 38.1분. idle만 낮아도 23.5분. idle이 1차, pack이 2차 방어선.", color: C.red },
+    { icon: "🎯", title: "운영 우선순위 6유형", val: "포장병목형★", sub: "3순위 포장병목형(27.0분)이 1순위 즉시개입형(24.6분)보다 지연 높음. 반례 분석 없인 발견 불가능.", color: C.accent },
+  ];
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
-      {findings.map(({ icon, title, val, sub, color }) => (
-        <div key={title} style={{
-          background: C.surface, border: `0.5px solid ${C.border}`,
-          borderRadius: 12, padding: "28px 32px",
-          borderLeft: `2px solid ${color}`,
-          transition: "border-color 0.2s",
-        }}
-          onMouseEnter={e => e.currentTarget.style.borderLeftColor = color}
-          onMouseLeave={e => e.currentTarget.style.borderLeftColor = color}
-        >
-          <div style={{ fontSize: 24, marginBottom: 12 }}>{icon}</div>
-          <div style={{ fontSize: 14, fontWeight: 500, color: C.white, marginBottom: 6 }}>{title}</div>
-          <div style={{
-            fontFamily: "'DM Serif Display', serif",
-            fontSize: 28, color, lineHeight: 1, marginBottom: 8,
-          }}>{val}</div>
-          <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.5 }}>{sub}</div>
+  return (
+    <section id="findings" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>핵심 발견</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>6가지 핵심 발견</h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6 }}>각 발견은 독립적인 결과가 아니라 하나의 인과 구조로 연결됩니다.</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          {items.map(({ icon, title, val, sub, color }) => (
+            <Card key={title} style={{ padding: "24px", borderTop: `3px solid ${color}`, borderRadius: "0 0 12px 12px" }}>
+              <div style={{ fontSize: 22, marginBottom: 12 }}>{icon}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 6 }}>{title}</div>
+              <div style={{ fontFamily: "'Lora', serif", fontSize: 24, color, lineHeight: 1.1, marginBottom: 10 }}>{val}</div>
+              <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{sub}</div>
+            </Card>
+          ))}
         </div>
-      ))}
+      </div>
+    </section>
+  );
+};
+
+/* ─── 시스템 구조도 ──────────────────────────── */
+const SystemFlow = () => (
+  <div style={{ background: C.surfaceAlt, borderRadius: 12, border: `1px solid ${C.border}`, padding: "28px 32px" }}>
+    <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>시스템 병목 인과 구조</div>
+    <div style={{ fontSize: 12, color: C.muted, marginBottom: 24 }}>주문 증가에서 출고 지연까지 이어지는 전체 흐름</div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+      {/* 트리거 */}
+      <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 500, color: C.muted }}>
+        주문 증가 <Mono color={C.faint} size={11}>(order_inflow 2.47×↑)</Mono>
+      </div>
+      <div style={{ display: "flex", gap: 80, alignItems: "flex-start", marginTop: 0 }}>
+        {/* 경로 A */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0, paddingTop: 0 }}>
+          <div style={{ width: 1, height: 20, background: C.border }} />
+          <div style={{ fontSize: 11, color: C.red, fontWeight: 600, marginBottom: 4 }}>경로 A</div>
+          <div style={{ background: C.redBg, border: `1px solid ${C.redDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 500, color: C.red, textAlign: "center" }}>
+            혼잡 증가<br /><Mono color={C.red} size={11}>blocked_path 15.8×↑</Mono>
+          </div>
+          <div style={{ width: 1, height: 12, background: C.redDim }} />
+          <div style={{ background: C.redBg, border: `1px solid ${C.redDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, color: C.red, textAlign: "center" }}>
+            경로 차단·교착<br /><Mono color={C.red} size={11}>교착 39.3분 &gt; 고장 35.3분</Mono>
+          </div>
+          <div style={{ width: 1, height: 12, background: C.redDim }} />
+        </div>
+        {/* 경로 B */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+          <div style={{ width: 1, height: 20, background: C.border }} />
+          <div style={{ fontSize: 11, color: C.amber, fontWeight: 600, marginBottom: 4 }}>경로 B</div>
+          <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 500, color: C.amber, textAlign: "center" }}>
+            배터리 소모<br /><Mono color={C.amber} size={11}>저배터리 58×↑</Mono>
+          </div>
+          <div style={{ width: 1, height: 12, background: C.amberDim }} />
+          <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, color: C.amber, textAlign: "center" }}>
+            충전 대기 급증<br /><Mono color={C.amber} size={11}>charging_ratio 31×↑</Mono>
+          </div>
+          <div style={{ width: 1, height: 12, background: C.amberDim }} />
+        </div>
+      </div>
+      {/* 수렴 */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 0 }}>
+        <div style={{ width: 80, height: 1, background: C.border }} />
+        <div style={{ fontSize: 11, color: C.faint }}>두 경로 수렴</div>
+        <div style={{ width: 80, height: 1, background: C.border }} />
+      </div>
+      <div style={{ width: 1, height: 12, background: C.border }} />
+      {/* idle 감소 */}
+      <div style={{
+        background: C.accentBg, border: `2px solid ${C.accent}`, borderRadius: 10,
+        padding: "12px 32px", textAlign: "center",
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.accent }}>⚠ idle 비율 급감</div>
+        <div style={{ fontSize: 12, color: C.accent }}><Mono color={C.accent} size={11}>최저 36.3분 vs 최고 5.5분 (6.6배)</Mono></div>
+      </div>
+      <div style={{ width: 1, height: 12, background: C.border }} />
+      {/* pack 병목 */}
+      <div style={{
+        background: C.purpleBg, border: `1px solid ${C.purpleDim}`, borderRadius: 10,
+        padding: "12px 32px", textAlign: "center",
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: C.purple }}>pack 과포화 → 후처리 병목</div>
+        <div style={{ fontSize: 12, color: C.purple }}><Mono color={C.purple} size={11}>선형 상관 0.105 → 모델 1위 (14.2%) — 숨은 병목</Mono></div>
+      </div>
+      <div style={{ width: 1, height: 12, background: C.border }} />
+      {/* 최종 */}
+      <div style={{
+        background: C.redBg, border: `2px solid ${C.red}`, borderRadius: 10,
+        padding: "12px 32px", textAlign: "center",
+      }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.red }}>출고 지연 폭발</div>
+        <div style={{ fontSize: 12, color: C.red }}><Mono color={C.red} size={11}>3개 동시 나쁨: 38.1분 (정상 10.2분의 3.7배)</Mono></div>
+      </div>
     </div>
-  </section>
+  </div>
 );
 
-/* ─── VISUALIZATION TABS ─────────────────────── */
-const VisSection = () => {
+/* ─── VIZ SECTION ────────────────────────────── */
+const VizSection = () => {
   const [tab, setTab] = useState(0);
-  const tabs = ["idle 비율", "U자형 발견", "복합 병목", "PSM 전후"];
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div style={{ background: C.surface, border: `0.5px solid ${C.border}`, borderRadius: 6, padding: "8px 12px" }}>
-        <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 14, fontWeight: 500, color: C.white }}>{payload[0].value.toFixed(1)}분</div>
-      </div>
-    );
-  };
+  const tabs = ["시스템 구조도", "idle 비율", "U자형 발견", "복합 병목", "PSM 전후", "위기 시계열"];
 
   const charts = [
-    // idle 비율
-    <div key="idle" style={{ height: 260 }}>
-      <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>
-        여유 최저 구간 36.3분 vs 최고 5.5분 — <strong style={{ color: C.white }}>6.6배 차이</strong>. 30%가 임계점.
-      </p>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={idleData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-          <CartesianGrid strokeDasharray="2 4" stroke={C.border} vertical={false} />
+    <SystemFlow key="sys" />,
+
+    // idle
+    <div key="idle">
+      <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+        <div style={{ background: C.accentBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
+          <div style={{ fontSize: 11, color: C.accent, fontWeight: 600, marginBottom: 2 }}>핵심 발견</div>
+          <div style={{ fontSize: 13, color: C.text }}>최저 <strong>36.3분</strong> vs 최고 <strong style={{ color: C.green }}>5.5분</strong> — 6.6배 차이. 30%가 임계점.</div>
+        </div>
+        <div style={{ background: C.redBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
+          <div style={{ fontSize: 11, color: C.red, fontWeight: 600, marginBottom: 2 }}>실행 연결</div>
+          <div style={{ fontSize: 13, color: C.text }}>idle &lt; 30% → 즉각 경보 + 충전 스케줄 조정</div>
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={240}>
+        <BarChart data={DATA.idle} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
+          <CartesianGrid strokeDasharray="3 6" stroke={C.border} vertical={false} />
           <XAxis dataKey="group" tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="delay" radius={[4, 4, 0, 0]}>
-            {idleData.map((_, i) => (
-              <Cell key={i} fill={i === 0 ? C.red : i === 4 ? C.green : C.accent + "88"} />
+          <ReferenceLine y={19} stroke={C.faint} strokeDasharray="4 4" label={{ value: "전체 평균", fill: C.faint, fontSize: 11, position: "right" }} />
+          <Tooltip content={<ChartTip />} />
+          <Bar dataKey="delay" radius={[5, 5, 0, 0]} name="평균 지연">
+            {DATA.idle.map((_, i) => (
+              <Cell key={i} fill={i === 0 ? C.red : i === 4 ? C.green : C.accent + (["CC", "99", "66", "44"][i - 1] || "44")} />
             ))}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>,
 
-    // U자형
-    <div key="pack" style={{ height: 260 }}>
-      <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>
-        선형 상관계수 <Mono style={{ color: C.amber }}>r=0.105</Mono> → 모델 중요도 <Mono style={{ color: C.green }}>1위(14.2%)</Mono>.
-        저가동=처리 부족, 고가동=후처리 병목.
-      </p>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={packData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-          <CartesianGrid strokeDasharray="2 4" stroke={C.border} vertical={false} />
+    // pack U자형
+    <div key="pack">
+      <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
+        <div style={{ background: C.amberBg, borderRadius: 8, padding: "10px 16px" }}>
+          <div style={{ fontSize: 11, color: C.amber, fontWeight: 600, marginBottom: 2 }}>EDA 오판</div>
+          <div style={{ fontSize: 13, color: C.text }}>상관계수 <Mono color={C.amber}>r=0.105</Mono> → "관계 없음"</div>
+        </div>
+        <div style={{ background: C.accentBg, borderRadius: 8, padding: "10px 16px" }}>
+          <div style={{ fontSize: 11, color: C.accent, fontWeight: 600, marginBottom: 2 }}>모델 발견</div>
+          <div style={{ fontSize: 13, color: C.text }}>중요도 <Mono color={C.accent}>1위 (14.2%)</Mono> — 비선형 U자형</div>
+        </div>
+        <div style={{ background: C.greenBg, borderRadius: 8, padding: "10px 16px" }}>
+          <div style={{ fontSize: 11, color: C.green, fontWeight: 600, marginBottom: 2 }}>최적 구간</div>
+          <div style={{ fontSize: 13, color: C.text }}>60~80% 유지 → <strong>12.0분</strong></div>
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={240}>
+        <LineChart data={DATA.pack} margin={{ top: 4, right: 20, bottom: 0, left: -20 }}>
+          <CartesianGrid strokeDasharray="3 6" stroke={C.border} vertical={false} />
           <XAxis dataKey="range" tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} />
-          <Line type="monotone" dataKey="delay" stroke={C.accent} strokeWidth={2.5}
+          <YAxis tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} domain={[8, 35]} />
+          <ReferenceLine y={19} stroke={C.faint} strokeDasharray="4 4" />
+          <Tooltip content={<ChartTip />} />
+          <Line type="monotone" dataKey="delay" stroke={C.accent} strokeWidth={2.5} name="평균 지연"
             dot={(props) => {
-              const last = props.index === packData.length - 1;
-              return <circle key={props.index} cx={props.cx} cy={props.cy} r={last ? 6 : 3}
-                fill={last ? C.red : C.accent} stroke={C.bg} strokeWidth={2} />;
-            }} />
+              const isLast = props.index === DATA.pack.length - 1;
+              const isMin = props.index === 5;
+              return <circle key={props.index} cx={props.cx} cy={props.cy}
+                r={isLast || isMin ? 6 : 3}
+                fill={isLast ? C.red : isMin ? C.green : C.accent}
+                stroke={C.surface} strokeWidth={2} />;
+            }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>,
 
     // 복합 병목
-    <div key="combo" style={{ height: 260 }}>
-      <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>
-        나쁜 조건이 겹칠수록 폭발적 증가 — <strong style={{ color: C.white }}>3개 동시: 38.1분 (정상의 3.7배)</strong>
-      </p>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={comboData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-          <CartesianGrid strokeDasharray="2 4" stroke={C.border} vertical={false} />
+    <div key="combo">
+      <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+        <div style={{ background: C.accentBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
+          <div style={{ fontSize: 11, color: C.accent, fontWeight: 600, marginBottom: 2 }}>핵심 발견</div>
+          <div style={{ fontSize: 13, color: C.text }}>3개 동시: <strong style={{ color: C.red }}>38.1분</strong> (정상 10.2분의 3.7배). idle만 낮아도 23.5분.</div>
+        </div>
+        <div style={{ background: C.greenBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
+          <div style={{ fontSize: 11, color: C.green, fontWeight: 600, marginBottom: 2 }}>전략적 시사점</div>
+          <div style={{ fontSize: 13, color: C.text }}>idle 수호가 1차 방어선. idle 정상이면 다른 조건이 나빠도 20분 이하.</div>
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={240}>
+        <BarChart data={DATA.combo} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
+          <CartesianGrid strokeDasharray="3 6" stroke={C.border} vertical={false} />
           <XAxis dataKey="label" tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="delay" radius={[4, 4, 0, 0]}>
-            {comboData.map((_, i) => (
-              <Cell key={i} fill={[C.green, C.amber + "CC", C.red + "CC", C.red][i]} />
+          <Tooltip content={<ChartTip />} />
+          <Bar dataKey="delay" radius={[5, 5, 0, 0]} name="평균 지연">
+            {DATA.combo.map((_, i) => (
+              <Cell key={i} fill={[C.green, C.amber, C.red + "CC", C.red][i]} />
             ))}
           </Bar>
         </BarChart>
@@ -430,33 +560,67 @@ const VisSection = () => {
     </div>,
 
     // PSM
-    <div key="psm" style={{ height: 260 }}>
-      <p style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>
-        매칭 전 <Mono style={{ color: C.red }}>+3.69분 (p=0.007)</Mono> → 매칭 후 <Mono style={{ color: C.green }}>-0.55분 (p=0.783)</Mono>.
-        레이아웃 효과 소멸.
-      </p>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, height: "calc(100% - 48px)" }}>
+    <div key="psm">
+      <div style={{ background: C.accentBg, borderRadius: 8, padding: "12px 16px", marginBottom: 16, border: `1px solid ${C.accentDim}` }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: C.accent, marginBottom: 4 }}>PSM 분석 결론</div>
+        <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>
+          매칭 전: hub_spoke <Mono color={C.red}>+3.69분 (p=0.007)</Mono> → 통계적 유의미 →
+          PSM 매칭 후: <Mono color={C.green}>-0.55분 (p=0.783)</Mono> → 효과 소멸.
+          <strong> hub_spoke 레이아웃 자체가 문제가 아니라 운영이 나쁜 창고들이 몰려 있었던 것.</strong>
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         {["before", "after"].map((key, ki) => (
-          <div key={key} style={{ position: "relative" }}>
-            <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, textAlign: "center" }}>
-              {ki === 0 ? "매칭 전 (단순 비교)" : "PSM 매칭 후"}
+          <div key={key}>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, textAlign: "center", fontWeight: 500 }}>
+              {ki === 0 ? "매칭 전 — 단순 비교" : "PSM 매칭 후 — 운영 조건 통제"}
             </div>
             <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={psmData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-                <CartesianGrid strokeDasharray="2 4" stroke={C.border} vertical={false} />
+              <BarChart data={DATA.psm} margin={{ top: 4, right: 8, bottom: 0, left: -20 }}>
+                <CartesianGrid strokeDasharray="3 6" stroke={C.border} vertical={false} />
                 <XAxis dataKey="group" tick={{ fill: C.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} domain={[15, 25]} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey={key} radius={[4, 4, 0, 0]}
+                <Tooltip content={<ChartTip />} />
+                <Bar dataKey={key} radius={[5, 5, 0, 0]} name="평균 지연"
                   fill={ki === 0 ? C.red + "88" : C.accent + "88"} />
               </BarChart>
             </ResponsiveContainer>
-            <div style={{
-              textAlign: "center", fontSize: 12, fontWeight: 500, marginTop: 4,
-              color: ki === 0 ? C.red : C.green,
-            }}>
-              {ki === 0 ? "+3.69분 **" : "-0.55분 (n.s.)"}
+            <div style={{ textAlign: "center", fontSize: 13, fontWeight: 600, marginTop: 6, color: ki === 0 ? C.red : C.green }}>
+              {ki === 0 ? "+3.69분  p=0.007 **" : "-0.55분  p=0.783 (n.s.)"}
             </div>
+          </div>
+        ))}
+      </div>
+    </div>,
+
+    // 위기 시계열
+    <div key="timeline">
+      <div style={{ background: C.accentBg, borderRadius: 8, padding: "12px 16px", marginBottom: 16, border: `1px solid ${C.accentDim}` }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: C.accent, marginBottom: 4 }}>경보 규칙이 실패한 이유</div>
+        <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>
+          위기가 갑자기 터지는 게 아니었습니다.
+          <strong> 6스냅샷 전부터 이미 idle이 낮고 혼잡이 높은 상태가 지속됩니다.</strong>
+          단일 시점에서 잡으려 했으니 놓친 것 — 연속 상태 누적 감지가 필요합니다.
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={220}>
+        <LineChart data={DATA.timeline} margin={{ top: 4, right: 20, bottom: 0, left: -20 }}>
+          <CartesianGrid strokeDasharray="3 6" stroke={C.border} vertical={false} />
+          <XAxis dataKey="snap" tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
+          <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} />
+          <Tooltip content={<ChartTip unit="" />} />
+          <Line type="monotone" dataKey="idle" stroke={C.accent} strokeWidth={2} name="idle_ratio" dot={{ r: 3, fill: C.accent }} />
+          <Line type="monotone" dataKey="battery" stroke={C.amber} strokeWidth={2} name="저배터리" dot={{ r: 3, fill: C.amber }} strokeDasharray="5 3" />
+        </LineChart>
+      </ResponsiveContainer>
+      <div style={{ display: "flex", gap: 16, marginTop: 12 }}>
+        {[
+          { color: C.accent, label: "idle_ratio (정상 0.526 → 위기 0.214)" },
+          { color: C.amber, label: "저배터리 비율 (정상 0.128 → 위기 0.280)" },
+        ].map(({ color, label }) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.muted }}>
+            <div style={{ width: 20, height: 2, background: color, borderRadius: 1 }} />
+            {label}
           </div>
         ))}
       </div>
@@ -464,206 +628,323 @@ const VisSection = () => {
   ];
 
   return (
-    <section id="시각화" style={{ padding: "60px 40px", borderBottom: `0.5px solid ${C.border}` }}>
-      <SectionLabel>주요 시각화</SectionLabel>
-      <h2 style={{
-        fontFamily: "'DM Serif Display', serif",
-        fontSize: 32, color: C.white, marginBottom: 32,
-      }}>데이터로 보는 발견들</h2>
+    <section id="viz" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>주요 시각화</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+          데이터로 보는 발견들
+        </h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
+          각 차트는 독립적인 결과가 아니라 하나의 분석 흐름으로 이어집니다.
+        </p>
 
-      {/* 탭 */}
-      <div style={{ display: "flex", gap: 0, marginBottom: 28, borderBottom: `0.5px solid ${C.border}` }}>
-        {tabs.map((t, i) => (
-          <button key={t} onClick={() => setTab(i)} style={{
-            padding: "10px 20px", fontSize: 13, cursor: "pointer", fontWeight: 500,
-            background: "transparent", border: "none", fontFamily: "'Outfit', sans-serif",
-            color: tab === i ? C.white : C.muted,
-            borderBottom: tab === i ? `1.5px solid ${C.accent}` : "1.5px solid transparent",
-            transition: "all 0.2s",
-          }}>{t}</button>
-        ))}
-      </div>
+        {/* 탭 */}
+        <div style={{ display: "flex", gap: 0, borderBottom: `1px solid ${C.border}`, marginBottom: 24, overflowX: "auto" }}>
+          {tabs.map((t, i) => (
+            <button key={t} onClick={() => setTab(i)} style={{
+              padding: "10px 16px", fontSize: 13, cursor: "pointer", fontWeight: tab === i ? 600 : 400,
+              background: "transparent", border: "none", whiteSpace: "nowrap",
+              color: tab === i ? C.accent : C.muted,
+              borderBottom: tab === i ? `2px solid ${C.accent}` : "2px solid transparent",
+              transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
+            }}>{t}</button>
+          ))}
+        </div>
 
-      <div style={{
-        background: C.surface, border: `0.5px solid ${C.border}`,
-        borderRadius: 12, padding: "28px 32px",
-        minHeight: 340,
-      }}>
-        {charts[tab]}
+        <Card style={{ padding: "28px 32px", minHeight: 380 }}>
+          {charts[tab]}
+        </Card>
       </div>
     </section>
   );
 };
 
-/* ─── METHOD REASONS ─────────────────────────── */
+/* ─── METHOD SECTION ─────────────────────────── */
 const MethodSection = () => {
   const [open, setOpen] = useState(null);
-  return (
-    <section id="방법론" style={{ padding: "60px 40px", borderBottom: `0.5px solid ${C.border}` }}>
-      <SectionLabel>방법론 선택 이유</SectionLabel>
-      <h2 style={{
-        fontFamily: "'DM Serif Display', serif",
-        fontSize: 32, color: C.white, marginBottom: 12,
-      }}>왜 이 방법을 선택했는가</h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6 }}>
-        각 방법은 기법을 써보려고 선택한 게 아닙니다.
-        그 방법이 아니었으면 잘못된 결론에 도달했을 것이기 때문에 선택했습니다.
-      </p>
+  const methods = [
+    { q: "왜 GroupKFold를 선택했는가?", bad: "일반 KFold → 같은 창고 스냅샷이 학습·검증에 동시 포함 → 데이터 누출 → 성능 과대평가", good: "창고 단위로 완전 분리 → 학습에 없던 창고로만 검증 → 실제 배포 환경 시뮬레이션 → 신뢰할 수 있는 OOF 성능" },
+    { q: "왜 상관계수 대신 모델 중요도를 봤는가?", bad: "상관계수만 → pack_utilization r=0.105 '관계 없음' → 핵심 변수 누락 → 잘못된 분석 방향", good: "비선형 U자형 패턴 포착 가능 → 모델 1위 재발견 → 반례 분석과 수렴 → 신뢰도 상승" },
+    { q: "왜 PSM이 필요했는가?", bad: "단순 비교 → hub_spoke +3.69분 유의미 → 레이아웃 개선 추진 → 고비용·잘못된 방향", good: "운영 조건 통제 후 비교 → 효과 소멸(p=0.783) → 레이아웃 X, 운영 개선 O → 비용 절감" },
+    { q: "왜 반례 분석을 별도로 진행했는가?", bad: "전체 경향만 → 'idle 높으면 안전' 단순 결론 → idle 정상인데 지연 큰 창고 20개 미발견", good: "공통 원인: pack 과포화 → U자형 분석과 수렴 → 두 독립 분석이 같은 결론 → 신뢰도 상승" },
+    { q: "왜 단일 임계값 경보가 실패했는가?", bad: "idle ≤ 0.30 조합 → 최고 Precision 0.12 → 그리드 서치·ML 모두 동일 상한", good: "단일 변수 상위 10% 구간도 위기율 11% 상한 → 위기는 복합 누적 현상 → 연속 상태 감지 필요" },
+  ];
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {methodReasons.map(({ q, bad, good }, i) => (
-          <div key={i} style={{
-            background: C.surface, border: `0.5px solid ${open === i ? C.accentDim : C.border}`,
-            borderRadius: 8, overflow: "hidden", transition: "border-color 0.2s",
-          }}>
-            <button onClick={() => setOpen(open === i ? null : i)} style={{
-              width: "100%", padding: "18px 24px", display: "flex", justifyContent: "space-between",
-              alignItems: "center", background: "transparent", border: "none",
-              cursor: "pointer", textAlign: "left",
-            }}>
-              <span style={{ fontSize: 14, fontWeight: 500, color: C.white, fontFamily: "'Outfit', sans-serif" }}>{q}</span>
-              <span style={{
-                fontSize: 18, color: C.muted, transition: "transform 0.2s",
-                transform: open === i ? "rotate(45deg)" : "rotate(0deg)",
-              }}>+</span>
-            </button>
-            {open === i && (
-              <div style={{ padding: "0 24px 20px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <div style={{ background: C.redDim + "60", borderRadius: 6, padding: "12px 16px", border: `0.5px solid ${C.red}30` }}>
-                  <div style={{ fontSize: 11, color: C.red, marginBottom: 6, fontWeight: 500 }}>✗ 다른 방법 썼다면</div>
-                  <div style={{ fontSize: 13, color: C.text + "CC", lineHeight: 1.5 }}>{bad}</div>
+  return (
+    <section id="method" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>방법론 선택 이유</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+          왜 이 방법을 선택했는가
+        </h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
+          각 방법은 기법을 써보려고 선택한 게 아닙니다.
+          그 방법이 아니었으면 잘못된 결론에 도달했을 것이기 때문입니다.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {methods.map(({ q, bad, good }, i) => (
+            <Card key={i} style={{ overflow: "hidden" }}>
+              <button onClick={() => setOpen(open === i ? null : i)} style={{
+                width: "100%", padding: "18px 24px",
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
+              }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{q}</span>
+                <span style={{
+                  width: 24, height: 24, borderRadius: "50%",
+                  background: open === i ? C.accentBg : C.bg,
+                  color: open === i ? C.accent : C.muted,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 16, flexShrink: 0, transition: "all 0.2s",
+                  border: `1px solid ${open === i ? C.accentDim : C.border}`,
+                }}>{open === i ? "−" : "+"}</span>
+              </button>
+              {open === i && (
+                <div style={{ padding: "0 24px 20px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <div style={{ background: C.redBg, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.redDim}` }}>
+                    <div style={{ fontSize: 11, color: C.red, fontWeight: 600, marginBottom: 8 }}>✗ 다른 방법 썼다면</div>
+                    <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>{bad}</div>
+                  </div>
+                  <div style={{ background: C.greenBg, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.greenDim}` }}>
+                    <div style={{ fontSize: 11, color: C.green, fontWeight: 600, marginBottom: 8 }}>✓ 이 방법을 선택한 이유</div>
+                    <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>{good}</div>
+                  </div>
                 </div>
-                <div style={{ background: C.greenDim + "60", borderRadius: 6, padding: "12px 16px", border: `0.5px solid ${C.green}30` }}>
-                  <div style={{ fontSize: 11, color: C.green, marginBottom: 6, fontWeight: 500 }}>✓ 이 방법을 쓴 이유</div>
-                  <div style={{ fontSize: 13, color: C.text + "CC", lineHeight: 1.5 }}>{good}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
   );
 };
 
-/* ─── PRIORITY MATRIX ────────────────────────── */
-const PrioritySection = () => (
-  <section id="우선순위" style={{ padding: "60px 40px", borderBottom: `0.5px solid ${C.border}` }}>
-    <SectionLabel>운영 우선순위</SectionLabel>
-    <h2 style={{
-      fontFamily: "'DM Serif Display', serif",
-      fontSize: 32, color: C.white, marginBottom: 12,
-    }}>어떤 창고부터 개입하는가</h2>
-    <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-      ★ 포장병목형(3순위)이 즉시개입형(1순위)보다 평균 지연 높음 — 반례 분석 없이는 발견하기 어려운 유형
-    </p>
+/* ─── PARADOX SECTION ────────────────────────── */
+const ParadoxSection = () => (
+  <section style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <SecLabel>반례 분석</SecLabel>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+        왜 일부 창고는 일반 패턴을 따르지 않았는가
+      </h2>
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6, maxWidth: 560 }}>
+        좋은 분석은 안 맞는 사례를 봅니다. 예외가 시스템 구조를 더 깊이 이해하게 해줍니다.
+      </p>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      {/* 헤더 */}
-      <div style={{
-        display: "grid", gridTemplateColumns: "100px 140px 80px 80px 1fr 1fr",
-        gap: 12, padding: "10px 20px",
-        fontSize: 11, color: C.muted, fontWeight: 500, letterSpacing: "0.06em", textTransform: "uppercase",
-      }}>
-        {["우선순위", "유형", "창고", "지연", "특징", "조치"].map(h => <div key={h}>{h}</div>)}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+        {[
+          {
+            title: "반례 유형 1 — idle 높아도 지연이 큰 창고 (20개)",
+            q: "idle이 충분한데 왜 지연이 큰가?",
+            rows: [["pack_utilization", "0.436 (일반)", "0.732 (반례)", "1.68×"], ["혼잡도", "13.30", "6.79", "0.51× (오히려 낮음)"], ["저배터리", "0.213", "0.085", "0.40× (오히려 낮음)"]],
+            conclusion: "idle은 필요조건, pack 최적화는 충분조건 — idle이 여유 있어도 포장 라인이 막히면 소용없음",
+            color: C.red,
+          },
+          {
+            title: "반례 유형 2 — 혼잡 낮아도 위기가 많은 창고 (29개)",
+            q: "혼잡도가 낮은데 왜 위기가 자주 발생하는가?",
+            rows: [["pack_utilization", "0.388 (일반)", "0.673 (반례)", "1.73×"], ["혼잡도", "4.896", "4.815", "0.98× (거의 동일)"], ["저배터리", "0.087", "0.090", "1.04× (거의 동일)"]],
+            conclusion: "단일 병목(pack)이 전체 시스템을 무력화 — 혼잡·배터리 정상이어도 pack이 막히면 위기",
+            color: C.amber,
+          },
+        ].map(({ title, q, rows, conclusion, color }) => (
+          <Card key={title} style={{ padding: "24px", borderTop: `3px solid ${color}`, borderRadius: "0 0 12px 12px" }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 8 }}>{title}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color, marginBottom: 14 }}>Q. {q}</div>
+            <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 16, fontSize: 12 }}>
+              <thead>
+                <tr style={{ background: C.bg }}>
+                  {["변수", "일반 창고", "반례 창고", "배율"].map(h => (
+                    <th key={h} style={{ padding: "6px 8px", textAlign: "left", color: C.muted, fontWeight: 500, borderBottom: `1px solid ${C.border}` }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((cell, ci) => (
+                      <td key={ci} style={{ padding: "6px 8px", borderBottom: `1px solid ${C.border}`, color: ci === 3 ? color : C.text, fontWeight: ci === 3 ? 600 : 400 }}>
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{ background: color + "10", borderRadius: 8, padding: "10px 14px", border: `1px solid ${color}30` }}>
+              <div style={{ fontSize: 11, color, fontWeight: 600, marginBottom: 4 }}>결론</div>
+              <div style={{ fontSize: 13, color: C.text, lineHeight: 1.5 }}>{conclusion}</div>
+            </div>
+          </Card>
+        ))}
       </div>
 
-      {priorityTypes.map(({ rank, type, n, delay, feature, action, color }) => (
-        <div key={rank} style={{
-          display: "grid", gridTemplateColumns: "100px 140px 80px 80px 1fr 1fr",
-          gap: 12, padding: "14px 20px",
-          background: C.surface, border: `0.5px solid ${C.border}`,
-          borderRadius: 8, alignItems: "center",
-          borderLeft: `2px solid ${color}`,
-          transition: "background 0.15s",
-        }}
-          onMouseEnter={e => e.currentTarget.style.background = C.border}
-          onMouseLeave={e => e.currentTarget.style.background = C.surface}
-        >
-          <Badge color={color}>{rank}</Badge>
-          <div style={{ fontSize: 13, fontWeight: 500, color: C.white }}>{type}</div>
-          <Mono style={{ fontSize: 13, color: C.muted }}>{n}개</Mono>
-          <Mono style={{ fontSize: 13, color: delay > 25 ? C.red : delay > 20 ? C.amber : C.green }}>
-            {delay}분
-          </Mono>
-          <div style={{ fontSize: 12, color: C.muted }}>{feature}</div>
-          <div style={{ fontSize: 12, color: C.text + "CC" }}>{action}</div>
+      <Card style={{ padding: "20px 24px", background: C.accentBg, border: `1px solid ${C.accentDim}` }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: C.accent, marginBottom: 6 }}>
+          두 반례의 공통 원인 — pack_utilization 과포화
         </div>
-      ))}
+        <div style={{ fontSize: 14, color: C.text, lineHeight: 1.6 }}>
+          U자형 분석(모델 발견)과 반례 분석(예외 탐색)이 독립적인 방법으로 같은 결론에 도달했습니다.
+          서로 다른 접근이 같은 답을 가리킬 때 분석의 신뢰도가 올라갑니다.
+        </div>
+      </Card>
     </div>
   </section>
 );
 
-/* ─── CONCLUSION ─────────────────────────────── */
-const Conclusion = () => (
-  <section style={{ padding: "60px 40px" }}>
-    <SectionLabel>최종 결론</SectionLabel>
-    <h2 style={{
-      fontFamily: "'DM Serif Display', serif",
-      fontSize: 40, color: C.white, marginBottom: 16, lineHeight: 1.1,
-    }}>
-      결론이 세 번 바뀌었습니다.<br />
-      <span style={{ color: C.accent }}>그것이 분석의 가치입니다.</span>
-    </h2>
+/* ─── PRIORITY SECTION ───────────────────────── */
+const PrioritySection = () => {
+  const types = [
+    { rank: "1순위", type: "즉시개입형",      n: 49,  delay: 24.6, feature: "고혼잡 + 저idle",            action: "경로 재배정 즉시 / 충전 스케줄 긴급 조정",  target: "idle 30% 회복",       color: C.red },
+    { rank: "2순위", type: "배터리위기형",     n: 23,  delay: 23.3, feature: "저idle + 배터리 나쁨",       action: "사전 충전 스케줄 / 배터리 교체 점검",       target: "저배터리 10% 이하",   color: C.red },
+    { rank: "3순위★", type: "포장병목형",     n: 40,  delay: 27.0, feature: "pack 고가동 (숨은 병목)",    action: "포장 부하 분산 / pack 60~80% 조정",         target: "U자형 최적 구간",     color: C.amber },
+    { rank: "4순위", type: "혼잡관리형",       n: 29,  delay: 15.4, feature: "idle 정상 + 고혼잡",         action: "피크타임 경로 사전 분산 / 모니터링",        target: "혼잡도 임계 이하",    color: C.amber },
+    { rank: "5순위", type: "배터리최적화형",   n: 6,   delay: 17.0, feature: "idle 정상 + 배터리 나쁨",    action: "정기 충전 스케줄 최적화",                   target: "low_bat 10% 관리",   color: C.accent },
+    { rank: "6순위", type: "모니터링형",       n: 103, delay: 13.5, feature: "전반적 정상",                action: "정기 모니터링 / 이상 징후 조기 감지",       target: "현재 상태 유지",      color: C.green },
+  ];
 
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginTop: 40 }}>
-      {[
-        { from: "처음엔 의심했다", fromVal: "hub_spoke 구조가 원인", to: "PSM으로 확인했다", toVal: "운영이 원인, 레이아웃 효과 없음", color: C.accent },
-        { from: "EDA로는 몰랐다", fromVal: "pack r=0.105 '관계 없음'", to: "모델이 발견했다", toVal: "비선형 U자형, 모델 1위", color: C.amber },
-        { from: "기대했던 것", fromVal: "경보 규칙으로 예측 가능", to: "발견한 것", toVal: "Precision ~0.12 구조적 상한", color: C.red },
-      ].map(({ from, fromVal, to, toVal, color }, i) => (
-        <div key={i} style={{
-          background: C.surface, border: `0.5px solid ${C.border}`,
-          borderRadius: 12, padding: "24px", display: "flex", flexDirection: "column", gap: 16,
-        }}>
-          <div style={{ background: C.bg, borderRadius: 8, padding: "12px 16px" }}>
-            <div style={{ fontSize: 11, color: C.muted, marginBottom: 4 }}>{from}</div>
-            <div style={{ fontSize: 13, color: C.text + "AA" }}>{fromVal}</div>
-          </div>
-          <div style={{ textAlign: "center", color, fontSize: 20 }}>↓</div>
-          <div style={{ background: color + "15", borderRadius: 8, padding: "12px 16px", border: `0.5px solid ${color}40` }}>
-            <div style={{ fontSize: 11, color, marginBottom: 4, fontWeight: 500 }}>{to}</div>
-            <div style={{ fontSize: 13, color: C.white, fontWeight: 500 }}>{toVal}</div>
-          </div>
+  return (
+    <section id="priority" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>운영 전략</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+          운영 우선순위 매트릭스
+        </h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 8, lineHeight: 1.6, maxWidth: 560 }}>
+          250개 창고를 6개 운영 유형으로 분류하고 맞춤 개입 전략을 제시합니다.
+        </p>
+        <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 16px", marginBottom: 28, display: "inline-block" }}>
+          <span style={{ fontSize: 13, color: C.amber, fontWeight: 600 }}>★ </span>
+          <span style={{ fontSize: 13, color: C.text }}>포장병목형(3순위) 평균 지연 27.0분 &gt; 즉시개입형(1순위) 24.6분 — 반례 분석 없이는 발견 불가</span>
         </div>
-      ))}
-    </div>
 
-    {/* 하단 링크 */}
-    <div style={{
-      marginTop: 48, paddingTop: 32, borderTop: `0.5px solid ${C.border}`,
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-    }}>
-      <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 15, color: C.muted }}>
-        분석 포트폴리오
+        {/* 헤더 */}
+        <div style={{
+          display: "grid", gridTemplateColumns: "100px 130px 70px 80px 1fr 1fr 100px",
+          gap: 12, padding: "8px 20px",
+          fontSize: 11, color: C.muted, fontWeight: 600, letterSpacing: "0.05em",
+          textTransform: "uppercase",
+        }}>
+          {["우선순위", "유형", "창고 수", "평균 지연", "특징", "즉각 조치", "목표"].map(h => <div key={h}>{h}</div>)}
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {types.map(({ rank, type, n, delay, feature, action, target, color }) => {
+            const [hov, setHov] = useState(false);
+            return (
+              <div key={rank}
+                onMouseEnter={() => setHov(true)}
+                onMouseLeave={() => setHov(false)}
+                style={{
+                  display: "grid", gridTemplateColumns: "100px 130px 70px 80px 1fr 1fr 100px",
+                  gap: 12, padding: "14px 20px",
+                  background: hov ? C.bg : C.surface,
+                  border: `1px solid ${hov ? C.borderDark : C.border}`,
+                  borderRadius: 8, alignItems: "center",
+                  borderLeft: `3px solid ${color}`,
+                  borderRadius: "0 8px 8px 0",
+                  transition: "all 0.15s",
+                }}>
+                <Tag color={color}>{rank}</Tag>
+                <div style={{ fontSize: 13, fontWeight: 600, color: rank.includes("★") ? C.amber : C.text }}>{type}</div>
+                <Mono size={13}>{n}개</Mono>
+                <div style={{ fontSize: 13, fontWeight: 600, color: delay > 25 ? C.red : delay > 20 ? C.amber : C.green }}>
+                  {delay}분
+                </div>
+                <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.4 }}>{feature}</div>
+                <div style={{ fontSize: 12, color: C.text, lineHeight: 1.4 }}>{action}</div>
+                <Tag color={color} bg={color + "10"}>{target}</Tag>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div style={{ display: "flex", gap: 20 }}>
-        {["GitHub", "보고서 PDF", "태블로 대시보드", "발표 PPT"].map(t => (
-          <a key={t} href="#" style={{ fontSize: 13, color: C.muted, textDecoration: "none" }}
-            onMouseEnter={e => e.target.style.color = C.text}
-            onMouseLeave={e => e.target.style.color = C.muted}
-          >{t}</a>
+    </section>
+  );
+};
+
+/* ─── LIMITS SECTION ─────────────────────────── */
+const LimitsSection = () => (
+  <section style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <SecLabel>한계 및 향후 방향</SecLabel>
+      <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+        솔직한 한계 진단
+      </h2>
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
+        좋은 분석은 성공만 보여주지 않습니다. 한계를 명시하는 것이 신뢰도를 높입니다.
+      </p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        {[
+          { title: "경보 규칙 Precision ~0.12 상한", desc: "단일 시점 변수만으로는 위기 예측이 구조적으로 어렵습니다. 단일 변수 상위 10% 구간도 위기율 11% 수준이 이론적 상한.", next: "LSTM/GRU로 스냅샷 시퀀스 학습 → 위기 누적 패턴 포착", color: C.red },
+          { title: "PSM 소표본 (30쌍)", desc: "매칭 쌍이 30개로 소표본이고 충전 중 비율·고장 횟수의 표준화 평균 차이(SMD)가 0.25 초과. hub_spoke 효과 없음은 잠정적 결론.", next: "더 많은 창고 데이터 확보 후 재검증 필요", color: C.amber },
+          { title: "모델 수요폭증형 과소예측", desc: "300분+ 구간에서 평균 잔차 +328분. 설비 용량 자체가 수요를 따라가지 못하는 케이스는 운영 변수로 설명 불가.", next: "수요폭증형 별도 모델 + 앙상블 구성", color: C.amber },
+          { title: "ROI 가정 기반 추정", desc: "연간 절감 추정치(~1,855억원)는 출고 100건/시나리오, 1분=500원 등 가정에 매우 민감. 절대 금액보다 상대 우선순위가 핵심.", next: "파일럿 창고 적용 후 실제 데이터로 검증 필요", color: C.muted },
+        ].map(({ title, desc, next, color }) => (
+          <Card key={title} style={{ padding: "22px 24px" }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0, marginTop: 5 }} />
+              <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{title}</div>
+            </div>
+            <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.6, marginBottom: 12, paddingLeft: 18 }}>{desc}</div>
+            <div style={{ paddingLeft: 18, display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <span style={{ fontSize: 11, color: C.green, fontWeight: 600, flexShrink: 0, marginTop: 1 }}>→ 향후</span>
+              <span style={{ fontSize: 12, color: C.green, lineHeight: 1.5 }}>{next}</span>
+            </div>
+          </Card>
         ))}
       </div>
     </div>
   </section>
+);
+
+/* ─── FOOTER ─────────────────────────────────── */
+const Footer = () => (
+  <footer style={{ padding: "40px 40px", borderTop: `1px solid ${C.border}` }}>
+    <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div>
+        <div style={{ fontFamily: "'Lora', serif", fontSize: 16, color: C.text, marginBottom: 4 }}>
+          데이터 분석 포트폴리오
+        </div>
+        <div style={{ fontSize: 13, color: C.muted }}>창고 로봇 출고 지연 원인 분석</div>
+      </div>
+      <div style={{ display: "flex", gap: 8 }}>
+        {["GitHub ↗", "보고서 PDF", "태블로 대시보드", "발표 PPT"].map(t => (
+          <button key={t} style={{
+            padding: "7px 14px", borderRadius: 6, fontSize: 12,
+            background: "transparent", color: C.muted,
+            border: `1px solid ${C.border}`, cursor: "pointer",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            transition: "all 0.15s",
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+          >{t}</button>
+        ))}
+      </div>
+    </div>
+  </footer>
 );
 
 /* ─── APP ────────────────────────────────────── */
 export default function App() {
   return (
-    <div style={{ background: C.bg, minHeight: "100vh", color: C.text }}>
-      <FontLink />
+    <div style={{ background: C.bg, minHeight: "100vh" }}>
+      <Fonts />
       <Nav />
-      <main style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <main>
         <Hero />
         <StoryFlow />
         <Findings />
-        <VisSection />
+        <VizSection />
         <MethodSection />
+        <ParadoxSection />
         <PrioritySection />
-        <Conclusion />
+        <LimitsSection />
       </main>
+      <Footer />
     </div>
   );
 }
