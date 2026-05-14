@@ -1337,28 +1337,28 @@
             </div>
             <div class="project-meta"><span>Python</span><span>LightGBM</span><span>PSM</span><span>Clustering</span></div>
           </button>
-          <a class="project-card" id="project-02" href="#project-02" aria-label="Project 02 상세 보기">
+          <button class="project-card" id="project-02" type="button" data-modal-open="instacart-modal" aria-label="Instacart 구매 로그 기반 개인화 마케팅 전략 상세 보기">
             <div>
               <div class="project-card-top">
                 <span class="project-number">02</span>
                 <span class="project-arrow" aria-hidden="true">↗</span>
               </div>
-              <h3>Project 02</h3>
-              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+              <h3>Instacart 구매 로그 기반 개인화 마케팅 전략</h3>
+              <p>300만 건 이상의 주문 로그에서 고객 생애주기와 재구매 타이밍을 분석해 개인화 마케팅 전략을 설계한 프로젝트입니다.</p>
             </div>
-            <div class="project-meta"><span>Python</span><span>SQL</span><span>Visualization</span></div>
-          </a>
-          <a class="project-card" id="project-03" href="#project-03" aria-label="Project 03 상세 보기">
+            <div class="project-meta"><span>SQL</span><span>Python</span><span>Tableau</span><span>Marketing</span></div>
+          </button>
+          <button class="project-card" id="project-03" type="button" data-modal-open="jewelry-modal" aria-label="쥬얼리 브랜드 R사 타겟 리포지셔닝 상세 보기">
             <div>
               <div class="project-card-top">
                 <span class="project-number">03</span>
                 <span class="project-arrow" aria-hidden="true">↗</span>
               </div>
-              <h3>Project 03</h3>
-              <p>프로젝트 설명을 업데이트할 예정입니다.</p>
+              <h3>쥬얼리 브랜드 R사 타겟 리포지셔닝</h3>
+              <p>광고 성과와 리뷰 데이터를 결합해 실제 구매자 페르소나를 재정의하고 예산 재배치 전략을 도출한 프로젝트입니다.</p>
             </div>
-            <div class="project-meta"><span>EDA</span><span>Modeling</span><span>Report</span></div>
-          </a>
+            <div class="project-meta"><span>Ad Analytics</span><span>Persona</span><span>Python</span><span>Tableau</span></div>
+          </button>
           <button class="project-card" id="project-04" type="button" data-modal-open="detective-modal" aria-label="AI 탐정게임 개발 상세 보기">
             <div>
               <div class="project-card-top">
@@ -1370,6 +1370,34 @@
             </div>
             <div class="project-meta"><span>JavaScript</span><span>GPT API</span><span>Prompt Engineering</span><span>Vibe Coding</span></div>
           </button>
+        </div>
+
+        <div class="project-modal theme-light exact-react" id="instacart-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="instacart-modal-title">
+          <div class="modal-dialog" tabindex="-1">
+            <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+            <iframe class="exact-frame" title="Instacart 구매 로그 기반 개인화 마케팅 전략" src="portfolio_case_instacart.html"></iframe>
+
+            <header class="case-hero case-animate">
+              <h3 class="case-title" id="instacart-modal-title">
+                Instacart 구매 로그 기반<br />
+                <span>개인화 마케팅 전략</span>
+              </h3>
+            </header>
+          </div>
+        </div>
+
+        <div class="project-modal theme-light exact-react" id="jewelry-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="jewelry-modal-title">
+          <div class="modal-dialog" tabindex="-1">
+            <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+            <iframe class="exact-frame" title="쥬얼리 브랜드 R사 타겟 리포지셔닝과 광고 예산 최적화" src="portfolio_case_jewelry.html"></iframe>
+
+            <header class="case-hero case-animate">
+              <h3 class="case-title" id="jewelry-modal-title">
+                쥬얼리 브랜드 R사<br />
+                <span>타겟 리포지셔닝</span>
+              </h3>
+            </header>
+          </div>
         </div>
 
         <div class="project-modal theme-light exact-react" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
@@ -2083,6 +2111,12 @@
 
       if (window.location.hash === "#warehouse-modal") {
         openModal("warehouse-modal");
+      }
+      if (window.location.hash === "#instacart-modal") {
+        openModal("instacart-modal");
+      }
+      if (window.location.hash === "#jewelry-modal") {
+        openModal("jewelry-modal");
       }
       if (window.location.hash === "#detective-modal") {
         openModal("detective-modal");
