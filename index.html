@@ -459,6 +459,29 @@
       color: var(--case-text);
       border-color: var(--case-border-strong);
     }
+    .project-modal.exact-react .modal-dialog {
+      max-width: 1180px;
+      height: min(90vh, 900px);
+      overflow: hidden;
+      padding: 0;
+      background: #0a0a0f;
+      border-color: rgba(116, 116, 255, 0.24);
+    }
+    .project-modal.exact-react .modal-dialog > :not(.modal-close):not(.exact-frame) {
+      display: none;
+    }
+    .project-modal.exact-react .modal-close {
+      z-index: 5;
+      background: rgba(255, 255, 255, 0.9);
+      color: #6b7280;
+    }
+    .exact-frame {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #0a0a0f;
+    }
     .case-hero {
       position: relative;
       padding: 30px 42px 24px;
@@ -1209,6 +1232,7 @@
         max-width: calc(100vw - 24px);
         max-height: 92vh;
       }
+      .project-modal.exact-react .modal-dialog { height: 92vh; }
       .case-hero { padding: 26px 20px 20px; }
       .case-toolbar {
         align-items: flex-start;
@@ -1348,9 +1372,10 @@
           </button>
         </div>
 
-        <div class="project-modal theme-light" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
+        <div class="project-modal theme-light exact-react" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+            <iframe class="exact-frame" title="창고 로봇 시스템 출고 지연 원인 분석" src="portfolio_case_warehouse.html"></iframe>
 
             <header class="case-hero case-animate">
               <div class="case-toolbar">
@@ -1640,9 +1665,10 @@
           </div>
         </div>
 
-        <div class="project-modal theme-light detective-case" id="detective-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detective-modal-title">
+        <div class="project-modal theme-light detective-case exact-react" id="detective-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detective-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+            <iframe class="exact-frame" title="AI 탐정게임 개발 Detective" src="portfolio_case_detective.html"></iframe>
 
             <header class="case-hero case-animate">
               <div class="case-toolbar">
