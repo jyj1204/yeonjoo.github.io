@@ -536,7 +536,7 @@
     .case-summary strong { color: var(--case-text); font-weight: 600; }
     .case-kpi-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 8px;
       margin-top: 22px;
     }
@@ -1369,15 +1369,16 @@
                 <span>출고 지연</span> 원인 분석
               </h3>
               <p class="case-summary">
-                250개 창고, 25만 건 데이터. 처음에는 레이아웃이 문제라고 생각했지만,
-                운영 조건을 통제하자 결론이 바뀌었습니다. <strong>이 프로젝트는 결과보다 “결론이 바뀌는 과정”을 보여주는 분석 케이스스터디입니다.</strong>
+                250개 창고, 25만 건 데이터.
+                레이아웃이 문제라고 생각했는데 운영이었고,
+                중요하지 않다고 본 변수가 핵심이었습니다.
+                <strong>분석 과정에서 결론이 세 번 바뀌었습니다.</strong>
               </p>
               <div class="case-kpi-grid" aria-label="프로젝트 핵심 지표">
-                <div class="case-kpi"><small>분석 데이터</small><strong>250K</strong><span>250개 창고 × 1,000 시나리오 × 25 스냅샷</span></div>
-                <div class="case-kpi is-accent"><small>지연 최대 차이</small><strong>6.6×</strong><span>idle 최저 구간과 최고 구간 비교</span></div>
-                <div class="case-kpi"><small>모델 성능</small><strong>21.77</strong><span>LightGBM OOF RMSE, GroupKFold 검증</span></div>
-                <div class="case-kpi"><small>취약 창고</small><strong>102</strong><span>K-Means로 분류한 vulnerable 그룹</span></div>
-                <div class="case-kpi"><small>결론 수정</small><strong>3회</strong><span>EDA, 모델링, PSM에서 가설 재검토</span></div>
+                <div class="case-kpi"><small>분석 창고</small><strong>250개</strong><span>4개 레이아웃 유형</span></div>
+                <div class="case-kpi is-accent"><small>지연 최대 차이</small><strong>6.6×</strong><span>idle 최저 vs 최고</span></div>
+                <div class="case-kpi"><small>결론 수정 횟수</small><strong>3회</strong><span>가설→검증→수정</span></div>
+                <div class="case-kpi"><small>지연 감소 추정</small><strong>78%</strong><span>가정 기반 시뮬레이션</span></div>
               </div>
             </header>
 
@@ -1392,92 +1393,88 @@
 
             <div class="modal-content">
               <section class="case-section case-animate" id="warehouse-story" aria-labelledby="warehouse-story-title">
-                <p class="case-section-label">Analysis Story</p>
+                <p class="case-section-label">분석 스토리</p>
                 <h4 id="warehouse-story-title">결론이 세 번 바뀐 과정</h4>
                 <p class="case-intro">
-                  분석은 하나의 정답을 바로 찾는 식으로 진행되지 않았습니다. EDA에서 보인 강한 신호, 모델이 발견한 숨은 변수,
-                  경보 규칙의 한계, 군집화로 만든 가설, PSM 검증까지 이어지며 결론을 계속 수정했습니다.
+                  각 단계는 이전 결론을 의심하고 검증하는 방향으로 진행됐습니다.
                 </p>
                 <div class="case-story-grid">
                   <article class="story-step" style="--tone: var(--case-accent)">
                     <span class="story-num">01</span>
                     <span class="story-phase">EDA</span>
                     <strong>idle이 핵심이다</strong>
-                    <p>idle 30% 이하에서 지연이 급격히 커지고, 배터리·혼잡 신호가 함께 움직였습니다.</p>
-                    <span class="story-badge">첫 발견</span>
+                    <p>30% 임계점, 배터리 연쇄 구조</p>
+                    <span class="story-badge">발견</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-amber)">
                     <span class="story-num">02</span>
-                    <span class="story-phase">Modeling</span>
+                    <span class="story-phase">모델링</span>
                     <strong>EDA가 놓친 변수</strong>
-                    <p>상관계수 0.105에 불과했던 pack_utilization이 모델 중요도 1위로 올라왔습니다.</p>
+                    <p>pack_util r=0.105 → 모델 1위</p>
                     <span class="story-badge">한계 발견</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-red)">
                     <span class="story-num">03</span>
-                    <span class="story-phase">Alert</span>
-                    <strong>Precision 상한</strong>
-                    <p>단일 시점 경보는 Precision 0.113~0.118 수준에서 막혔고, 누적 신호가 더 중요했습니다.</p>
-                    <span class="story-badge">실패 후 전환</span>
+                    <span class="story-phase">경보</span>
+                    <strong>Precision 상한 발견</strong>
+                    <p>어떤 방법도 12% 돌파 불가</p>
+                    <span class="story-badge">실패→전환</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-accent)">
                     <span class="story-num">04</span>
-                    <span class="story-phase">Clustering</span>
+                    <span class="story-phase">군집화</span>
                     <strong>취약형 102개</strong>
-                    <p>취약 창고 102개 중 hub_spoke 비중이 높아 레이아웃 원인 가설이 생겼습니다.</p>
+                    <p>hub_spoke 67% 취약 → 가설</p>
                     <span class="story-badge">가설 형성</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-green)">
                     <span class="story-num">05</span>
                     <span class="story-phase">PSM</span>
                     <strong>결론이 뒤집혔다</strong>
-                    <p>운영 조건을 통제하자 hub_spoke 효과가 사라져, 원인은 레이아웃보다 운영 조건으로 정리됐습니다.</p>
+                    <p>운영 통제 후 효과 소멸</p>
                     <span class="story-badge">결론 수정</span>
                   </article>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="warehouse-findings" aria-labelledby="warehouse-findings-title">
-                <p class="case-section-label">Key Findings</p>
+                <p class="case-section-label">핵심 발견</p>
                 <h4 id="warehouse-findings-title">4가지 핵심 발견</h4>
                 <div class="case-finding-grid">
                   <article class="finding-card" style="--tone: var(--case-red)">
-                    <small>idle 비율</small>
+                    <small>idle 비율이 핵심</small>
                     <strong>6.6×</strong>
-                    <p>idle 최저 20% 구간 평균 지연은 36.3분, 최고 20% 구간은 5.5분이었습니다. 30%가 운영상 1차 방어선으로 보였습니다.</p>
+                    <p>최저 vs 최고 구간 지연 차이</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-amber)">
-                    <small>숨은 병목</small>
+                    <small>숨은 병목 발견</small>
                     <strong>r=0.105 → 1위</strong>
-                    <p>pack_utilization은 선형 상관으로 보면 약했지만 LightGBM에서는 가장 중요한 변수였습니다. U자형 관계라 EDA에서 놓치기 쉬웠습니다.</p>
+                    <p>EDA 오판, 모델로 재발견</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-green)">
-                    <small>인과 검증</small>
+                    <small>PSM 인과 검증</small>
                     <strong>p=0.783</strong>
-                    <p>단순 비교에서는 hub_spoke가 +3.69분 지연처럼 보였지만, PSM 매칭 후 -0.55분으로 효과가 사라졌습니다.</p>
+                    <p>운영 통제 후 레이아웃 효과 소멸</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-accent)">
                     <small>운영 우선순위</small>
                     <strong>6개 유형</strong>
-                    <p>창고를 6개 운영 유형으로 나눠 개입 우선순위를 설계했습니다. 특히 포장병목형은 평균 지연이 27.0분으로 높은 반례였습니다.</p>
+                    <p>포장병목형이 즉시개입형보다 위험</p>
                   </article>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="warehouse-visuals" aria-labelledby="warehouse-visuals-title">
-                <p class="case-section-label">Visualization</p>
+                <p class="case-section-label">주요 시각화</p>
                 <h4 id="warehouse-visuals-title">데이터로 보는 발견들</h4>
-                <p class="case-intro">
-                  아래 차트는 보내준 분석 내용을 바탕으로 임시 구현한 시각화입니다. 나중에 실제 그래프 이미지나 Tableau 캡처를 보내주면 같은 자리에 교체할 수 있습니다.
-                </p>
                 <div class="visual-tabs" role="tablist" aria-label="시각화 선택">
                   <button class="visual-tab" type="button" data-chart-tab="idle" aria-selected="true">idle 비율</button>
-                  <button class="visual-tab" type="button" data-chart-tab="pack" aria-selected="false">U자형 병목</button>
+                  <button class="visual-tab" type="button" data-chart-tab="pack" aria-selected="false">U자형 발견</button>
                   <button class="visual-tab" type="button" data-chart-tab="combo" aria-selected="false">복합 병목</button>
                   <button class="visual-tab" type="button" data-chart-tab="psm" aria-selected="false">PSM 전후</button>
                 </div>
                 <div class="visual-panel" data-chart-panel="idle">
-                  <p class="chart-caption">여유 로봇 비율이 낮을수록 다음 30분 출고 지연이 급격히 증가했습니다. <strong>최저 구간과 최고 구간의 차이는 6.6배</strong>입니다.</p>
+                  <p class="chart-caption">여유 최저 구간 36.3분 vs 최고 5.5분 — <strong>6.6배 차이</strong>. 30%가 임계점.</p>
                   <div class="bar-chart" style="--bars: 5" aria-label="idle 구간별 평균 지연">
                     <div class="chart-bar" style="--h: 100%; --tone: var(--case-red)"><strong>36.3</strong><i></i><span>최저<br />20%</span></div>
                     <div class="chart-bar" style="--h: 77%; --tone: var(--case-amber)"><strong>28.1</strong><i></i><span>20~40%</span></div>
@@ -1487,7 +1484,7 @@
                   </div>
                 </div>
                 <div class="visual-panel" data-chart-panel="pack" hidden>
-                  <p class="chart-caption">pack_utilization은 선형 상관계수만 보면 낮지만, <strong>저가동과 고가동 양쪽에서 지연이 커지는 U자형</strong>이었습니다.</p>
+                  <p class="chart-caption">선형 상관계수 <strong>r=0.105</strong> → 모델 중요도 <strong>1위(14.2%)</strong>. 저가동=처리 부족, 고가동=후처리 병목.</p>
                   <div class="line-chart" aria-label="pack utilization 구간별 평균 지연">
                     <svg viewBox="0 0 700 280" role="img" aria-labelledby="pack-chart-title">
                       <title id="pack-chart-title">pack utilization U자형 패턴</title>
@@ -1495,15 +1492,15 @@
                       <line class="axis" x1="36" y1="40" x2="36" y2="235"></line>
                       <line class="grid" x1="36" y1="95" x2="668" y2="95"></line>
                       <line class="grid" x1="36" y1="160" x2="668" y2="160"></line>
-                      <polyline class="line" points="42,108 112,125 182,137 252,148 322,151 392,160 462,159 532,160 602,160 668,43"></polyline>
-                      <circle class="point" cx="42" cy="108" r="6"></circle><circle class="point" cx="392" cy="160" r="6"></circle><circle class="point" cx="668" cy="43" r="8"></circle>
-                      <text x="36" y="262">0~10%</text><text x="355" y="262">50~60%</text><text x="632" y="262">90%+</text>
-                      <text x="612" y="34">29.6분</text><text x="340" y="182">12.0분</text>
+                      <polyline class="line" points="42,139 112,165 182,182 252,198 322,203 392,216 462,215 532,216 602,216 668,44"></polyline>
+                      <circle class="point" cx="42" cy="139" r="6"></circle><circle class="point" cx="392" cy="216" r="6"></circle><circle class="point" cx="668" cy="44" r="8"></circle>
+                      <text x="36" y="262">0~10%</text><text x="350" y="262">50~60%</text><text x="632" y="262">90%+</text>
+                      <text x="612" y="34">29.6분</text><text x="340" y="207">12.0분</text>
                     </svg>
                   </div>
                 </div>
                 <div class="visual-panel" data-chart-panel="combo" hidden>
-                  <p class="chart-caption">idle 부족, 혼잡, 배터리 문제가 겹칠수록 지연이 폭발했습니다. <strong>3개 조건 동시 발생 시 평균 38.1분</strong>으로 정상의 3.7배입니다.</p>
+                  <p class="chart-caption">나쁜 조건이 겹칠수록 폭발적 증가 — <strong>3개 동시: 38.1분 (정상의 3.7배)</strong></p>
                   <div class="bar-chart" style="--bars: 4" aria-label="복합 병목 수별 평균 지연">
                     <div class="chart-bar" style="--h: 27%; --tone: var(--case-green)"><strong>10.2</strong><i></i><span>0개<br />정상</span></div>
                     <div class="chart-bar" style="--h: 47%; --tone: var(--case-amber)"><strong>17.9</strong><i></i><span>1개</span></div>
@@ -1512,7 +1509,7 @@
                   </div>
                 </div>
                 <div class="visual-panel" data-chart-panel="psm" hidden>
-                  <p class="chart-caption">단순 비교에서는 hub_spoke가 문제처럼 보였지만, 운영 조건을 맞춰 비교하자 <strong>레이아웃 효과가 통계적으로 사라졌습니다.</strong></p>
+                  <p class="chart-caption">매칭 전 <strong>+3.69분 (p=0.007)</strong> → 매칭 후 <strong>-0.55분 (p=0.783)</strong>. 레이아웃 효과 소멸.</p>
                   <div class="psm-grid">
                     <article class="psm-card" style="--tone: var(--case-red)">
                       <h5>매칭 전 단순 비교</h5>
@@ -1531,10 +1528,11 @@
               </section>
 
               <section class="case-section case-animate" id="warehouse-methods" aria-labelledby="warehouse-methods-title">
-                <p class="case-section-label">Method Choice</p>
+                <p class="case-section-label">방법론 선택 이유</p>
                 <h4 id="warehouse-methods-title">왜 이 방법을 선택했는가</h4>
                 <p class="case-intro">
-                  방법론은 “써봤다”가 아니라 잘못된 결론을 피하기 위해 선택했다는 흐름으로 정리했습니다.
+                  각 방법은 기법을 써보려고 선택한 게 아닙니다.
+                  그 방법이 아니었으면 잘못된 결론에 도달했을 것이기 때문에 선택했습니다.
                 </p>
                 <div class="method-list">
                   <article class="method-item is-open">
@@ -1543,12 +1541,12 @@
                     </button>
                     <div class="method-body">
                       <div class="method-note bad" style="--tone: var(--case-red)">
-                        <strong>다른 방법을 썼다면</strong>
-                        <p>일반 KFold는 같은 창고의 스냅샷이 학습과 검증에 동시에 들어가 성능이 과대평가될 수 있습니다.</p>
+                        <strong>✗ 다른 방법 썼다면</strong>
+                        <p>일반 KFold → 같은 창고 스냅샷 누출 → 성능 과대평가</p>
                       </div>
                       <div class="method-note good" style="--tone: var(--case-green)">
-                        <strong>이 방법을 쓴 이유</strong>
-                        <p>창고 단위로 완전히 분리해 실제 새로운 창고를 예측하는 상황과 더 가까운 검증 구조를 만들었습니다.</p>
+                        <strong>✓ 이 방법을 쓴 이유</strong>
+                        <p>창고 단위 완전 분리 → 실제 배포 환경 시뮬레이션</p>
                       </div>
                     </div>
                   </article>
@@ -1558,12 +1556,12 @@
                     </button>
                     <div class="method-body" hidden>
                       <div class="method-note bad" style="--tone: var(--case-red)">
-                        <strong>상관계수만 봤다면</strong>
-                        <p>pack_utilization은 r=0.105라 관계가 약하다고 보고 지나쳤을 가능성이 큽니다.</p>
+                        <strong>✗ 다른 방법 썼다면</strong>
+                        <p>상관계수만 → pack r=0.105 '관계 없음' → 핵심 변수 누락</p>
                       </div>
                       <div class="method-note good" style="--tone: var(--case-green)">
-                        <strong>이 방법을 쓴 이유</strong>
-                        <p>비선형 U자형 패턴을 포착하면서 숨은 병목을 찾아냈고, 반례 분석과도 결론이 수렴했습니다.</p>
+                        <strong>✓ 이 방법을 쓴 이유</strong>
+                        <p>비선형 U자형 포착 → 모델 1위 재발견 → 반례 수렴</p>
                       </div>
                     </div>
                   </article>
@@ -1573,12 +1571,12 @@
                     </button>
                     <div class="method-body" hidden>
                       <div class="method-note bad" style="--tone: var(--case-red)">
-                        <strong>단순 비교만 했다면</strong>
-                        <p>hub_spoke가 +3.69분 지연을 만든다고 보고 레이아웃 개선이라는 고비용 결론으로 갈 수 있었습니다.</p>
+                        <strong>✗ 다른 방법 썼다면</strong>
+                        <p>단순 비교 → hub_spoke +3.69분 → 레이아웃 개선 추진 (고비용 오판)</p>
                       </div>
                       <div class="method-note good" style="--tone: var(--case-green)">
-                        <strong>이 방법을 쓴 이유</strong>
-                        <p>운영 조건을 맞춰 비교하자 효과가 사라져, 레이아웃보다 운영 개선이 우선이라는 판단으로 바뀌었습니다.</p>
+                        <strong>✓ 이 방법을 쓴 이유</strong>
+                        <p>운영 조건 통제 → 효과 소멸(p=0.783) → 레이아웃 X, 운영 O</p>
                       </div>
                     </div>
                   </article>
@@ -1588,12 +1586,12 @@
                     </button>
                     <div class="method-body" hidden>
                       <div class="method-note bad" style="--tone: var(--case-red)">
-                        <strong>전체 경향만 봤다면</strong>
-                        <p>idle이 높으면 안전하다는 단순한 결론으로 끝났을 수 있습니다.</p>
+                        <strong>✗ 다른 방법 썼다면</strong>
+                        <p>전체 경향만 → 'idle 높으면 안전' 단순 결론</p>
                       </div>
                       <div class="method-note good" style="--tone: var(--case-green)">
-                        <strong>이 방법을 쓴 이유</strong>
-                        <p>idle이 높아도 지연이 큰 창고에서 pack 과포화가 반복되어 모델의 U자형 발견을 다시 확인했습니다.</p>
+                        <strong>✓ 이 방법을 쓴 이유</strong>
+                        <p>공통 원인: pack 과포화 → U자형 분석과 수렴 → 신뢰도↑</p>
                       </div>
                     </div>
                   </article>
@@ -1601,45 +1599,40 @@
               </section>
 
               <section class="case-section case-animate" id="warehouse-priority" aria-labelledby="warehouse-priority-title">
-                <p class="case-section-label">Operational Priority</p>
+                <p class="case-section-label">운영 우선순위</p>
                 <h4 id="warehouse-priority-title">어떤 창고부터 개입하는가</h4>
                 <p class="case-intro">
-                  분석 결과를 운영 의사결정으로 연결하기 위해 창고를 6개 유형으로 분류했습니다.
-                  포장병목형은 3순위지만 평균 지연이 27.0분으로 가장 높아, 실제 운영에서는 별도 관리가 필요합니다.
+                  ★ 포장병목형(3순위)이 즉시개입형(1순위)보다 평균 지연 높음 — 반례 분석 없이는 발견하기 어려운 유형
                 </p>
                 <div class="case-priority-grid" aria-label="운영 우선순위">
                   <div class="priority-head"><span>Rank</span><span>Type</span><span>Count</span><span>Delay</span><span>Signal</span><span>Action</span></div>
-                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">1순위</span><span class="priority-type">즉시개입형</span><span>49개</span><span class="priority-delay">24.6분</span><span>고혼잡 + 저idle</span><span>경로 재배정, 충전 긴급 조정</span></div>
-                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">2순위</span><span class="priority-type">배터리위기형</span><span>23개</span><span class="priority-delay">23.3분</span><span>저idle + 배터리 나쁨</span><span>사전 충전 스케줄 적용</span></div>
-                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">3순위</span><span class="priority-type">포장병목형</span><span>40개</span><span class="priority-delay">27.0분</span><span>pack 고가동</span><span>pack 60~80% 구간 유지</span></div>
-                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">4순위</span><span class="priority-type">혼잡관리형</span><span>29개</span><span class="priority-delay">15.4분</span><span>idle 정상 + 고혼잡</span><span>피크타임 경로 분산</span></div>
+                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">1순위</span><span class="priority-type">즉시개입형</span><span>49개</span><span class="priority-delay">24.6분</span><span>고혼잡 + 저idle</span><span>경로 재배정 + 충전 긴급</span></div>
+                  <div class="priority-row" style="--tone: var(--case-red)"><span class="priority-rank">2순위</span><span class="priority-type">배터리위기형</span><span>23개</span><span class="priority-delay">23.3분</span><span>저idle + 배터리 나쁨</span><span>사전 충전 스케줄</span></div>
+                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">3순위★</span><span class="priority-type">포장병목형</span><span>40개</span><span class="priority-delay">27.0분</span><span>pack 고가동 (숨은 병목)</span><span>pack 60~80% 조정</span></div>
+                  <div class="priority-row" style="--tone: var(--case-amber)"><span class="priority-rank">4순위</span><span class="priority-type">혼잡관리형</span><span>29개</span><span class="priority-delay">15.4분</span><span>idle 정상 + 고혼잡</span><span>경로 모니터링</span></div>
                   <div class="priority-row" style="--tone: var(--case-accent)"><span class="priority-rank">5순위</span><span class="priority-type">배터리최적화형</span><span>6개</span><span class="priority-delay">17.0분</span><span>idle 정상 + 배터리 나쁨</span><span>정기 충전 최적화</span></div>
                   <div class="priority-row" style="--tone: var(--case-green)"><span class="priority-rank">6순위</span><span class="priority-type">모니터링형</span><span>103개</span><span class="priority-delay">13.5분</span><span>전반적 정상</span><span>정기 모니터링</span></div>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="warehouse-conclusion" aria-labelledby="warehouse-conclusion-title">
-                <p class="case-section-label">Conclusion</p>
-                <h4 id="warehouse-conclusion-title">결론이 바뀐 지점이 분석의 가치입니다</h4>
-                <p class="case-intro">
-                  최종 결론은 “레이아웃을 바꾸자”가 아니라 “운영 조건을 먼저 개선하자”였습니다.
-                  배터리 사전 충전, idle 30% 회복, pack 병목 분산이 우선순위로 정리됐고, 개선 효과는 가정 기반 시뮬레이션에서 평균 지연 19.0분에서 4.1분으로 감소하는 방향을 보였습니다.
-                </p>
+                <p class="case-section-label">최종 결론</p>
+                <h4 id="warehouse-conclusion-title">결론이 세 번 바뀌었습니다.<br /><span style="color: var(--case-accent)">그것이 분석의 가치입니다.</span></h4>
                 <div class="case-conclusion-grid">
                   <article class="conclusion-card" style="--tone: var(--case-accent)">
-                    <div class="conclusion-box"><strong>처음엔 의심했다</strong><p>hub_spoke 구조가 지연 원인일 것이다.</p></div>
+                    <div class="conclusion-box"><strong>처음엔 의심했다</strong><p>hub_spoke 구조가 원인</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>PSM으로 확인했다</strong><p>운영 조건을 통제하면 레이아웃 효과는 사라진다.</p></div>
+                    <div class="conclusion-box after"><strong>PSM으로 확인했다</strong><p>운영이 원인, 레이아웃 효과 없음</p></div>
                   </article>
                   <article class="conclusion-card" style="--tone: var(--case-amber)">
-                    <div class="conclusion-box"><strong>EDA로는 약했다</strong><p>pack_utilization은 상관계수 0.105라 중요하지 않아 보였다.</p></div>
+                    <div class="conclusion-box"><strong>EDA로는 몰랐다</strong><p>pack r=0.105 '관계 없음'</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>모델이 발견했다</strong><p>비선형 U자형 병목으로 모델 중요도 1위였다.</p></div>
+                    <div class="conclusion-box after"><strong>모델이 발견했다</strong><p>비선형 U자형, 모델 1위</p></div>
                   </article>
                   <article class="conclusion-card" style="--tone: var(--case-red)">
-                    <div class="conclusion-box"><strong>기대했던 것</strong><p>단순 경보 규칙으로 위기 창고를 잘 잡을 수 있을 것이다.</p></div>
+                    <div class="conclusion-box"><strong>기대했던 것</strong><p>경보 규칙으로 예측 가능</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>발견한 것</strong><p>Precision 상한이 있어 누적 패턴과 운영 유형화가 더 중요했다.</p></div>
+                    <div class="conclusion-box after"><strong>발견한 것</strong><p>Precision ~0.12 구조적 상한</p></div>
                   </article>
                 </div>
               </section>
@@ -1653,14 +1646,13 @@
 
             <header class="case-hero case-animate">
               <div class="case-toolbar">
-                <span class="case-label">Interactive AI Game Case Study</span>
+                <span class="case-label">PROJECT_04 / HTML·CSS·JS + GPT API</span>
                 <span class="case-label">Project 04</span>
               </div>
               <div class="case-badges" aria-label="프로젝트 사용 기술">
+                <span class="case-badge">2024</span>
                 <span class="case-badge accent">캡스톤 디자인</span>
-                <span class="case-badge">JavaScript</span>
-                <span class="case-badge">GPT API</span>
-                <span class="case-badge">Prompt Engineering</span>
+                <span class="case-badge">4인 팀 프로젝트</span>
                 <span class="case-badge">Vibe Coding</span>
               </div>
               <h3 class="case-title" id="detective-modal-title">
@@ -1669,15 +1661,15 @@
               </h3>
               <p class="type-line"><span data-typewriter="용의자를 심문하라. AI가 거짓말한다.">용의자를 심문하라. AI가 거짓말한다.</span><i class="type-cursor" aria-hidden="true"></i></p>
               <p class="case-summary">
-                HTML, CSS, JavaScript만으로 구현한 인터랙티브 웹 추리게임입니다. 플레이어는 GPT API 기반 AI 용의자를 심문하고,
-                수집한 단서를 바탕으로 최종 추리를 제출합니다. <strong>핵심은 AI가 단순히 답하는 것이 아니라, 용의자의 알리바이와 거짓말 패턴을 유지하도록 설계한 점입니다.</strong>
+                HTML/CSS/JavaScript만으로 구현한 인터랙티브 웹 추리게임. GPT API 기반 AI 용의자와
+                실제 대화하며 단서를 수집하고 최종 추리를 완성하는 몰입형 탐정 경험.
+                전 과정을 AI 협업 개발(Vibe Coding) 방식으로 진행한 실험 프로젝트.
               </p>
-              <div class="case-kpi-grid" aria-label="프로젝트 핵심 지표">
-                <div class="case-kpi"><small>시나리오</small><strong>2개</strong><span>아파트 살인사건, 놀이공원 화재사건</span></div>
-                <div class="case-kpi is-accent"><small>AI 심문</small><strong>GPT</strong><span>단서와 대화 맥락을 반영한 용의자 응답</span></div>
-                <div class="case-kpi"><small>평가 방식</small><strong>S/A</strong><span>논리, 단서 활용, 범인 특정 정확도 채점</span></div>
-                <div class="case-kpi"><small>개발 방식</small><strong>AI</strong><span>ChatGPT, Claude와 설계·구현·디버깅</span></div>
-                <div class="case-kpi"><small>구현 범위</small><strong>Web</strong><span>씬 전환, 단서 상태, 오디오, 타이머</span></div>
+              <div class="case-badges" aria-label="프로젝트 태그" style="margin-top: 20px">
+                <span class="case-badge accent">JavaScript</span>
+                <span class="case-badge accent">GPT API</span>
+                <span class="case-badge accent">프롬프트 엔지니어링</span>
+                <span class="case-badge accent">Vibe Coding</span>
               </div>
             </header>
 
@@ -1691,78 +1683,101 @@
 
             <div class="modal-content">
               <section class="case-section case-animate" id="detective-story" aria-labelledby="detective-story-title">
-                <p class="case-section-label">Project Flow</p>
+                <p class="case-section-label">프로젝트 흐름</p>
                 <h4 id="detective-story-title">어떻게 만들었는가</h4>
                 <div class="case-story-grid">
                   <article class="story-step" style="--tone: var(--case-accent)">
                     <span class="story-num">01</span>
-                    <span class="story-phase">Planning</span>
+                    <span class="story-phase">기획</span>
                     <strong>두 개의 독립 시나리오</strong>
-                    <p>아파트 살인사건과 놀이공원 화재사건을 분리해 장소, 단서, 용의자 흐름을 따로 설계했습니다.</p>
+                    <p>아파트 vs 놀이공원, 각기 다른 클루 수집 방식</p>
                     <span class="story-badge">설계</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-amber)">
                     <span class="story-num">02</span>
-                    <span class="story-phase">AI Design</span>
+                    <span class="story-phase">AI 설계</span>
                     <strong>프롬프트 엔지니어링</strong>
-                    <p>직업, 알리바이, 숨기는 비밀, 말투, 회피 반응을 시스템 프롬프트에 넣었습니다.</p>
+                    <p>개성·알리바이·거짓말 패턴을 GPT에 주입</p>
                     <span class="story-badge">핵심 기술</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-green)">
                     <span class="story-num">03</span>
-                    <span class="story-phase">Build</span>
+                    <span class="story-phase">구현</span>
                     <strong>Vibe Coding 실험</strong>
-                    <p>ChatGPT와 Claude를 활용해 코드 구조 설계, 구현, 디버깅을 반복했습니다.</p>
+                    <p>ChatGPT·Claude로 코드 설계·구현·디버깅 전 과정</p>
                     <span class="story-badge">AI 협업</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-accent)">
                     <span class="story-num">04</span>
-                    <span class="story-phase">Scoring</span>
+                    <span class="story-phase">평가 AI</span>
                     <strong>최종 추리 자동 채점</strong>
-                    <p>플레이어의 추리문을 GPT가 논리, 단서 활용, 정확도 기준으로 평가합니다.</p>
+                    <p>GPT가 논리 타당성·단서 활용도·정확도 평가</p>
                     <span class="story-badge">자동화</span>
                   </article>
                   <article class="story-step" style="--tone: var(--case-red)">
                     <span class="story-num">05</span>
-                    <span class="story-phase">UX</span>
+                    <span class="story-phase">완성</span>
                     <strong>몰입형 경험 설계</strong>
-                    <p>BGM, 페이드, 타이머, 타자 효과를 씬 전환과 동기화했습니다.</p>
-                    <span class="story-badge">완성</span>
+                    <p>BGM·페이드·타이머가 씬 전환과 동기화</p>
+                    <span class="story-badge">UX</span>
                   </article>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="detective-features" aria-labelledby="detective-features-title">
-                <p class="case-section-label">AI Interrogation System</p>
-                <h4 id="detective-features-title">AI 용의자를 어떻게 설계했는가</h4>
+                <p class="case-section-label">핵심 수치</p>
+                <h4 id="detective-features-title">무엇이 핵심인가</h4>
                 <div class="case-finding-grid">
                   <article class="finding-card" style="--tone: var(--case-accent)">
-                    <small>시스템 프롬프트</small>
-                    <strong>역할 주입</strong>
-                    <p>용의자의 직업, 알리바이, 숨기는 비밀, 성격을 프롬프트로 구성해 각 인물이 다르게 반응하도록 만들었습니다.</p>
+                    <small>Vibe Coding</small>
+                    <strong>전 과정 AI 협업</strong>
+                    <p>ChatGPT·Claude로 설계·구현·디버깅</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-amber)">
+                    <small>AI 용의자 심문</small>
+                    <strong>GPT-4 기반</strong>
+                    <p>맥락 유지·단서 연동·거짓말 패턴</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-green)">
+                    <small>2개 시나리오</small>
+                    <strong>독립 타임라인</strong>
+                    <p>아파트 살인 + 놀이공원 화재</p>
+                  </article>
+                  <article class="finding-card" style="--tone: var(--case-red)">
+                    <small>자동 채점</small>
+                    <strong>S/A/B/C 등급</strong>
+                    <p>논리·단서·정확도 3축 GPT 평가</p>
+                  </article>
+                </div>
+                <p class="case-intro" style="margin-top: 32px">AI 용의자 심문 설계 방식</p>
+                <div class="case-finding-grid">
+                  <article class="finding-card" style="--tone: var(--case-accent)">
+                    <small>시스템 프롬프트 구조</small>
+                    <strong>Prompt</strong>
+                    <p>용의자의 직업·알리바이·숨기는 비밀·수집된 단서를 포함한 시스템 프롬프트 생성</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-green)">
                     <small>단서 연동</small>
-                    <strong>맥락 반응</strong>
-                    <p>플레이어가 수집한 단서와 관련 키워드를 언급하면 해당 내용이 프롬프트에 추가되어 자연스럽게 당황하거나 회피합니다.</p>
+                    <strong>Clue</strong>
+                    <p>플레이어가 단서 관련 키워드를 언급하면 해당 단서 내용이 프롬프트에 자동 추가되어 AI가 자연스럽게 반응</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-amber)">
-                    <small>응답 규칙</small>
-                    <strong>거짓말 패턴</strong>
-                    <p>범인임을 바로 인정하지 않고, 단서 압박이 들어올 때 말투가 흔들리도록 답변 규칙을 설정했습니다.</p>
+                    <small>답변 규칙</small>
+                    <strong>Rule</strong>
+                    <p>범인임을 인정하지 않게, 단서 언급 시 당황하거나 회피하는 반응 포함, 100자 제한 등 형식 설정</p>
                   </article>
                   <article class="finding-card" style="--tone: var(--case-red)">
-                    <small>대화 기록</small>
-                    <strong>흐름 유지</strong>
-                    <p>이전 대화를 함께 전달해 심문이 끊기지 않고, 플레이어의 추궁 흐름을 이어가도록 구성했습니다.</p>
+                    <small>대화 기록 유지</small>
+                    <strong>Memory</strong>
+                    <p>GPT API에 이전 대화 내용을 전달하여 전후 맥락을 유지한 대화 흐름 구현</p>
                   </article>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="detective-scenarios" aria-labelledby="detective-scenarios-title">
-                <p class="case-section-label">Scenario Design</p>
+                <p class="case-section-label">시나리오 & 기능</p>
                 <h4 id="detective-scenarios-title">두 개의 독립 사건</h4>
-                <p class="case-intro">각 시나리오는 독립적인 장소, 용의자, 단서 수집 방식을 가집니다.</p>
+                <p class="case-intro">각 시나리오는 독립적인 타임라인과 단서 수집 동선을 가집니다.</p>
                 <div class="visual-tabs" role="tablist" aria-label="시나리오 선택">
                   <button class="visual-tab" type="button" data-chart-tab="apartment" aria-selected="true">개나리아파트 살인사건</button>
                   <button class="visual-tab" type="button" data-chart-tab="park" aria-selected="false">놀이공원 화재사건</button>
@@ -1770,15 +1785,15 @@
                 <div class="visual-panel" data-chart-panel="apartment">
                   <div class="case-split-grid">
                     <article class="case-info-card" style="--tone: var(--case-red)">
-                      <h5>사건 배경</h5>
-                      <p>한적한 아파트 단지에서 발생한 의문의 살인사건. 플레이어는 현장 증거를 분석하고 용의자를 심문해 진범을 추적합니다.</p>
+                      <h5>배경</h5>
+                      <p>한적한 아파트 단지 내 의문의 살인 — 플레이어가 탐정이 되어 현장 증거를 분석하고 용의자를 심문하며 진범 추적</p>
                     </article>
                     <article class="case-info-card" style="--tone: var(--case-accent)">
                       <h5>구성 요소</h5>
                       <ul>
-                        <li>탐색 장소: 13층 복도, 거실, 주차장, 관리실</li>
+                        <li>탐색 장소: 13층 복도, 거실, 각 층 주차장·관리실</li>
                         <li>용의자: 아내, 동료, 할머니, 군인</li>
-                        <li>단서 방식: 장소 클릭 후 이미지·텍스트 단서 획득</li>
+                        <li>단서 수집 방식: 장소 클릭 → 이미지·텍스트 단서 획득</li>
                       </ul>
                     </article>
                   </div>
@@ -1786,72 +1801,79 @@
                 <div class="visual-panel" data-chart-panel="park" hidden>
                   <div class="case-split-grid">
                     <article class="case-info-card" style="--tone: var(--case-amber)">
-                      <h5>사건 배경</h5>
-                      <p>놀이공원에서 발생한 의문의 화재사건. 숨겨진 동기와 의도를 파헤치며, 지도 UI를 통해 현장을 직접 탐색합니다.</p>
+                      <h5>배경</h5>
+                      <p>놀이공원에서 발생한 의문의 화재 — 숨겨진 동기와 의도를 파헤치는 사건. BGM 씬별 다른 배경음악으로 몰입감 극대화</p>
                     </article>
                     <article class="case-info-card" style="--tone: var(--case-green)">
                       <h5>구성 요소</h5>
                       <ul>
-                        <li>탐색 장소: 무대, 회전목마, 스태프 휴게실, 티켓부스</li>
-                        <li>용의자: AI 그룹 다수</li>
-                        <li>단서 방식: 현장 지도 클릭, 씬별 BGM 변경</li>
+                        <li>탐색 장소: 무대, 회전목마, 스태프 폭케실, 티켓부스</li>
+                        <li>용의자: AI 그룹 (다수)</li>
+                        <li>단서 수집 방식: 지도 UI — 현장 지도 직접 클릭 → 단서 획득</li>
                       </ul>
                     </article>
                   </div>
                 </div>
-                <div class="score-grid" aria-label="최종 추리 평가 기준">
+                <div class="case-info-card" style="--tone: var(--case-accent); margin-top: 20px">
+                  <h5>🏆 최종 추리 평가 AI — GPT 자동 채점 시스템</h5>
+                  <div class="score-grid" aria-label="최종 추리 평가 기준">
                   <article class="score-card" style="--tone: var(--case-accent)"><small>논리적 근거의 타당성</small><div class="score-bar"><i style="--score: 40%"></i></div><strong>40점</strong></article>
                   <article class="score-card" style="--tone: var(--case-green)"><small>단서 활용도</small><div class="score-bar"><i style="--score: 30%"></i></div><strong>30점</strong></article>
                   <article class="score-card" style="--tone: var(--case-amber)"><small>범인 특정 정확도</small><div class="score-bar"><i style="--score: 30%"></i></div><strong>30점</strong></article>
+                  </div>
+                  <p style="margin-top: 12px">
+                    플레이어가 제시한 논리에 따라 상세한 피드백과 점수가 제공되며 S/A/B/C 등급으로 분류
+                  </p>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="detective-tech" aria-labelledby="detective-tech-title">
-                <p class="case-section-label">Technical Implementation</p>
+                <p class="case-section-label">기술 스택 & 구현</p>
                 <h4 id="detective-tech-title">어떻게 구현했는가</h4>
                 <div class="case-split-grid">
                   <div class="tech-row-list">
-                    <div class="tech-row"><strong>Frontend</strong><span>HTML5, CSS3, Vanilla JavaScript</span></div>
-                    <div class="tech-row"><strong>AI API</strong><span>OpenAI GPT API 기반 용의자 대화</span></div>
-                    <div class="tech-row"><strong>State</strong><span>JS Object로 단서, 씬, 대화 상태 관리</span></div>
-                    <div class="tech-row"><strong>Scene</strong><span>switchScene() 커스텀 씬 전환 엔진</span></div>
-                    <div class="tech-row"><strong>Audio</strong><span>Web Audio API로 BGM과 효과음 제어</span></div>
+                    <div class="tech-row"><strong>프론트엔드</strong><span>HTML5, CSS3, Vanilla JS</span></div>
+                    <div class="tech-row"><strong>AI API</strong><span>OpenAI GPT-4 API</span></div>
+                    <div class="tech-row"><strong>상태 관리</strong><span>JS Object (단서·씬)</span></div>
+                    <div class="tech-row"><strong>씬 전환</strong><span>switchScene() 커스텀 엔진</span></div>
+                    <div class="tech-row"><strong>오디오</strong><span>Web Audio API</span></div>
+                    <div class="tech-row"><strong>개발 방식</strong><span>AI 협업 개발 (Vibe Coding)</span></div>
                   </div>
                   <div class="case-info-card" style="--tone: var(--case-accent)">
-                    <h5>Vibe Coding 실험</h5>
-                    <p>
-                      이 프로젝트는 AI 협업 개발을 실험한 작업입니다. AI에게 단순 구현만 맡긴 것이 아니라,
-                      기능 단위 설계, 버그 원인 추적, 프롬프트 개선, UX 조정까지 반복하며 개발 흐름을 만들었습니다.
-                    </p>
-                    <p>
-                      결과적으로 정적인 웹페이지가 아니라, 단서 상태와 대화 맥락이 이어지는 플레이 가능한 추리 경험을 만드는 데 집중했습니다.
-                    </p>
+                    <h5>핵심 구현 상세</h5>
+                    <p><strong>switchScene() 엔진</strong><br />HTML 셀렉터를 숨겼다 보여주는 방식으로 상황 전환 구현. 비동기 페이드 애니메이션 포함.</p>
+                    <p><strong>단서 상태 관리</strong><br />JS Object로 플레이어가 수집한 단서와 게임 상태를 실시간 관리 및 시각적 표현.</p>
+                    <p><strong>Web Audio API</strong><br />BGM, 타자기 효과음 등 씬 전환 시 단서 추가, BGM 변경, 타이머 적용이 함께 실행되도록 중앙화.</p>
                   </div>
+                </div>
+                <div class="case-info-card" style="--tone: var(--case-accent); margin-top: 20px">
+                  <h5>Vibe Coding — AI 협업 개발 실험</h5>
+                  <p>
+                    ChatGPT, Claude 등 AI 툴을 활용해 코드 설계·구현·디버깅 전 과정을 진행한 Vibe Coding 실험 프로젝트.
+                    단순 채팅봇이 아닌 게임 맥락을 이해하는 AI 용의자 심문 시스템 구현 / GPT API 프롬프트 엔지니어링으로
+                    각 용의자의 개성·알리바이·거짓말 패턴 구현 / 플레이어의 최종 추리 논리를 AI가 평가하여 점수·등급·피드백을 자동 생성.
+                  </p>
                 </div>
               </section>
 
               <section class="case-section case-animate" id="detective-conclusion" aria-labelledby="detective-conclusion-title">
-                <p class="case-section-label">Conclusion</p>
-                <h4 id="detective-conclusion-title">AI가 거짓말하도록 설계했습니다</h4>
-                <p class="case-intro">
-                  이 프로젝트의 핵심은 GPT를 단순 채팅봇으로 쓰지 않고, 게임 세계관 안에서 “모순을 숨기는 인물”로 작동하게 만든 점입니다.
-                  단서, 심문, 추리, 평가가 하나의 흐름으로 이어지도록 설계하면서 AI API를 사용자 경험 안에 녹이는 방식을 실험했습니다.
-                </p>
+                <p class="case-section-label">프로젝트 결론</p>
+                <h4 id="detective-conclusion-title">AI가 거짓말하도록 설계했습니다.<br /><span style="color: var(--case-accent)">그것이 몰입의 열쇠였습니다.</span></h4>
                 <div class="case-conclusion-grid">
                   <article class="conclusion-card" style="--tone: var(--case-accent)">
-                    <div class="conclusion-box"><strong>처음 시도</strong><p>단순 Q&A 기반 용의자 대화</p></div>
+                    <div class="conclusion-box"><strong>처음 시도</strong><p>단순 채팅봇 Q&A</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>실제 구현</strong><p>맥락 유지와 단서 연동이 되는 AI 용의자</p></div>
+                    <div class="conclusion-box after"><strong>실제 구현</strong><p>맥락 유지 + 단서 연동 AI 용의자</p></div>
                   </article>
                   <article class="conclusion-card" style="--tone: var(--case-green)">
-                    <div class="conclusion-box"><strong>예상한 어려움</strong><p>용의자별 말투와 거짓말 패턴 유지</p></div>
+                    <div class="conclusion-box"><strong>예상한 것</strong><p>구현이 어려울 것</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>해결 방식</strong><p>시스템 프롬프트와 대화 기록 전달로 제어</p></div>
+                    <div class="conclusion-box after"><strong>발견한 것</strong><p>프롬프트 엔지니어링으로 충분히 가능</p></div>
                   </article>
                   <article class="conclusion-card" style="--tone: var(--case-amber)">
-                    <div class="conclusion-box"><strong>개발 목표</strong><p>캡스톤 게임 완성</p></div>
+                    <div class="conclusion-box"><strong>단순 개발 목표</strong><p>게임 완성</p></div>
                     <div class="conclusion-arrow">↓</div>
-                    <div class="conclusion-box after"><strong>실험적 성과</strong><p>AI 협업 개발과 GPT 기반 평가 시스템 검증</p></div>
+                    <div class="conclusion-box after"><strong>실험적 성과</strong><p>AI 협업 개발(Vibe Coding) 방법론 검증</p></div>
                   </article>
                 </div>
               </section>
