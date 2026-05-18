@@ -71,24 +71,14 @@
       gap: 20px;
     }
 
-    .brand { font-size: 17px; font-weight: 600; white-space: nowrap; }
-    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 15px; font-weight: 500; }
-    .nav-links a:hover { color: var(--teal); }
-    .theme-toggle {
-      min-height: 34px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0 12px;
-      background: rgba(255, 255, 255, 0.72);
-      color: var(--muted);
-      font: 600 13px "Outfit", "IBM Plex Sans KR", sans-serif;
-      cursor: pointer;
+    .brand {
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: 18px;
+      font-weight: 700;
       white-space: nowrap;
     }
-    body.theme-dark .theme-toggle {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--ink);
-    }
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 15px; font-weight: 500; }
+    .nav-links a:hover { color: var(--teal); }
 
     .hero {
       padding: 0;
@@ -121,17 +111,19 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(40px, 5vw, 58px);
-      line-height: 1.02;
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: clamp(44px, 4.8vw, 60px);
+      line-height: 1.05;
       letter-spacing: 0;
-      font-weight: 500;
+      font-weight: 700;
     }
 
     .role {
-      margin: 12px 0 0;
-      font-size: clamp(24px, 3vw, 34px);
-      line-height: 1.15;
-      font-weight: 500;
+      margin: 10px 0 0;
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: clamp(24px, 2.6vw, 31px);
+      line-height: 1.25;
+      font-weight: 700;
       color: var(--teal-dark);
     }
 
@@ -141,7 +133,8 @@
       max-width: none;
       margin: 28px 0 0;
       color: var(--muted);
-      font-size: 18px;
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: 19px;
       font-weight: 400;
       line-height: 1.75;
     }
@@ -218,21 +211,15 @@
     }
 
     .portrait-stage {
-      min-height: 320px;
       display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.34);
-    }
-    body.theme-dark .portrait-stage {
-      background: rgba(255, 255, 255, 0.025);
+      justify-items: center;
     }
 
     .hero-showcase .portrait-wrap {
-      width: min(100%, 184px);
-      border-radius: 50%;
-      aspect-ratio: 1;
-      box-shadow: none;
+      width: min(100%, 248px);
+      border-radius: 8px;
+      aspect-ratio: 4 / 5;
+      box-shadow: var(--shadow);
       border: 1px solid var(--line);
     }
 
@@ -250,7 +237,7 @@
       display: grid;
       grid-template-columns: 118px minmax(0, 1fr);
       gap: 16px;
-      align-items: baseline;
+      align-items: center;
       min-height: 54px;
       border-bottom: 1px solid var(--line);
       color: var(--ink);
@@ -259,12 +246,14 @@
 
     .intro-row dt {
       color: var(--muted);
+      line-height: 1.3;
       font-weight: 500;
     }
 
     .intro-row dd {
       margin: 0;
       color: var(--ink);
+      line-height: 1.3;
       font-weight: 500;
     }
 
@@ -278,6 +267,9 @@
       content: " ↗";
       color: var(--teal);
       font-weight: 700;
+    }
+    .intro-row a[href^="mailto:"]::after {
+      content: "";
     }
 
     section { padding: 86px 0; }
@@ -1206,9 +1198,6 @@
       .hero-visual-panel {
         gap: 24px;
       }
-      .portrait-stage {
-        min-height: 300px;
-      }
       .portrait-wrap { max-height: 520px; }
       section { padding: 64px 0; }
       .section-heading, .contact-box { display: block; }
@@ -1235,7 +1224,7 @@
         justify-content: flex-start;
         gap: 6px 26px;
       }
-      .lead { font-size: 16px; }
+      .lead { font-size: 17px; }
       .lead span { white-space: normal; }
       .button { width: 100%; }
       .intro-row {
@@ -1286,7 +1275,6 @@
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
-        <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false">Dark</button>
       </div>
     </nav>
   </header>
@@ -1308,7 +1296,7 @@
             <li>Excel</li>
           </ul>
           <div class="hero-actions" aria-label="바로가기">
-            <a class="button primary" href="#projects">프로젝트 보기</a>
+            <a class="button primary" href="#projects">프로젝트 보기 →</a>
           </div>
         </div>
         <aside class="hero-showcase" aria-label="전연주 소개 정보">
@@ -1323,6 +1311,10 @@
                 <div class="intro-row">
                   <dt>연락처</dt>
                   <dd>010-4442-4218</dd>
+                </div>
+                <div class="intro-row">
+                  <dt>이메일</dt>
+                  <dd><a href="mailto:duswn0852@gmail.com">duswn0852@gmail.com</a></dd>
                 </div>
                 <div class="intro-row">
                   <dt>블로그</dt>
@@ -2095,25 +2087,8 @@
         });
       });
 
-      const themeButtons = document.querySelectorAll("[data-theme-toggle]");
-      const syncThemeButtons = (isDark) => {
-        themeButtons.forEach((button) => {
-          button.setAttribute("aria-pressed", String(isDark));
-          button.textContent = isDark ? "Light" : "Dark";
-        });
-      };
-      const applyTheme = (theme) => {
-        const isDark = theme === "dark";
-        document.body.classList.toggle("theme-dark", isDark);
-        localStorage.setItem("portfolio-theme", isDark ? "dark" : "light");
-        syncThemeButtons(isDark);
-      };
-      applyTheme(localStorage.getItem("portfolio-theme") || "light");
-      themeButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          applyTheme(document.body.classList.contains("theme-dark") ? "light" : "dark");
-        });
-      });
+      document.body.classList.remove("theme-dark");
+      localStorage.removeItem("portfolio-theme");
 
       document.querySelectorAll("[data-typewriter]").forEach((target) => {
         const full = target.dataset.typewriter;
