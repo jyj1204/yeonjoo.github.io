@@ -107,11 +107,11 @@
       min-height: auto;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(280px, 430px) minmax(360px, 1fr);
+      grid-template-columns: minmax(300px, 430px) minmax(420px, 1fr);
       align-items: center;
       align-content: center;
-      gap: 52px;
-      padding: 40px 0;
+      gap: 64px;
+      padding: 0;
     }
 
     .hero-profile {
@@ -143,11 +143,33 @@
     }
 
     .lead {
-      max-width: 680px;
-      margin: 14px 0 0;
+      max-width: 330px;
+      margin: 26px 0 0;
       color: var(--muted);
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 400;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      margin: 26px 0 0;
+      list-style: none;
+    }
+    .hero-tags li {
+      min-width: 62px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 7px 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.48);
+      font: 500 12px "DM Mono", "Outfit", monospace;
+      text-align: center;
+    }
+    body.theme-dark .hero-tags li {
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
@@ -171,17 +193,12 @@
       background: rgba(255, 255, 255, 0.05);
     }
 
-    .profile-visual { position: relative; min-height: 420px; display: grid; align-items: center; }
     .portrait-wrap {
       overflow: hidden;
       border-radius: 8px;
       box-shadow: var(--shadow);
       background: #d7dde7;
       aspect-ratio: 4 / 5;
-    }
-    .hero-profile .portrait-wrap {
-      width: min(100%, 220px);
-      margin-bottom: 18px;
     }
     .portrait-wrap img {
       width: 100%;
@@ -191,28 +208,36 @@
       filter: saturate(0.92) contrast(1.02);
     }
 
-    .metric-strip {
-      position: absolute;
-      right: -18px;
-      bottom: 24px;
-      width: min(280px, 76%);
-      padding: 18px;
-      border-radius: 8px;
-      background: #ffffff;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--line);
-    }
-    .metric-strip strong { display: block; font-size: 28px; line-height: 1; color: var(--coral); }
-    .metric-strip span { display: block; margin-top: 8px; color: var(--muted); font-size: 13px; font-weight: 700; }
-
     .hero-showcase {
       align-self: center;
       width: 100%;
     }
 
+    .hero-visual-panel {
+      min-height: min(650px, calc(100vh - 120px));
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 30px;
+      border-left: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.34);
+      padding: 48px 40px;
+    }
+    body.theme-dark .hero-visual-panel {
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .hero-showcase .portrait-wrap {
+      width: min(100%, 220px);
+      border-radius: 50%;
+      aspect-ratio: 1;
+      box-shadow: none;
+      border: 1px solid var(--line);
+    }
+
     .intro-card {
-      max-width: 430px;
-      padding: 30px 34px;
+      width: min(100%, 360px);
+      padding: 28px 30px;
       border: 1px solid rgba(227, 231, 239, 0.95);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.72);
@@ -1192,11 +1217,14 @@
       .nav, .hero-inner, .section-inner { width: min(calc(100% - 28px), 1120px); }
       .nav-links { gap: 12px; font-size: 13px; }
       .hero-inner { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
-      .hero-profile .portrait-wrap { width: min(100%, 360px); }
       .hero-showcase { align-self: auto; }
-      .profile-visual { min-height: 0; }
+      .hero-visual-panel {
+        min-height: auto;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 34px 0 0;
+      }
       .portrait-wrap { max-height: 520px; }
-      .metric-strip { right: 12px; bottom: 12px; }
       section { padding: 64px 0; }
       .section-heading, .contact-box { display: block; }
       .section-note { margin-top: 12px; }
@@ -1224,7 +1252,7 @@
       }
       .lead { font-size: 16px; }
       .button { width: 100%; }
-      .intro-card { max-width: none; padding: 22px; }
+      .intro-card { width: 100%; max-width: none; padding: 22px; }
       .intro-row { grid-template-columns: 96px 1fr; gap: 12px; }
       .project-modal { justify-content: flex-start; padding: 12px; }
       .modal-dialog {
@@ -1278,39 +1306,48 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-profile">
-          <div class="portrait-wrap">
-            <img src="assets/profile.jpeg" alt="전연주 프로필 사진" />
-          </div>
+          <p class="eyebrow">Data Analyst Portfolio</p>
           <h1 id="hero-title">전연주</h1>
           <p class="role">데이터 분석가</p>
           <p class="lead">
             데이터로 흐름을 읽고, 결정을 설계합니다.
           </p>
+          <ul class="hero-tags" aria-label="주요 기술">
+            <li>SQL</li>
+            <li>Python</li>
+            <li>Tableau</li>
+            <li>Excel</li>
+          </ul>
           <div class="hero-actions" aria-label="바로가기">
             <a class="button primary" href="#projects">프로젝트 보기</a>
           </div>
         </div>
         <aside class="hero-showcase" aria-label="전연주 소개 정보">
-          <div class="intro-card">
-            <p class="intro-title">Intro</p>
-            <dl class="intro-list">
-              <div class="intro-row">
-                <dt>이름</dt>
-                <dd>전연주</dd>
-              </div>
-              <div class="intro-row">
-                <dt>연락처</dt>
-                <dd>010-4442-4218</dd>
-              </div>
-              <div class="intro-row">
-                <dt>블로그</dt>
-                <dd><a href="https://duswn1204.tistory.com/" target="_blank" rel="noreferrer">duswn1204.tistory.com</a></dd>
-              </div>
-              <div class="intro-row">
-                <dt>태블로퍼블릭</dt>
-                <dd><a href="https://public.tableau.com/app/profile/.10463744/vizzes" target="_blank" rel="noreferrer">public.tableau.com</a></dd>
-              </div>
-            </dl>
+          <div class="hero-visual-panel">
+            <div class="portrait-wrap">
+              <img src="assets/profile.jpeg" alt="전연주 프로필 사진" />
+            </div>
+            <div class="intro-card">
+              <p class="intro-title">Intro</p>
+              <dl class="intro-list">
+                <div class="intro-row">
+                  <dt>이름</dt>
+                  <dd>전연주</dd>
+                </div>
+                <div class="intro-row">
+                  <dt>연락처</dt>
+                  <dd>010-4442-4218</dd>
+                </div>
+                <div class="intro-row">
+                  <dt>블로그</dt>
+                  <dd><a href="https://duswn1204.tistory.com/" target="_blank" rel="noreferrer">duswn1204.tistory.com</a></dd>
+                </div>
+                <div class="intro-row">
+                  <dt>태블로퍼블릭</dt>
+                  <dd><a href="https://public.tableau.com/app/profile/.10463744/vizzes" target="_blank" rel="noreferrer">public.tableau.com</a></dd>
+                </div>
+              </dl>
+            </div>
           </div>
         </aside>
       </div>
