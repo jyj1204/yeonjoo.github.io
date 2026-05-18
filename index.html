@@ -89,7 +89,6 @@
         linear-gradient(120deg, rgba(15, 118, 110, 0.09), transparent 35%),
         linear-gradient(300deg, rgba(232, 93, 79, 0.1), transparent 36%),
         var(--soft);
-      border-bottom: 1px solid var(--line);
     }
 
     .hero-inner {
@@ -273,7 +272,16 @@
     }
 
     section { padding: 86px 0; }
-    #about, #skills { background: var(--paper); }
+    #about {
+      min-height: calc(100vh - 64px);
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(120deg, rgba(15, 118, 110, 0.09), transparent 35%),
+        linear-gradient(300deg, rgba(232, 93, 79, 0.1), transparent 36%),
+        var(--soft);
+    }
+    #skills { background: var(--paper); }
     .section-inner { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
     .section-heading {
       display: flex;
@@ -292,19 +300,51 @@
       text-transform: uppercase;
     }
     .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
+    #about .section-inner {
+      width: min(1040px, calc(100% - 40px));
+    }
+    .about-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 54px;
+      padding-bottom: 18px;
+    }
+    .about-index {
+      color: var(--muted);
+      font: 500 12px "DM Mono", "Outfit", monospace;
+    }
+    .about-title {
+      font-family: "DM Serif Display", "Gowun Batang", serif;
+      font-size: clamp(34px, 3vw, 42px);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
     .about-layout {
       display: grid;
-      grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
-      gap: 44px;
+      grid-template-columns: minmax(320px, 390px) minmax(420px, 500px);
+      justify-content: center;
+      gap: 72px;
       align-items: start;
     }
     .about-rail {
       display: grid;
-      gap: 30px;
+      gap: 34px;
     }
     .about-block {
       display: grid;
       gap: 12px;
+    }
+    .about-copy {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      color: var(--ink);
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: 21px;
+      line-height: 1.8;
+      font-weight: 400;
     }
     .about-label {
       margin: 0;
@@ -314,33 +354,23 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .about-value {
-      margin: 0;
-      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
-      font-size: 23px;
-      line-height: 1.45;
-      font-weight: 700;
-    }
-    .about-subvalue {
-      margin: -6px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-      font-weight: 500;
-    }
     .credential-list {
       display: grid;
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
       padding: 0;
       margin: 0;
       list-style: none;
     }
     .credential-list li {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
+      display: grid;
+      gap: 4px;
+      min-height: 70px;
+      align-content: center;
+      border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      padding-bottom: 10px;
+      padding: 14px 16px;
       color: var(--ink);
       font-size: 16px;
       font-weight: 500;
@@ -352,40 +382,52 @@
     }
     .about-content {
       display: grid;
-      gap: 18px;
+      gap: 0;
     }
     .about-item {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 16px;
       border-top: 1px solid var(--line);
-      padding-top: 20px;
+      padding: 22px 0;
     }
     .about-item:first-child {
-      border-top: 0;
       padding-top: 0;
     }
     .about-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      display: grid;
+      align-content: start;
+      gap: 3px;
+      margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
     }
     .about-item h3 {
-      margin: 0 0 12px;
-      font-size: 22px;
+      margin: 0 0 6px;
+      font-size: 20px;
       line-height: 1.35;
       font-weight: 700;
     }
+    .about-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
     .about-bullets {
       display: grid;
-      gap: 7px;
-      margin: 0;
-      padding-left: 18px;
+      gap: 5px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 15px;
       line-height: 1.65;
+    }
+    .about-bullets li::before {
+      content: "— ";
+      color: rgba(31, 36, 48, 0.32);
     }
     .panel { border: 1px solid var(--line); border-radius: 8px; background: #ffffff; padding: 28px; }
     body.theme-dark .panel { background: #11151e; }
@@ -1330,7 +1372,21 @@
       section { padding: 64px 0; }
       .section-heading, .contact-box { display: block; }
       .section-note { margin-top: 12px; }
-      .about-grid, .project-grid { grid-template-columns: 1fr; }
+      .about-layout, .project-grid { grid-template-columns: 1fr; }
+      #about {
+        min-height: 0;
+        padding: 76px 0;
+      }
+      .about-heading {
+        margin-bottom: 36px;
+      }
+      .about-layout {
+        gap: 38px;
+      }
+      .about-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
       .case-kpi-grid, .case-finding-grid, .case-conclusion-grid, .case-split-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .case-story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .case-story-grid::before { display: none; }
@@ -1390,7 +1446,18 @@
       .chart-bar { min-height: 205px; }
       .priority-row { grid-template-columns: 1fr; gap: 5px; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
-      .about-layout { grid-template-columns: 1fr; gap: 28px; }
+      #about {
+        min-height: 0;
+        padding: 72px 0;
+      }
+      .about-heading {
+        margin-bottom: 34px;
+      }
+      .about-layout { grid-template-columns: 1fr; gap: 36px; }
+      .about-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
       .panel, .project-card, .contact-box { padding: 22px; }
       .project-card { min-height: 0; border-radius: 16px; }
     }
@@ -1463,18 +1530,17 @@
 
     <section id="about" aria-labelledby="about-title">
       <div class="section-inner">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">About</p>
-            <h2 id="about-title">학력과 이수 과정</h2>
-          </div>
+        <div class="about-heading">
+          <span class="about-index">01</span>
+          <h2 class="about-title" id="about-title">About</h2>
         </div>
         <div class="about-layout">
-          <aside class="about-rail" aria-label="학력 및 자격증">
+          <aside class="about-rail" aria-label="소개 및 자격증">
             <div class="about-block">
-              <p class="about-label">학력</p>
-              <p class="about-value">수원대학교 데이터과학부</p>
-              <p class="about-subvalue">2026.02 졸업</p>
+              <p class="about-copy">
+                <span>데이터로 흐름을 읽고, 결정을 설계합니다.</span>
+                <span>숫자 속에서 이야기를 찾아냅니다.</span>
+              </p>
             </div>
             <div class="about-block">
               <p class="about-label">자격증</p>
@@ -1489,28 +1555,42 @@
           <div class="about-content">
             <article class="about-item">
               <div class="about-meta">
-                <span>2025.06~2025.11</span>
-                <span>패스트캠퍼스</span>
+                <span>2026.02</span>
+                <span>졸업</span>
               </div>
-              <h3>데이터 분석 부트캠프 수료</h3>
-              <ul class="about-bullets">
-                <li>SQL을 활용한 데이터 추출 및 전처리 수행</li>
-                <li>Python 기반 데이터 가공 및 분석 로직 구현</li>
-                <li>Tableau를 활용한 데이터 시각화 및 대시보드 제작</li>
-                <li>팀 프로젝트 기반 데이터 분석 프로세스 경험</li>
-              </ul>
+              <div>
+                <h3>수원대학교</h3>
+                <p>데이터과학부</p>
+              </div>
+            </article>
+            <article class="about-item">
+              <div class="about-meta">
+                <span>2025.06~2025.11</span>
+              </div>
+              <div>
+                <h3>패스트캠퍼스</h3>
+                <p>데이터 분석 부트캠프 수료</p>
+                <ul class="about-bullets">
+                  <li>SQL을 활용한 데이터 추출 및 전처리 수행</li>
+                  <li>Python 기반 데이터 가공 및 분석 로직 구현</li>
+                  <li>Tableau를 활용한 데이터 시각화 및 대시보드 제작</li>
+                  <li>팀 프로젝트 기반 데이터 분석 프로세스 경험</li>
+                </ul>
+              </div>
             </article>
             <article class="about-item">
               <div class="about-meta">
                 <span>2026</span>
-                <span>인프런</span>
               </div>
-              <h3>A/B 테스트 실무자 완벽 가이드 수료</h3>
-              <ul class="about-bullets">
-                <li>A/B Test 핵심원리 및 개념</li>
-                <li>A/B Test를 위한 필수 통계학 개념</li>
-                <li>A/B Test 모의 사례 실습</li>
-              </ul>
+              <div>
+                <h3>인프런</h3>
+                <p>A/B 테스트 실무자 완벽 가이드 수료</p>
+                <ul class="about-bullets">
+                  <li>A/B Test 핵심원리 및 개념</li>
+                  <li>A/B Test를 위한 필수 통계학 개념</li>
+                  <li>A/B Test 모의 사례 실습</li>
+                </ul>
+              </div>
             </article>
           </div>
         </div>
