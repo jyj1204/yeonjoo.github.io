@@ -414,14 +414,13 @@
     .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
     .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .project-card {
-      min-height: 0;
+      min-height: 292px;
       display: flex;
       flex-direction: column;
       border: 1px solid #d9dee8;
-      border-radius: 8px;
+      border-radius: 18px;
       background: rgba(255, 255, 255, 0.76);
-      overflow: hidden;
-      padding: 0;
+      padding: 24px 28px 26px;
       box-shadow: 0 18px 44px rgba(31, 36, 48, 0.045);
       transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
       color: inherit;
@@ -441,43 +440,11 @@
       border-color: rgba(13, 111, 104, 0.42);
       box-shadow: 0 22px 54px rgba(31, 36, 48, 0.075);
     }
-    .project-preview {
-      position: relative;
-      aspect-ratio: 16 / 6.4;
-      overflow: hidden;
-      border-bottom: 1px solid var(--line);
-      background: #eef2f7;
-    }
-    .project-preview::after {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0) 58%, rgba(255,255,255,0.18));
-      content: "";
-      pointer-events: none;
-    }
-    .project-preview img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: top left;
-      transition: transform 220ms ease;
-    }
-    .project-card:hover .project-preview img {
-      transform: scale(1.025);
-    }
-    .project-body {
-      display: flex;
-      min-height: 214px;
-      flex: 1;
-      flex-direction: column;
-      padding: 22px 24px 24px;
-    }
     .project-card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       color: var(--muted);
       font-size: 13px;
     }
@@ -487,8 +454,43 @@
       font-size: 18px;
       line-height: 1;
     }
-    .project-card h3 { margin: 0 0 10px; font-size: 23px; line-height: 1.32; font-weight: 600; }
-    .project-card p { margin: 0; min-height: 48px; font-size: 15px; }
+    .project-icon {
+      width: 46px;
+      height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid currentColor;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      background: rgba(13, 111, 104, 0.06);
+      color: var(--teal);
+      font-size: 22px;
+      line-height: 1;
+    }
+    .project-card:nth-child(1) .project-icon {
+      color: #4b7df0;
+      background: rgba(75, 125, 240, 0.08);
+    }
+    .project-card:nth-child(2) .project-icon {
+      color: #16a34a;
+      background: rgba(22, 163, 74, 0.08);
+    }
+    .project-card:nth-child(3) .project-icon {
+      color: #c28110;
+      background: rgba(194, 129, 16, 0.09);
+    }
+    .project-card:nth-child(4) .project-icon {
+      color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.08);
+    }
+    .project-card h3 { margin: 0 0 10px; font-size: 22px; line-height: 1.35; font-weight: 700; }
+    .project-card p {
+      margin: 0;
+      min-height: 54px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
     .project-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 22px; font-size: 12px; font-weight: 600; }
     .project-meta span { border: 1px solid #d8dde7; border-radius: 999px; padding: 6px 9px; background: rgba(255, 255, 255, 0.64); }
     body.theme-dark .project-meta span {
@@ -1390,6 +1392,7 @@
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
       .about-layout { grid-template-columns: 1fr; gap: 28px; }
       .panel, .project-card, .contact-box { padding: 22px; }
+      .project-card { min-height: 0; border-radius: 16px; }
     }
   </style>
 </head>
@@ -1521,64 +1524,48 @@
             <p class="section-kicker">Projects</p>
             <h2 id="projects-title">분석 프로젝트</h2>
           </div>
-          <p class="section-note">진행한 4개의 프로젝트를 하나씩 열어볼 수 있는 영역입니다. 상세 내용은 추후 프로젝트별로 채워갈 예정입니다.</p>
+          <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
         </div>
         <div class="project-grid">
           <button class="project-card" id="project-01" type="button" data-modal-open="warehouse-modal" aria-label="창고 로봇 시스템 출고 지연 원인 분석 상세 보기">
-            <div class="project-preview">
-              <img src="assets/project-warehouse-thumb.png" alt="" loading="lazy" decoding="async" />
+            <div class="project-card-top">
+              <span class="project-number">01</span>
+              <span class="project-arrow" aria-hidden="true">↗</span>
             </div>
-            <div class="project-body">
-              <div class="project-card-top">
-                <span class="project-number">01</span>
-                <span class="project-arrow" aria-hidden="true">↗</span>
-              </div>
-              <h3>창고 로봇 시스템 출고 지연 원인 분석</h3>
-              <p>250,000건 운영 데이터를 기반으로 출고 지연의 원인과 개선 우선순위를 도출한 분석 프로젝트입니다.</p>
-              <div class="project-meta"><span>Python</span><span>LightGBM</span><span>PSM</span><span>Clustering</span></div>
-            </div>
+            <span class="project-icon" aria-hidden="true">📦</span>
+            <h3>창고 로봇 시스템 출고 지연 원인 분석</h3>
+            <p>250,000건 운영 데이터를 기반으로 출고 지연의 원인과 개선 우선순위를 도출한 분석 프로젝트입니다.</p>
+            <div class="project-meta"><span>Python</span><span>LightGBM</span><span>PSM</span><span>Clustering</span></div>
           </button>
           <button class="project-card" id="project-02" type="button" data-modal-open="instacart-modal" aria-label="Instacart 구매 로그 기반 개인화 마케팅 전략 상세 보기">
-            <div class="project-preview">
-              <img src="assets/project-instacart-thumb.png" alt="" loading="lazy" decoding="async" />
+            <div class="project-card-top">
+              <span class="project-number">02</span>
+              <span class="project-arrow" aria-hidden="true">↗</span>
             </div>
-            <div class="project-body">
-              <div class="project-card-top">
-                <span class="project-number">02</span>
-                <span class="project-arrow" aria-hidden="true">↗</span>
-              </div>
-              <h3>Instacart 구매 로그 기반 개인화 마케팅 전략</h3>
-              <p>300만 건 이상의 주문 로그에서 고객 생애주기와 재구매 타이밍을 분석해 개인화 마케팅 전략을 설계한 프로젝트입니다.</p>
-              <div class="project-meta"><span>SQL</span><span>Python</span><span>Tableau</span><span>Marketing</span></div>
-            </div>
+            <span class="project-icon" aria-hidden="true">🛒</span>
+            <h3>Instacart 구매 로그 기반 개인화 마케팅 전략</h3>
+            <p>300만 건 이상의 주문 로그에서 고객 생애주기와 재구매 타이밍을 분석해 개인화 마케팅 전략을 설계한 프로젝트입니다.</p>
+            <div class="project-meta"><span>SQL</span><span>Python</span><span>Tableau</span><span>Marketing</span></div>
           </button>
           <button class="project-card" id="project-03" type="button" data-modal-open="jewelry-modal" aria-label="쥬얼리 브랜드 R사 타겟 리포지셔닝 상세 보기">
-            <div class="project-preview">
-              <img src="assets/project-jewelry-thumb.png" alt="" loading="lazy" decoding="async" />
+            <div class="project-card-top">
+              <span class="project-number">03</span>
+              <span class="project-arrow" aria-hidden="true">↗</span>
             </div>
-            <div class="project-body">
-              <div class="project-card-top">
-                <span class="project-number">03</span>
-                <span class="project-arrow" aria-hidden="true">↗</span>
-              </div>
-              <h3>쥬얼리 브랜드 R사 타겟 리포지셔닝</h3>
-              <p>광고 성과와 리뷰 데이터를 결합해 실제 구매자 페르소나를 재정의하고 예산 재배치 전략을 도출한 프로젝트입니다.</p>
-              <div class="project-meta"><span>Ad Analytics</span><span>Persona</span><span>Python</span><span>Tableau</span></div>
-            </div>
+            <span class="project-icon" aria-hidden="true">💍</span>
+            <h3>쥬얼리 브랜드 R사 타겟 리포지셔닝</h3>
+            <p>광고 성과와 리뷰 데이터를 결합해 실제 구매자 페르소나를 재정의하고 예산 재배치 전략을 도출한 프로젝트입니다.</p>
+            <div class="project-meta"><span>Ad Analytics</span><span>Persona</span><span>Python</span><span>Tableau</span></div>
           </button>
           <button class="project-card" id="project-04" type="button" data-modal-open="detective-modal" aria-label="AI 탐정게임 개발 상세 보기">
-            <div class="project-preview">
-              <img src="assets/project-detective-thumb.png" alt="" loading="lazy" decoding="async" />
+            <div class="project-card-top">
+              <span class="project-number">04</span>
+              <span class="project-arrow" aria-hidden="true">↗</span>
             </div>
-            <div class="project-body">
-              <div class="project-card-top">
-                <span class="project-number">04</span>
-                <span class="project-arrow" aria-hidden="true">↗</span>
-              </div>
-              <h3>AI 탐정게임 개발</h3>
-              <p>GPT API 기반 AI 용의자와 대화하며 단서를 수집하고 최종 추리를 완성하는 인터랙티브 웹 게임입니다.</p>
-              <div class="project-meta"><span>JavaScript</span><span>GPT API</span><span>Prompt Engineering</span><span>Vibe Coding</span></div>
-            </div>
+            <span class="project-icon" aria-hidden="true">🔎</span>
+            <h3>AI 탐정게임 개발</h3>
+            <p>GPT API 기반 AI 용의자와 대화하며 단서를 수집하고 최종 추리를 완성하는 인터랙티브 웹 게임입니다.</p>
+            <div class="project-meta"><span>JavaScript</span><span>GPT API</span><span>Prompt Engineering</span><span>Vibe Coding</span></div>
           </button>
         </div>
 
