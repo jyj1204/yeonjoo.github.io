@@ -292,7 +292,101 @@
       text-transform: uppercase;
     }
     .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .about-layout {
+      display: grid;
+      grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
+      gap: 44px;
+      align-items: start;
+    }
+    .about-rail {
+      display: grid;
+      gap: 30px;
+    }
+    .about-block {
+      display: grid;
+      gap: 12px;
+    }
+    .about-label {
+      margin: 0;
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .about-value {
+      margin: 0;
+      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
+      font-size: 23px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .about-subvalue {
+      margin: -6px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .credential-list {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .credential-list li {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .credential-list span {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .about-content {
+      display: grid;
+      gap: 18px;
+    }
+    .about-item {
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+    }
+    .about-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+    .about-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .about-item h3 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    .about-bullets {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
     .panel { border: 1px solid var(--line); border-radius: 8px; background: #ffffff; padding: 28px; }
     body.theme-dark .panel { background: #11151e; }
     .panel h3 { margin: 0 0 12px; font-size: 20px; font-weight: 700; }
@@ -1294,6 +1388,7 @@
       .chart-bar { min-height: 205px; }
       .priority-row { grid-template-columns: 1fr; gap: 5px; }
       .metric-strip { position: static; width: 100%; margin-top: 12px; }
+      .about-layout { grid-template-columns: 1fr; gap: 28px; }
       .panel, .project-card, .contact-box { padding: 22px; }
     }
   </style>
@@ -1303,8 +1398,8 @@
     <nav class="nav" aria-label="주요 메뉴">
       <a class="brand" href="#top">전연주</a>
       <div class="nav-links">
-        <a href="#projects">Projects</a>
         <a href="#about">About</a>
+        <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
@@ -1360,6 +1455,62 @@
             </div>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-inner">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">About</p>
+            <h2 id="about-title">학력과 이수 과정</h2>
+          </div>
+        </div>
+        <div class="about-layout">
+          <aside class="about-rail" aria-label="학력 및 자격증">
+            <div class="about-block">
+              <p class="about-label">학력</p>
+              <p class="about-value">수원대학교 데이터과학부</p>
+              <p class="about-subvalue">2026.02 졸업</p>
+            </div>
+            <div class="about-block">
+              <p class="about-label">자격증</p>
+              <ul class="credential-list">
+                <li>SQLD <span>2024</span></li>
+                <li>ADsP <span>2024</span></li>
+                <li>GA4 <span>2026</span></li>
+                <li>Tableau Desktop Foundation <span>2026</span></li>
+              </ul>
+            </div>
+          </aside>
+          <div class="about-content">
+            <article class="about-item">
+              <div class="about-meta">
+                <span>2025.06~2025.11</span>
+                <span>패스트캠퍼스</span>
+              </div>
+              <h3>데이터 분석 부트캠프 수료</h3>
+              <ul class="about-bullets">
+                <li>SQL을 활용한 데이터 추출 및 전처리 수행</li>
+                <li>Python 기반 데이터 가공 및 분석 로직 구현</li>
+                <li>Tableau를 활용한 데이터 시각화 및 대시보드 제작</li>
+                <li>팀 프로젝트 기반 데이터 분석 프로세스 경험</li>
+              </ul>
+            </article>
+            <article class="about-item">
+              <div class="about-meta">
+                <span>2026</span>
+                <span>인프런</span>
+              </div>
+              <h3>A/B 테스트 실무자 완벽 가이드 수료</h3>
+              <ul class="about-bullets">
+                <li>A/B Test 핵심원리 및 개념</li>
+                <li>A/B Test를 위한 필수 통계학 개념</li>
+                <li>A/B Test 모의 사례 실습</li>
+              </ul>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1992,31 +2143,6 @@
               </section>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" aria-labelledby="about-title">
-      <div class="section-inner">
-        <div class="section-heading">
-          <h2 id="about-title">소개</h2>
-          <p class="section-note">아직 초안입니다. 프로젝트와 경험을 추가하면서 더 선명한 이야기로 다듬어갈 예정입니다.</p>
-        </div>
-        <div class="about-grid">
-          <article class="panel">
-            <h3>분석으로 답을 찾는 사람</h3>
-            <p>
-              복잡한 데이터를 목적에 맞게 정리하고, 핵심 지표를 통해 현재 상황을 설명하는 일에 관심이 있습니다.
-              가설을 세우고 검증하며, 결과를 이해하기 쉬운 언어와 시각 자료로 전달하는 분석가를 지향합니다.
-            </p>
-          </article>
-          <article class="panel">
-            <h3>차근차근 쌓는 포트폴리오</h3>
-            <p>
-              이 페이지는 전연주의 데이터 분석 포트폴리오 공간입니다. 앞으로 분석 프로젝트, 대시보드, 학습 기록,
-              협업 경험을 업데이트해 실제 역량이 잘 보이도록 개선할 예정입니다.
-            </p>
-          </article>
         </div>
       </div>
     </section>
