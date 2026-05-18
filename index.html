@@ -300,11 +300,14 @@
     #about .section-inner {
       width: min(1040px, calc(100% - 40px));
     }
+    #about {
+      font-family: "Noto Sans KR", "IBM Plex Sans KR", "Outfit", sans-serif;
+    }
     .about-layout {
       display: grid;
-      grid-template-columns: minmax(320px, 390px) minmax(440px, 520px);
-      justify-content: center;
-      gap: 68px;
+      grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+      width: 100%;
+      gap: 64px;
       align-items: start;
     }
     .about-rail {
@@ -2404,13 +2407,6 @@
       const skillsGrid = document.querySelector(".skills-grid");
       if (skillsSection && skillsGrid) {
         const revealSkills = () => skillsGrid.classList.add("is-visible");
-        if (window.location.hash === "#skills") revealSkills();
-        window.setTimeout(() => {
-          if (window.location.hash === "#skills") revealSkills();
-        }, 0);
-        window.addEventListener("hashchange", () => {
-          if (window.location.hash === "#skills") revealSkills();
-        });
         if (!("IntersectionObserver" in window)) {
           revealSkills();
         } else {
@@ -2420,9 +2416,9 @@
               revealSkills();
               skillsObserver.disconnect();
             },
-            { threshold: 0.15 }
+            { rootMargin: "0px 0px -18% 0px", threshold: 0.35 }
           );
-          skillsObserver.observe(skillsSection);
+          skillsObserver.observe(skillsGrid);
         }
       }
 
