@@ -71,8 +71,8 @@
       gap: 20px;
     }
 
-    .brand { font-weight: 600; white-space: nowrap; }
-    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 14px; font-weight: 500; }
+    .brand { font-size: 17px; font-weight: 600; white-space: nowrap; }
+    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 15px; font-weight: 500; }
     .nav-links a:hover { color: var(--teal); }
     .theme-toggle {
       min-height: 34px;
@@ -81,7 +81,7 @@
       padding: 0 12px;
       background: rgba(255, 255, 255, 0.72);
       color: var(--muted);
-      font: 600 12px "Outfit", "IBM Plex Sans KR", sans-serif;
+      font: 600 13px "Outfit", "IBM Plex Sans KR", sans-serif;
       cursor: pointer;
       white-space: nowrap;
     }
@@ -107,23 +107,16 @@
       min-height: auto;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(300px, 430px) minmax(420px, 1fr);
+      grid-template-columns: minmax(360px, 420px) minmax(420px, 460px);
       align-items: center;
       align-content: center;
-      gap: 64px;
+      justify-content: center;
+      gap: 74px;
       padding: 0;
     }
 
     .hero-profile {
-      width: min(100%, 440px);
-    }
-
-    .eyebrow {
-      margin: 0 0 14px;
-      color: var(--teal);
-      font-size: 14px;
-      font-weight: 800;
-      text-transform: uppercase;
+      width: 100%;
     }
 
     h1 {
@@ -143,11 +136,17 @@
     }
 
     .lead {
-      max-width: 330px;
-      margin: 26px 0 0;
+      display: grid;
+      gap: 4px;
+      max-width: none;
+      margin: 28px 0 0;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 400;
+      line-height: 1.75;
+    }
+    .lead span {
+      white-space: nowrap;
     }
 
     .hero-tags {
@@ -165,14 +164,14 @@
       padding: 7px 12px;
       color: var(--muted);
       background: rgba(255, 255, 255, 0.48);
-      font: 500 12px "DM Mono", "Outfit", monospace;
+      font: 500 13px "DM Mono", "Outfit", monospace;
       text-align: center;
     }
     body.theme-dark .hero-tags li {
       background: rgba(255, 255, 255, 0.04);
     }
 
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
     .button {
       min-height: 46px;
       display: inline-flex;
@@ -181,7 +180,7 @@
       padding: 0 18px;
       border-radius: 8px;
       border: 1px solid var(--ink);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
     }
 
@@ -209,26 +208,28 @@
     }
 
     .hero-showcase {
-      align-self: center;
-      width: 100%;
+      width: min(100%, 460px);
+      justify-self: end;
     }
 
     .hero-visual-panel {
-      min-height: min(650px, calc(100vh - 120px));
       display: grid;
-      justify-items: center;
-      align-content: center;
       gap: 30px;
-      border-left: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.34);
-      padding: 48px 40px;
     }
-    body.theme-dark .hero-visual-panel {
+
+    .portrait-stage {
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.34);
+    }
+    body.theme-dark .portrait-stage {
       background: rgba(255, 255, 255, 0.025);
     }
 
     .hero-showcase .portrait-wrap {
-      width: min(100%, 220px);
+      width: min(100%, 184px);
       border-radius: 50%;
       aspect-ratio: 1;
       box-shadow: none;
@@ -236,43 +237,24 @@
     }
 
     .intro-card {
-      width: min(100%, 360px);
-      padding: 28px 30px;
-      border: 1px solid rgba(227, 231, 239, 0.95);
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.72);
-      box-shadow: 0 20px 60px rgba(31, 36, 48, 0.06);
-      backdrop-filter: blur(10px);
-    }
-    body.theme-dark .intro-card {
-      border-color: rgba(255, 255, 255, 0.08);
-      background: rgba(16, 19, 26, 0.82);
-      box-shadow: var(--shadow);
-    }
-
-    .intro-title {
-      display: inline-block;
-      margin: 0 0 20px;
-      border-bottom: 1px solid currentColor;
-      color: var(--coral);
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.2;
+      width: 100%;
     }
 
     .intro-list {
       display: grid;
-      gap: 12px;
+      gap: 0;
       margin: 0;
     }
 
     .intro-row {
       display: grid;
-      grid-template-columns: 118px 1fr;
-      gap: 20px;
+      grid-template-columns: 118px minmax(0, 1fr);
+      gap: 16px;
       align-items: baseline;
+      min-height: 54px;
+      border-bottom: 1px solid var(--line);
       color: var(--ink);
-      font-size: 14px;
+      font-size: 16px;
     }
 
     .intro-row dt {
@@ -283,7 +265,7 @@
     .intro-row dd {
       margin: 0;
       color: var(--ink);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .intro-row a {
@@ -1217,12 +1199,15 @@
       .nav, .hero-inner, .section-inner { width: min(calc(100% - 28px), 1120px); }
       .nav-links { gap: 12px; font-size: 13px; }
       .hero-inner { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
-      .hero-showcase { align-self: auto; }
+      .hero-showcase {
+        width: 100%;
+        justify-self: stretch;
+      }
       .hero-visual-panel {
-        min-height: auto;
-        border-left: 0;
-        border-top: 1px solid var(--line);
-        padding: 34px 0 0;
+        gap: 24px;
+      }
+      .portrait-stage {
+        min-height: 300px;
       }
       .portrait-wrap { max-height: 520px; }
       section { padding: 64px 0; }
@@ -1251,9 +1236,13 @@
         gap: 6px 26px;
       }
       .lead { font-size: 16px; }
+      .lead span { white-space: normal; }
       .button { width: 100%; }
-      .intro-card { width: 100%; max-width: none; padding: 22px; }
-      .intro-row { grid-template-columns: 96px 1fr; gap: 12px; }
+      .intro-row {
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 12px;
+        font-size: 15px;
+      }
       .project-modal { justify-content: flex-start; padding: 12px; }
       .modal-dialog {
         width: calc(min(100vw, 390px) - 24px);
@@ -1306,11 +1295,11 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-profile">
-          <p class="eyebrow">Data Analyst Portfolio</p>
           <h1 id="hero-title">전연주</h1>
           <p class="role">데이터 분석가</p>
           <p class="lead">
-            데이터로 흐름을 읽고, 결정을 설계합니다.
+            <span>데이터로 흐름을 읽고, 결정을 설계합니다.</span>
+            <span>숫자 속에서 이야기를 찾아냅니다.</span>
           </p>
           <ul class="hero-tags" aria-label="주요 기술">
             <li>SQL</li>
@@ -1324,16 +1313,13 @@
         </div>
         <aside class="hero-showcase" aria-label="전연주 소개 정보">
           <div class="hero-visual-panel">
-            <div class="portrait-wrap">
-              <img src="assets/profile.jpeg" alt="전연주 프로필 사진" />
+            <div class="portrait-stage">
+              <div class="portrait-wrap">
+                <img src="assets/profile.jpeg" alt="전연주 프로필 사진" />
+              </div>
             </div>
             <div class="intro-card">
-              <p class="intro-title">Intro</p>
               <dl class="intro-list">
-                <div class="intro-row">
-                  <dt>이름</dt>
-                  <dd>전연주</dd>
-                </div>
                 <div class="intro-row">
                   <dt>연락처</dt>
                   <dd>010-4442-4218</dd>
