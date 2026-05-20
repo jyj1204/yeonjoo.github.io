@@ -418,6 +418,13 @@
       line-height: 1.35;
       font-weight: 700;
     }
+    .about-org {
+      display: inline-block;
+      margin-right: 6px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
     .about-item p {
       margin: 0;
       color: var(--muted);
@@ -540,7 +547,9 @@
     .projects .section-heading { align-items: baseline; }
     .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
     .projects .section-note {
+      max-width: none;
       margin: -22px 0 30px 0;
+      white-space: nowrap;
     }
     .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .project-card {
@@ -1622,7 +1631,7 @@
         <div class="hero-profile">
           <div class="hero-badge">Data Analyst</div>
           <h1 id="hero-title">전연주</h1>
-          <p class="role">Jeon Yeonjoo · Data Analyst</p>
+          <p class="role">Data Analyst</p>
           <p class="lead">
             <span>데이터로 흐름을 읽고, 결정을 설계합니다.</span>
             <span>숫자 속에서 이야기를 찾아냅니다.</span>
@@ -1701,8 +1710,7 @@
                 <span>졸업</span>
               </div>
               <div>
-                <h3>수원대학교</h3>
-                <p>데이터과학부</p>
+                <h3><span class="about-org">수원대학교</span> 데이터과학부</h3>
               </div>
             </article>
             <article class="about-item">
@@ -1710,8 +1718,7 @@
                 <span>2025.06~2025.11</span>
               </div>
               <div>
-                <h3>패스트캠퍼스</h3>
-                <p>데이터 분석 부트캠프 수료</p>
+                <h3><span class="about-org">패스트캠퍼스</span> 데이터 분석 부트캠프 수료</h3>
                 <ul class="about-bullets">
                   <li>SQL을 활용한 데이터 추출 및 전처리 수행</li>
                   <li>Python 기반 데이터 가공 및 분석 로직 구현</li>
@@ -1725,8 +1732,7 @@
                 <span>2026</span>
               </div>
               <div>
-                <h3>인프런</h3>
-                <p>A/B 테스트 실무자 완벽 가이드 수료</p>
+                <h3><span class="about-org">인프런</span> A/B 테스트 실무자 완벽 가이드 수료</h3>
                 <ul class="about-bullets">
                   <li>A/B Test 핵심원리 및 개념</li>
                   <li>A/B Test를 위한 필수 통계학 개념</li>
