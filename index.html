@@ -414,8 +414,8 @@
     .about-item h3 {
       margin: 0 0 6px;
       font-family: "Outfit", "Noto Sans KR", sans-serif;
-      font-size: 20px;
-      line-height: 1.35;
+      font-size: 18px;
+      line-height: 1.45;
       font-weight: 700;
     }
     .about-org {
@@ -1459,11 +1459,17 @@
       font-weight: 700;
     }
     .contact-copy p {
-      max-width: 430px;
+      max-width: 560px;
       margin: 14px 0 0;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.8;
+    }
+    .contact-copy p span {
+      display: block;
+    }
+    .contact-copy p span:first-child {
+      white-space: nowrap;
     }
     .contact-list {
       display: grid;
@@ -1549,6 +1555,7 @@
         align-items: start;
       }
       .contact-layout { gap: 30px; }
+      .contact-copy p span:first-child { white-space: normal; }
     }
 
     @media (max-width: 560px) {
@@ -1710,7 +1717,7 @@
                 <span>졸업</span>
               </div>
               <div>
-                <h3><span class="about-org">수원대학교</span> 데이터과학부</h3>
+                <h3><span class="about-org">[수원대학교]</span> 데이터과학부</h3>
               </div>
             </article>
             <article class="about-item">
@@ -1718,7 +1725,7 @@
                 <span>2025.06~2025.11</span>
               </div>
               <div>
-                <h3><span class="about-org">패스트캠퍼스</span> 데이터 분석 부트캠프 수료</h3>
+                <h3><span class="about-org">[패스트캠퍼스]</span> 데이터분석 부트캠프 수료</h3>
                 <ul class="about-bullets">
                   <li>SQL을 활용한 데이터 추출 및 전처리 수행</li>
                   <li>Python 기반 데이터 가공 및 분석 로직 구현</li>
@@ -1732,7 +1739,7 @@
                 <span>2026</span>
               </div>
               <div>
-                <h3><span class="about-org">인프런</span> A/B 테스트 실무자 완벽 가이드 수료</h3>
+                <h3><span class="about-org">[인프런]</span> A/B 테스트 실무자 완벽 가이드 수료</h3>
                 <ul class="about-bullets">
                   <li>A/B Test 핵심원리 및 개념</li>
                   <li>A/B Test를 위한 필수 통계학 개념</li>
@@ -2424,7 +2431,10 @@
         <div class="contact-layout">
           <div class="contact-copy">
             <h3>함께 이야기해요</h3>
-            <p>데이터를 통해 문제를 발견하고 해결하는 일에 관심이 있습니다. 프로젝트와 연락처 정보는 계속 업데이트됩니다.</p>
+            <p>
+              <span>데이터를 통해 문제를 발견하고 해결하는 일에 관심이 있습니다.</span>
+              <span>프로젝트와 연락처 정보는 계속 업데이트됩니다.</span>
+            </p>
           </div>
           <div class="contact-list" aria-label="연락처">
             <a class="contact-item" href="mailto:duswn0852@gmail.com">
