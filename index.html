@@ -7,63 +7,52 @@
   <title>전연주 | Data Analyst Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ink: #1f2430;
-      --muted: #697182;
-      --line: #e3e7ef;
+      --ink: #111827;
+      --sub: #374151;
+      --muted: #6b7280;
+      --line: #e2e6ed;
       --paper: #ffffff;
-      --soft: #f7f8fb;
-      --teal: #0d6f68;
-      --teal-dark: #0a5651;
+      --soft: #ffffff;
+      --bg2: #f4f6f9;
+      --bg3: #edf0f5;
+      --teal: #2563eb;
+      --teal-dark: #1d4ed8;
+      --accent-light: #eff6ff;
       --coral: #d95f57;
       --gold: #f4b740;
-      --shadow: 0 18px 46px rgba(31, 36, 48, 0.08);
+      --shadow: 0 16px 38px rgba(17, 24, 39, 0.06);
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: "Outfit", "IBM Plex Sans KR", "Noto Sans KR", "Pretendard", "Inter", "Segoe UI", "Apple SD Gothic Neo", Arial, sans-serif;
+      font-family: "Noto Sans KR", "Outfit", "Segoe UI", "Apple SD Gothic Neo", Arial, sans-serif;
       color: var(--ink);
-      background: var(--soft);
-      line-height: 1.6;
+      background: #ffffff;
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
-      transition: background 180ms ease, color 180ms ease;
-    }
-    body.theme-dark {
-      --ink: #eef1f7;
-      --muted: #9aa2b4;
-      --line: #262c3c;
-      --paper: #10131a;
-      --soft: #0a0d13;
-      --teal: #74d7cd;
-      --teal-dark: #94eee6;
-      --coral: #ff9288;
-      --gold: #f3c76a;
-      --shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
     }
     a { color: inherit; text-decoration: none; }
 
     .site-header {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 10;
       backdrop-filter: blur(14px);
-      background: rgba(255, 255, 255, 0.88);
-      border-bottom: 1px solid rgba(223, 227, 234, 0.86);
-    }
-    body.theme-dark .site-header {
-      background: rgba(10, 13, 19, 0.86);
-      border-bottom-color: rgba(38, 44, 60, 0.92);
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid var(--line);
     }
 
     .nav {
-      width: min(1120px, calc(100% - 40px));
-      min-height: 64px;
+      width: min(1080px, calc(100% - 40px));
+      height: 60px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -72,33 +61,34 @@
     }
 
     .brand {
-      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
-      font-size: 18px;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: 16px;
       font-weight: 700;
       white-space: nowrap;
     }
-    .nav-links { display: flex; gap: 18px; color: var(--muted); font-size: 15px; font-weight: 500; }
+    .nav-links { display: flex; gap: 26px; color: var(--muted); font-family: "Outfit", "Noto Sans KR", sans-serif; font-size: 14px; font-weight: 600; }
     .nav-links a:hover { color: var(--teal); }
 
     .hero {
-      padding: 0;
-      min-height: calc(100vh - 64px);
+      min-height: 100svh;
+      padding: 60px 0 0;
       display: grid;
       align-items: center;
-      background: var(--soft);
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
     }
 
     .hero-inner {
-      width: min(1120px, calc(100% - 40px));
-      min-height: auto;
+      width: min(1080px, calc(100% - 40px));
+      min-height: calc(100svh - 60px);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(360px, 420px) minmax(420px, 460px);
+      grid-template-columns: minmax(360px, 1fr) minmax(280px, 320px);
       align-items: center;
       align-content: center;
       justify-content: center;
-      gap: 74px;
-      padding: 0;
+      gap: clamp(48px, 8vw, 116px);
+      padding: 0 0 8px;
     }
 
     .hero-profile {
@@ -107,32 +97,53 @@
 
     h1 {
       margin: 0;
-      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
-      font-size: clamp(44px, 4.8vw, 60px);
-      line-height: 1.05;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: clamp(58px, 6.4vw, 78px);
+      line-height: 0.98;
       letter-spacing: 0;
       font-weight: 700;
     }
 
+    .hero-badge {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      background: var(--accent-light);
+      color: var(--teal);
+      padding: 5px 12px;
+      font: 500 12px "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+    }
+    .hero-badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+
     .role {
-      margin: 10px 0 0;
-      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
-      font-size: clamp(24px, 2.6vw, 31px);
+      margin: 14px 0 0;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: clamp(20px, 2.2vw, 24px);
       line-height: 1.25;
-      font-weight: 700;
-      color: var(--teal-dark);
+      font-weight: 500;
+      color: var(--muted);
     }
 
     .lead {
       display: grid;
-      gap: 4px;
+      gap: 2px;
       max-width: none;
-      margin: 28px 0 0;
-      color: var(--muted);
-      font-family: "Gowun Batang", "IBM Plex Sans KR", serif;
-      font-size: 19px;
+      margin: 30px 0 0;
+      color: var(--sub);
+      font-size: 16px;
       font-weight: 400;
-      line-height: 1.75;
+      line-height: 1.85;
     }
     .lead span {
       white-space: nowrap;
@@ -152,12 +163,9 @@
       border-radius: 4px;
       padding: 7px 12px;
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.48);
-      font: 500 13px "DM Mono", "Outfit", monospace;
+      background: #ffffff;
+      font: 500 13px "IBM Plex Mono", monospace;
       text-align: center;
-    }
-    body.theme-dark .hero-tags li {
-      background: rgba(255, 255, 255, 0.04);
     }
 
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
@@ -175,11 +183,6 @@
 
     .button.primary { color: #ffffff; background: var(--ink); }
     .button.secondary { background: #ffffff; }
-    body.theme-dark .button.primary { color: #0a0d13; background: var(--ink); }
-    body.theme-dark .button.secondary {
-      border-color: var(--line);
-      background: rgba(255, 255, 255, 0.05);
-    }
 
     .portrait-wrap {
       overflow: hidden;
@@ -197,7 +200,7 @@
     }
 
     .hero-showcase {
-      width: min(100%, 460px);
+      width: min(100%, 320px);
       justify-self: end;
     }
 
@@ -213,9 +216,9 @@
     }
 
     .hero-showcase .portrait-wrap {
-      width: min(100%, 320px);
+      width: min(100%, 240px);
       border-radius: 8px;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 4 / 5.7;
       box-shadow: var(--shadow);
       border: 1px solid var(--line);
     }
@@ -232,19 +235,21 @@
 
     .intro-row {
       display: grid;
-      grid-template-columns: 88px minmax(0, 1fr);
-      gap: 18px;
+      grid-template-columns: 94px minmax(0, 1fr);
+      gap: 16px;
       align-items: center;
-      min-height: 54px;
+      min-height: 42px;
       border-bottom: 1px solid var(--line);
       color: var(--ink);
-      font-size: 16px;
+      font-size: 13px;
     }
 
     .intro-row dt {
       color: var(--muted);
       line-height: 1.3;
-      font-weight: 500;
+      font: 500 11px "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
     }
 
     .intro-row dd {
@@ -271,48 +276,56 @@
       content: "";
     }
 
-    section { padding: 86px 0; }
-    #about {
-      min-height: calc(100vh - 64px);
-      display: grid;
-      align-items: center;
-      background: var(--soft);
+    section {
+      padding: 82px 0;
+      scroll-margin-top: 60px;
     }
-    #skills { background: #f3f5f9; }
-    .section-inner { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    #about {
+      background: #ffffff;
+    }
+    #skills { background: var(--bg2); }
+    .section-inner { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
     .section-heading {
       display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 30px;
+      align-items: baseline;
+      justify-content: flex-start;
+      gap: 14px;
+      margin-bottom: 44px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
     }
-    h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); line-height: 1.1; letter-spacing: 0; font-weight: 700; }
-    .section-kicker {
-      margin: 0 0 12px;
+    h2 {
+      margin: 0;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+    .section-num {
       color: var(--teal);
-      font-size: 13px;
+      font: 500 12px "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+    }
+    .section-kicker {
+      margin: 0 0 10px;
+      color: var(--teal);
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .section-note { max-width: 420px; margin: 0; color: var(--muted); font-size: 15px; }
-    #about .section-inner {
-      width: min(1040px, calc(100% - 40px));
-    }
-    #about {
-      font-family: "Noto Sans KR", "IBM Plex Sans KR", "Outfit", sans-serif;
-    }
+    .section-note { max-width: 420px; margin: 10px 0 0; color: var(--muted); font-size: 15px; }
     .about-layout {
       display: grid;
-      grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+      grid-template-columns: minmax(340px, 430px) minmax(0, 1fr);
       width: 100%;
-      gap: 64px;
+      gap: 80px;
       align-items: start;
     }
     .about-rail {
       display: grid;
-      gap: 34px;
+      gap: 48px;
     }
     .about-block {
       display: grid;
@@ -322,9 +335,9 @@
       display: grid;
       gap: 18px;
       margin: 0;
-      color: var(--ink);
-      font-size: 17px;
-      line-height: 1.95;
+      color: var(--sub);
+      font-size: 15px;
+      line-height: 2;
       font-weight: 400;
     }
     .about-copy p {
@@ -333,35 +346,37 @@
     .about-label {
       margin: 0;
       color: var(--teal);
-      font-size: 13px;
+      font: 600 12px "IBM Plex Mono", monospace;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
     .credential-list {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
+      border-left: 0;
       padding: 0;
       margin: 0;
       list-style: none;
     }
     .credential-list li {
-      display: grid;
-      gap: 4px;
-      min-height: 70px;
-      align-content: center;
-      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 42px;
+      border-right: 0;
       border-bottom: 1px solid var(--line);
-      padding: 14px 16px;
+      padding: 9px 0;
       color: var(--ink);
-      font-size: 16px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
     }
     .credential-list span {
-      color: var(--muted);
-      font-size: 14px;
+      color: var(--teal);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
       font-weight: 500;
     }
     .about-content {
@@ -374,12 +389,9 @@
     .about-item {
       display: grid;
       grid-template-columns: 112px minmax(0, 1fr);
-      gap: 20px;
+      gap: 24px;
       border-top: 1px solid var(--line);
-      padding: 20px 0;
-    }
-    .about-item:first-child {
-      padding-top: 0;
+      padding: 22px 0;
     }
     .about-meta {
       display: grid;
@@ -387,20 +399,21 @@
       gap: 3px;
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font: 500 12px "Outfit", "Noto Sans KR", sans-serif;
       font-weight: 500;
       line-height: 1.5;
     }
     .about-item h3 {
       margin: 0 0 6px;
-      font-size: 19px;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: 20px;
       line-height: 1.35;
       font-weight: 700;
     }
     .about-item p {
       margin: 0;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.7;
     }
     .about-bullets {
@@ -410,7 +423,7 @@
       padding: 0;
       list-style: none;
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.7;
     }
     .about-bullets li::before {
@@ -419,61 +432,75 @@
     }
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
     }
     .skill-card {
       border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.86);
-      padding: 20px 22px 18px;
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 24px 20px;
       box-shadow: none;
+      transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
     }
-    .skill-card-head {
+    .skill-card:hover {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px var(--accent-light);
+      transform: translateY(-2px);
+    }
+    .skill-card-top {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .skill-card h3 {
-      margin: 0;
-      font-size: 16px;
-      line-height: 1.3;
+    .skill-icon {
+      width: 28px;
+      height: 28px;
+      display: block;
+      background: var(--icon-color, var(--teal));
+      -webkit-mask: var(--icon) center / contain no-repeat;
+      mask: var(--icon) center / contain no-repeat;
+    }
+    .skill-name {
+      margin: 0 0 8px;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: 17px;
+      line-height: 1.25;
       font-weight: 700;
     }
     .skill-score {
       color: var(--teal);
-      font: 600 14px "DM Mono", "Outfit", monospace;
+      font: 600 13px "IBM Plex Mono", monospace;
     }
-    .skill-track {
+    .skill-bar-wrap {
       width: 100%;
-      height: 4px;
+      height: 3px;
       overflow: hidden;
-      border-radius: 999px;
-      background: rgba(31, 36, 48, 0.1);
-      margin-bottom: 14px;
+      border-radius: 2px;
+      background: var(--line);
+      margin: 12px 0 14px;
     }
-    .skill-fill {
+    .skill-bar {
+      width: 0;
       height: 100%;
-      border-radius: inherit;
+      border-radius: 2px;
       background: var(--teal);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 950ms cubic-bezier(0.22, 1, 0.36, 1);
+      transition: width 1.25s cubic-bezier(0.22, 1, 0.36, 1) 180ms;
     }
-    .skills-grid.is-visible .skill-fill {
-      transform: scaleX(1);
+    .skill-bar.animated {
+      width: var(--w);
     }
     .skill-detail {
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.55;
     }
     @media (prefers-reduced-motion: reduce) {
-      .skill-fill {
-        transform: scaleX(1);
+      .skill-bar {
+        width: var(--w);
         transition: none;
       }
     }
@@ -1498,7 +1525,7 @@
 <body>
   <header class="site-header">
     <nav class="nav" aria-label="주요 메뉴">
-      <a class="brand" href="#top">전연주</a>
+      <a class="brand" href="#top">전연주 · Jeon Yeonjoo</a>
       <div class="nav-links">
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
@@ -1512,8 +1539,9 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-inner">
         <div class="hero-profile">
+          <div class="hero-badge">Data Analyst</div>
           <h1 id="hero-title">전연주</h1>
-          <p class="role">데이터 분석가</p>
+          <p class="role">Jeon Yeonjoo · Data Analyst</p>
           <p class="lead">
             <span>데이터로 흐름을 읽고, 결정을 설계합니다.</span>
             <span>숫자 속에서 이야기를 찾아냅니다.</span>
@@ -1563,10 +1591,8 @@
     <section id="about" aria-labelledby="about-title">
       <div class="section-inner">
         <div class="section-heading">
-          <div>
-            <p class="section-kicker">About</p>
-            <h2 id="about-title">소개</h2>
-          </div>
+          <span class="section-num">01</span>
+          <h2 id="about-title">About</h2>
         </div>
         <div class="about-layout">
           <aside class="about-rail" aria-label="소개 및 자격증">
@@ -1635,49 +1661,51 @@
     <section id="skills" aria-labelledby="skills-title">
       <div class="section-inner">
         <div class="section-heading">
-          <div>
-            <p class="section-kicker">Skills</p>
-            <h2 id="skills-title">기술 스택</h2>
-          </div>
+          <span class="section-num">02</span>
+          <h2 id="skills-title">Skills</h2>
         </div>
         <div class="skills-grid" aria-label="기술 숙련도">
           <article class="skill-card">
-            <div class="skill-card-head">
-              <h3>Excel</h3>
+            <div class="skill-card-top">
+              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/microsoftexcel.svg'); --icon-color: #217346" aria-hidden="true"></span>
               <span class="skill-score">8/10</span>
             </div>
-            <div class="skill-track" aria-hidden="true">
-              <div class="skill-fill" style="width: 80%"></div>
+            <h3 class="skill-name">Excel</h3>
+            <div class="skill-bar-wrap" aria-hidden="true">
+              <div class="skill-bar" style="--w: 80%"></div>
             </div>
             <p class="skill-detail">Pivot Table · 함수 · 데이터 정리</p>
           </article>
           <article class="skill-card">
-            <div class="skill-card-head">
-              <h3>Python</h3>
+            <div class="skill-card-top">
+              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/python.svg'); --icon-color: #3776ab" aria-hidden="true"></span>
               <span class="skill-score">8/10</span>
             </div>
-            <div class="skill-track" aria-hidden="true">
-              <div class="skill-fill" style="width: 80%"></div>
+            <h3 class="skill-name">Python</h3>
+            <div class="skill-bar-wrap" aria-hidden="true">
+              <div class="skill-bar" style="--w: 80%"></div>
             </div>
             <p class="skill-detail">Pandas · 데이터 가공 · 분석</p>
           </article>
           <article class="skill-card">
-            <div class="skill-card-head">
-              <h3>SQL</h3>
+            <div class="skill-card-top">
+              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/postgresql.svg'); --icon-color: #4169e1" aria-hidden="true"></span>
               <span class="skill-score">9/10</span>
             </div>
-            <div class="skill-track" aria-hidden="true">
-              <div class="skill-fill" style="width: 90%"></div>
+            <h3 class="skill-name">SQL</h3>
+            <div class="skill-bar-wrap" aria-hidden="true">
+              <div class="skill-bar" style="--w: 90%"></div>
             </div>
             <p class="skill-detail">데이터 추출 · 조인 · 윈도우 함수</p>
           </article>
           <article class="skill-card">
-            <div class="skill-card-head">
-              <h3>Tableau</h3>
+            <div class="skill-card-top">
+              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tableau.svg'); --icon-color: #e97627" aria-hidden="true"></span>
               <span class="skill-score">9/10</span>
             </div>
-            <div class="skill-track" aria-hidden="true">
-              <div class="skill-fill" style="width: 90%"></div>
+            <h3 class="skill-name">Tableau</h3>
+            <div class="skill-bar-wrap" aria-hidden="true">
+              <div class="skill-bar" style="--w: 90%"></div>
             </div>
             <p class="skill-detail">시각화 · 대시보드 · 스토리텔링</p>
           </article>
@@ -1688,11 +1716,11 @@
     <section class="projects" id="projects" aria-labelledby="projects-title">
       <div class="section-inner">
         <div class="section-heading">
+          <span class="section-num">03</span>
           <div>
-            <p class="section-kicker">Projects</p>
-            <h2 id="projects-title">분석 프로젝트</h2>
+            <h2 id="projects-title">Projects</h2>
+            <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
           </div>
-          <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
         </div>
         <div class="project-grid">
           <button class="project-card" id="project-01" type="button" data-modal-open="warehouse-modal" aria-label="창고 로봇 시스템 출고 지연 원인 분석 상세 보기">
@@ -2403,10 +2431,12 @@
         }, 55);
       });
 
-      const skillsSection = document.querySelector("#skills");
       const skillsGrid = document.querySelector(".skills-grid");
-      if (skillsSection && skillsGrid) {
-        const revealSkills = () => skillsGrid.classList.add("is-visible");
+      const skillBars = document.querySelectorAll(".skill-bar");
+      if (skillsGrid && skillBars.length) {
+        const revealSkills = () => {
+          skillBars.forEach((bar) => bar.classList.add("animated"));
+        };
         if (!("IntersectionObserver" in window)) {
           revealSkills();
         } else {
