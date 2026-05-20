@@ -83,11 +83,11 @@
       min-height: calc(100svh - 60px);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(360px, 1fr) minmax(280px, 320px);
+      grid-template-columns: minmax(340px, 390px) minmax(300px, 320px);
       align-items: center;
       align-content: center;
       justify-content: center;
-      gap: clamp(48px, 8vw, 116px);
+      gap: clamp(56px, 6vw, 84px);
       padding: 0 0 8px;
     }
 
@@ -163,7 +163,7 @@
       border-radius: 4px;
       padding: 7px 12px;
       color: var(--muted);
-      background: #ffffff;
+      background: var(--bg2);
       font: 500 13px "IBM Plex Mono", monospace;
       text-align: center;
     }
@@ -247,8 +247,10 @@
     .intro-row dt {
       color: var(--muted);
       line-height: 1.3;
-      font: 500 11px "IBM Plex Mono", monospace;
-      letter-spacing: 0.08em;
+      font-family: "Noto Sans KR", "Outfit", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
       white-space: nowrap;
     }
 
@@ -263,8 +265,11 @@
 
     .intro-row a {
       width: fit-content;
-      border-bottom: 1px solid currentColor;
+      border-bottom: 0;
       line-height: 1.35;
+    }
+    .intro-row a[target] {
+      border-bottom: 1px solid currentColor;
     }
 
     .intro-row a::after {
@@ -281,6 +286,9 @@
       scroll-margin-top: 60px;
     }
     #about {
+      min-height: calc(100svh - 60px);
+      display: grid;
+      align-items: center;
       background: #ffffff;
     }
     #skills { background: var(--bg2); }
@@ -456,12 +464,25 @@
       margin-bottom: 14px;
     }
     .skill-icon {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       display: block;
       background: var(--icon-color, var(--teal));
       -webkit-mask: var(--icon) center / contain no-repeat;
       mask: var(--icon) center / contain no-repeat;
+    }
+    .skill-icon-img {
+      width: 34px;
+      height: 34px;
+      display: block;
+      object-fit: contain;
+    }
+    .skill-logo-wide {
+      width: 102px;
+      height: 34px;
+      display: block;
+      object-fit: contain;
+      object-position: left center;
     }
     .skill-name {
       margin: 0 0 8px;
@@ -516,8 +537,11 @@
       border-bottom: 1px solid var(--line);
     }
     body.theme-dark .projects { background: #0d1017; }
-    .projects .section-heading { align-items: flex-start; }
+    .projects .section-heading { align-items: baseline; }
     .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
+    .projects .section-note {
+      margin: -22px 0 30px 0;
+    }
     .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .project-card {
       min-height: 292px;
@@ -1404,27 +1428,83 @@
       background: color-mix(in srgb, var(--tone, var(--case-accent)) 10%, transparent);
     }
 
-    .contact-band { background: var(--soft); }
-    .contact-box {
+    .contact-band {
+      min-height: calc(100svh - 60px);
       display: grid;
-      grid-template-columns: 1fr auto;
       align-items: center;
-      gap: 28px;
-      border-top: 4px solid var(--gold);
       background: #ffffff;
-      border-radius: 8px;
-      padding: 34px;
-      box-shadow: var(--shadow);
+      border-top: 1px solid var(--line);
     }
-    body.theme-dark .contact-box { background: #11151e; }
-    .contact-box p { margin: 10px 0 0; color: var(--muted); }
-    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+    .contact-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+      align-items: start;
+      gap: clamp(48px, 8vw, 96px);
+    }
+    .contact-copy h3 {
+      margin: 0;
+      font-family: "Outfit", "Noto Sans KR", sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      line-height: 1.2;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+    .contact-copy p {
+      max-width: 430px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .contact-list {
+      display: grid;
+      gap: 10px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 78px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg2);
+      padding: 17px 20px;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+    .contact-item:hover {
+      transform: translateY(-2px);
+      border-color: #bfdbfe;
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+    .contact-text {
+      display: grid;
+      gap: 5px;
+    }
+    .contact-label {
+      display: block;
+      color: var(--muted);
+      font: 500 12px "IBM Plex Mono", monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .contact-item strong {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    .contact-arrow {
+      color: var(--teal);
+      font-size: 18px;
+      line-height: 1;
+    }
     footer { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); }
 
     @media (max-width: 860px) {
       .nav, .hero-inner, .section-inner { width: min(calc(100% - 28px), 1120px); }
       .nav-links { gap: 12px; font-size: 13px; }
-      .hero-inner { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
+      .hero-inner { min-height: calc(100svh - 60px); grid-template-columns: 1fr; gap: 36px; padding: 58px 0 52px; }
       .hero-showcase {
         width: 100%;
         justify-self: stretch;
@@ -1434,9 +1514,9 @@
       }
       .portrait-wrap { max-height: 520px; }
       section { padding: 64px 0; }
-      .section-heading, .contact-box { display: block; }
+      .section-heading { display: flex; }
       .section-note { margin-top: 12px; }
-      .about-layout, .project-grid { grid-template-columns: 1fr; }
+      .about-layout, .project-grid, .contact-layout { grid-template-columns: 1fr; }
       #about {
         min-height: 0;
         padding: 76px 0;
@@ -1459,7 +1539,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: start;
       }
-      .contact-links { justify-content: flex-start; margin-top: 22px; }
+      .contact-layout { gap: 30px; }
     }
 
     @media (max-width: 560px) {
@@ -1517,7 +1597,8 @@
         grid-template-columns: 1fr;
         gap: 8px;
       }
-      .panel, .project-card, .contact-box { padding: 22px; }
+      .panel, .project-card { padding: 22px; }
+      .contact-item { padding: 16px 18px; }
       .project-card { min-height: 0; border-radius: 16px; }
     }
   </style>
@@ -1678,7 +1759,7 @@
           </article>
           <article class="skill-card">
             <div class="skill-card-top">
-              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/python.svg'); --icon-color: #3776ab" aria-hidden="true"></span>
+              <img class="skill-icon-img" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="" loading="lazy" />
               <span class="skill-score">8/10</span>
             </div>
             <h3 class="skill-name">Python</h3>
@@ -1689,7 +1770,7 @@
           </article>
           <article class="skill-card">
             <div class="skill-card-top">
-              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/postgresql.svg'); --icon-color: #4169e1" aria-hidden="true"></span>
+              <img class="skill-icon-img" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azuresqldatabase/azuresqldatabase-original.svg" alt="" loading="lazy" />
               <span class="skill-score">9/10</span>
             </div>
             <h3 class="skill-name">SQL</h3>
@@ -1700,7 +1781,7 @@
           </article>
           <article class="skill-card">
             <div class="skill-card-top">
-              <span class="skill-icon" style="--icon: url('https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tableau.svg'); --icon-color: #e97627" aria-hidden="true"></span>
+              <img class="skill-logo-wide" src="https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/tableau.svg" alt="" loading="lazy" />
               <span class="skill-score">9/10</span>
             </div>
             <h3 class="skill-name">Tableau</h3>
@@ -1717,11 +1798,9 @@
       <div class="section-inner">
         <div class="section-heading">
           <span class="section-num">03</span>
-          <div>
-            <h2 id="projects-title">Projects</h2>
-            <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
-          </div>
+          <h2 id="projects-title">Projects</h2>
         </div>
+        <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
         <div class="project-grid">
           <button class="project-card" id="project-01" type="button" data-modal-open="warehouse-modal" aria-label="창고 로봇 시스템 출고 지연 원인 분석 상세 보기">
             <div class="project-card-top">
@@ -2332,14 +2411,30 @@
 
     <section class="contact-band" id="contact" aria-labelledby="contact-title">
       <div class="section-inner">
-        <div class="contact-box">
-          <div>
-            <h2 id="contact-title">함께 이야기해요</h2>
+        <div class="section-heading">
+          <span class="section-num">04</span>
+          <h2 id="contact-title">Contact</h2>
+        </div>
+        <div class="contact-layout">
+          <div class="contact-copy">
+            <h3>함께 이야기해요</h3>
             <p>데이터를 통해 문제를 발견하고 해결하는 일에 관심이 있습니다. 프로젝트와 연락처 정보는 계속 업데이트됩니다.</p>
           </div>
-          <div class="contact-links">
-            <a class="button primary" href="https://github.com/jyj1204" target="_blank" rel="noreferrer">GitHub</a>
-            <a class="button secondary" href="mailto:duswn0852@gmail.com">Email</a>
+          <div class="contact-list" aria-label="연락처">
+            <a class="contact-item" href="mailto:duswn0852@gmail.com">
+              <span class="contact-text">
+                <span class="contact-label">Email</span>
+                <strong>duswn0852@gmail.com</strong>
+              </span>
+              <i class="contact-arrow" aria-hidden="true">↗</i>
+            </a>
+            <a class="contact-item" href="tel:01044424218">
+              <span class="contact-text">
+                <span class="contact-label">Phone</span>
+                <strong>010-4442-4218</strong>
+              </span>
+              <i class="contact-arrow" aria-hidden="true">↗</i>
+            </a>
           </div>
         </div>
       </div>
@@ -2434,11 +2529,19 @@
       const skillsGrid = document.querySelector(".skills-grid");
       const skillBars = document.querySelectorAll(".skill-bar");
       if (skillsGrid && skillBars.length) {
+        let skillsRevealed = false;
         const revealSkills = () => {
+          if (skillsRevealed) return;
+          skillsRevealed = true;
           skillBars.forEach((bar) => bar.classList.add("animated"));
         };
+        const revealIfVisible = () => {
+          const rect = skillsGrid.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 0.82 && rect.bottom > 0) revealSkills();
+        };
         if (!("IntersectionObserver" in window)) {
-          revealSkills();
+          revealIfVisible();
+          window.addEventListener("scroll", revealIfVisible, { passive: true });
         } else {
           const skillsObserver = new IntersectionObserver(
             ([entry]) => {
@@ -2450,6 +2553,9 @@
           );
           skillsObserver.observe(skillsGrid);
         }
+        window.addEventListener("hashchange", () => window.requestAnimationFrame(revealIfVisible));
+        window.addEventListener("scroll", revealIfVisible, { passive: true });
+        window.requestAnimationFrame(revealIfVisible);
       }
 
       document.addEventListener("keydown", (event) => {
