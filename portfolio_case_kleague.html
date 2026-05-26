@@ -38,52 +38,80 @@ body {
 
 /* NAV */
 nav {
-  position: fixed; top: 0; left: 0; right: 0;
+  position: sticky; top: 0; left: 0; right: 0;
   height: 56px;
   background: rgba(242,243,246,0.94);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 6vw; z-index: 100;
+  padding: 0 40px; z-index: 100;
   animation: caseFadeUp 0.65s ease both;
 }
-.nav-back {
-  font-size: 0.82rem; color: var(--text-muted);
-  text-decoration: none; display: flex; align-items: center; gap: 6px;
-  transition: color 0.2s;
+.nav-inner {
+  width: 100%; max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
 }
-.nav-back:hover { color: var(--text); }
-.nav-meta { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.04em; }
+.brand { font-size: 15px; font-weight: 600; color: var(--text); }
+.nav-links { display: flex; align-items: center; gap: 4px; padding-right: 52px; }
+.nav-links a {
+  font-size: 13px; color: var(--text-muted);
+  text-decoration: none; padding: 6px 12px; border-radius: 6px;
+  transition: background 0.18s, color 0.18s;
+}
+.nav-links a:hover { background: var(--surface); color: var(--text); }
 
 /* HERO */
 .hero {
-  padding: 120px 6vw 80px;
+  padding: 64px 40px 48px;
   border-bottom: 1px solid var(--border);
   max-width: 1100px;
   margin: 0 auto;
   animation: caseFadeUp 0.72s ease 0.08s both;
 }
 .hero-eyebrow {
-  font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 12px;
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
 }
-.hero-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--text-muted); }
 .hero-title {
-  font-size: clamp(2rem,4vw,3.2rem); font-weight: 700;
-  line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px;
+  font-size: clamp(2.6rem,5vw,4rem); font-weight: 700;
+  line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 16px;
 }
-.hero-desc { font-size: 1rem; color: var(--text-sub); max-width: 600px; line-height: 1.8; margin-bottom: 40px; }
+.hero-title .accent { color: #2563eb; }
+.hero-desc { font-size: 17px; color: #667085; max-width: 640px; line-height: 1.75; margin-bottom: 28px; }
+.hero-desc strong { color: var(--text); font-weight: 700; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 48px; }
+.button {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 9px 18px; border-radius: 7px;
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border);
+  transition: opacity 0.15s, border-color 0.15s;
+}
+.button:hover { opacity: 0.86; border-color: var(--border-strong); }
+.button.primary { background: #2563eb; border-color: #2563eb; color: #fff; }
 .hero-stats {
-  display: flex; gap: 48px; flex-wrap: wrap;
-  padding-top: 32px; border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;
+  padding-top: 0; border-top: 0;
 }
-.hero-stat-num { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-.hero-stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.05em; }
+.hero-stat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.hero-stat-num { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--text); }
+.hero-stat-num.accent { color: #2563eb; }
+.hero-stat-num.green { color: #10b981; }
+.hero-stat-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0; font-weight: 500; }
+.hero-stat-sub { font-size: 0.76rem; color: #98a2b3; margin-top: 6px; }
 
 /* TAGS */
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; }
-.tag { font-size: 0.75rem; padding: 4px 10px; background: var(--tag-bg); color: var(--tag-text); border-radius: 2px; font-weight: 500; }
+.tag {
+  font-size: 11px; padding: 3px 8px; background: var(--surface);
+  color: #667085; border-radius: 4px; font-weight: 500;
+  border: 1px solid var(--border); white-space: nowrap;
+}
+.tag.primary { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
 
 /* TOC */
 .toc-bar {
@@ -263,6 +291,8 @@ footer { padding: 40px 6vw; border-top: 1px solid var(--border); display: flex; 
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
   .overview-row { grid-template-columns: 1fr; }
   .eda-grid { grid-template-columns: 1fr 1fr; }
   .model-grid { grid-template-columns: 1fr; }
@@ -275,9 +305,12 @@ footer { padding: 40px 6vw; border-top: 1px solid var(--border); display: flex; 
   .result-banner { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (max-width: 600px) {
+  nav { padding: 0 24px; }
+  .hero { padding: 48px 24px 44px; }
+  .hero-title { font-size: 2.15rem; }
+  .hero-stats { grid-template-columns: 1fr; }
   .eda-grid, .lessons-grid, .story-flow, .perf-grid { grid-template-columns: 1fr; }
   .pipeline { grid-template-columns: 1fr 1fr; }
-  .hero-stats { gap: 28px; }
   .result-banner { grid-template-columns: 1fr; gap: 16px; padding: 28px 24px; }
 }
 </style>
@@ -285,45 +318,61 @@ footer { padding: 40px 6vw; border-top: 1px solid var(--border); display: flex; 
 <body>
 
 <nav>
-  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">← 전연주 포트폴리오</a>
-  <span class="nav-meta">Dacon · K리그-서울시립대 AI 경진대회 · Track 1</span>
+  <div class="nav-inner">
+    <div class="brand">데이터 분석 포트폴리오</div>
+    <div class="nav-links">
+      <a href="#overview">대회 개요</a>
+      <a href="#eda">EDA</a>
+      <a href="#features">피처 엔지니어링</a>
+      <a href="#modeling">모델링</a>
+      <a href="#ensemble">앙상블</a>
+      <a href="#results">결과</a>
+    </div>
+  </div>
 </nav>
 
 <!-- HERO -->
 <div class="content-wrap">
   <div class="hero">
-    <div class="hero-eyebrow">Data Analysis Case Study · Competition</div>
-    <h1 class="hero-title">K리그 경기 내<br>최종 패스 좌표 예측 AI</h1>
-    <p class="hero-desc">
-      K리그 실제 경기 데이터를 기반으로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측하는 AI 모델 개발.
-      CatBoost · LightGBM · XGBoost · CNN 4개 모델을 설계하고 앙상블하여 상위 7%를 달성했습니다.
-    </p>
-    <div class="tags">
+    <div class="hero-eyebrow">
+      <span class="tag primary">AI 경진대회</span>
       <span class="tag">CatBoost</span>
       <span class="tag">LightGBM</span>
       <span class="tag">XGBoost</span>
       <span class="tag">PyTorch CNN</span>
       <span class="tag">GroupKFold</span>
       <span class="tag">Pseudo Labeling</span>
-      <span class="tag">앙상블 최적화</span>
-      <span class="tag">Python</span>
+    </div>
+    <h1 class="hero-title">K리그 경기 내<br><span class="accent">최종 패스 좌표</span> 예측 AI</h1>
+    <p class="hero-desc">
+      K리그 실제 경기 데이터를 기반으로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측하는 AI 모델 개발.
+      <strong>CatBoost · LightGBM · XGBoost · CNN 4개 모델을 설계하고 앙상블하여 상위 7%를 달성했습니다.</strong>
+    </p>
+    <div class="hero-actions">
+      <a href="#" class="button primary">Dacon 대회 ↗</a>
+      <a href="#" class="button">GitHub ↗</a>
+      <a href="#" class="button">발표 PPT ↓</a>
     </div>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="hero-stat-num">TOP 7%</div>
         <div class="hero-stat-label">최종 순위</div>
+        <div class="hero-stat-num accent">TOP 7%</div>
+        <div class="hero-stat-sub">Dacon Track 1</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">4개</div>
         <div class="hero-stat-label">앙상블 모델</div>
+        <div class="hero-stat-num">4개</div>
+        <div class="hero-stat-sub">CatBoost · LGBM · XGB · CNN</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">15,428</div>
         <div class="hero-stat-label">학습 에피소드 수</div>
+        <div class="hero-stat-num">15,428</div>
+        <div class="hero-stat-sub">OOF 분석 기준</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">13.05m</div>
         <div class="hero-stat-label">앙상블 OOF MAE</div>
+        <div class="hero-stat-num green">13.05m</div>
+        <div class="hero-stat-sub">최종 앙상블 기준</div>
       </div>
     </div>
   </div>
