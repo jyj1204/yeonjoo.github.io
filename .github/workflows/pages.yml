@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -55,12 +56,16 @@ jobs:
             --arg oidc "$oidc_token" \
             '{artifact_id:$artifact_id, pages_build_version:$sha, oidc_token:$oidc}')
 
-          response=$(curl -sSf -X POST \
+          response=$(curl -sS -X POST \
             -H "Authorization: Bearer ${GITHUB_TOKEN}" \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/deployments" \
             -d "$payload")
+          if printf '%s' "$response" | jq -e '.message?' >/dev/null; then
+            printf '%s\n' "$response"
+            exit 1
+          fi
 
           deployment_id=$(printf '%s' "$response" | jq -r '.id // (.status_url | split("/")[-1])')
           echo "Created Pages deployment: ${deployment_id}"
