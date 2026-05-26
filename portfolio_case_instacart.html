@@ -4,13 +4,47 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Instacart 구매 로그 기반 개인화 마케팅 전략</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
   <style>
+    :root {
+      --case-bg: #f2f3f6;
+      --case-border: #d9dee8;
+      --case-text: #111827;
+    }
+    *, *::before, *::after {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: 0 !important;
+    }
     html, body, #root {
       width: 100%;
       min-height: 100%;
       margin: 0;
-      background: #F4F5F7;
+      background: var(--case-bg) !important;
       overflow-x: hidden;
+    }
+    body {
+      color: var(--case-text);
+    }
+    #root,
+    #root > div,
+    main,
+    section,
+    footer {
+      background: var(--case-bg) !important;
+    }
+    nav {
+      background: rgba(242, 243, 246, 0.94) !important;
+      border-color: var(--case-border) !important;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: -0.02em !important;
+    }
+    [style*="background: rgb(244, 245, 247)"],
+    [style*="background: #F4F5F7"],
+    [style*="background:#F4F5F7"],
+    [style*="background: rgb(249, 250, 251)"] {
+      background: var(--case-bg) !important;
     }
     nav > div {
       padding-right: 72px !important;
