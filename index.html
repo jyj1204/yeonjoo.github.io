@@ -83,7 +83,7 @@
       min-height: calc(100svh - 60px);
       margin: 0 auto;
       display: grid;
-      grid-template-columns: minmax(340px, 390px) minmax(300px, 320px);
+      grid-template-columns: minmax(420px, 520px) minmax(300px, 320px);
       align-items: center;
       align-content: center;
       justify-content: center;
@@ -146,7 +146,8 @@
       line-height: 1.85;
     }
     .lead span {
-      white-space: nowrap;
+      display: block;
+      white-space: normal;
     }
 
     .hero-tags {
@@ -551,7 +552,7 @@
       margin: -22px 0 30px 0;
       white-space: nowrap;
     }
-    .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
     .project-card {
       min-height: 292px;
       display: flex;
@@ -620,6 +621,10 @@
       background: rgba(194, 129, 16, 0.09);
     }
     .project-card:nth-child(4) .project-icon {
+      color: #0d9488;
+      background: rgba(13, 148, 136, 0.08);
+    }
+    .project-card:nth-child(5) .project-icon {
       color: #8b5cf6;
       background: rgba(139, 92, 246, 0.08);
     }
@@ -1640,8 +1645,8 @@
           <h1 id="hero-title">전연주</h1>
           <p class="role">Data Analyst</p>
           <p class="lead">
-            <span>데이터로 흐름을 읽고, 결정을 설계합니다.</span>
-            <span>숫자 속에서 이야기를 찾아냅니다.</span>
+            <span>커머스, 광고 성과, 물류 운영 데이터까지 다양한 도메인 데이터를 직접 분석하는 데이터 분석가.</span>
+            <span>SQL·Python·Tableau와 통계/ML 방법론을 활용해 데이터에서 인사이트를 도출하고, 이를 실제 전략으로 연결합니다.</span>
           </p>
           <ul class="hero-tags" aria-label="주요 기술">
             <li>SQL</li>
@@ -1845,9 +1850,19 @@
             <p>광고 성과와 리뷰 데이터를 결합해 실제 구매자 페르소나를 재정의하고 예산 재배치 전략을 도출한 프로젝트입니다.</p>
             <div class="project-meta"><span>Ad Analytics</span><span>Persona</span><span>Python</span><span>Tableau</span></div>
           </button>
-          <button class="project-card" id="project-04" type="button" data-modal-open="detective-modal" aria-label="AI 탐정게임 개발 상세 보기">
+          <button class="project-card" id="project-04" type="button" data-modal-open="kleague-modal" aria-label="K리그 최종 패스 좌표 예측 AI 상세 보기">
             <div class="project-card-top">
               <span class="project-number">04</span>
+              <span class="project-arrow" aria-hidden="true">↗</span>
+            </div>
+            <span class="project-icon" aria-hidden="true">⚽</span>
+            <h3>K리그 최종 패스 좌표 예측 AI</h3>
+            <p>K리그 실제 경기 데이터를 기반으로 최종 패스 도착 좌표를 예측하고, 앙상블 모델로 상위 7%를 달성한 AI 경진대회 프로젝트입니다.</p>
+            <div class="project-meta"><span>Python</span><span>CatBoost</span><span>LightGBM</span><span>GroupKFold</span></div>
+          </button>
+          <button class="project-card" id="project-05" type="button" data-modal-open="detective-modal" aria-label="AI 탐정게임 개발 상세 보기">
+            <div class="project-card-top">
+              <span class="project-number">05</span>
               <span class="project-arrow" aria-hidden="true">↗</span>
             </div>
             <span class="project-icon" aria-hidden="true">🔎</span>
@@ -2175,6 +2190,20 @@
                 </div>
               </section>
             </div>
+          </div>
+        </div>
+
+        <div class="project-modal theme-light exact-react" id="kleague-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="kleague-modal-title">
+          <div class="modal-dialog" tabindex="-1">
+            <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
+            <iframe class="exact-frame" title="K리그 최종 패스 좌표 예측 AI" src="portfolio_case_kleague.html"></iframe>
+
+            <header class="case-hero case-animate">
+              <h3 class="case-title" id="kleague-modal-title">
+                K리그 최종 패스 좌표<br />
+                <span>예측 AI</span>
+              </h3>
+            </header>
           </div>
         </div>
 
@@ -2588,6 +2617,9 @@
       }
       if (window.location.hash === "#jewelry-modal") {
         openModal("jewelry-modal");
+      }
+      if (window.location.hash === "#kleague-modal") {
+        openModal("kleague-modal");
       }
       if (window.location.hash === "#detective-modal") {
         openModal("detective-modal");
