@@ -1,307 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>창고 로봇 시스템 출고 지연 원인 분석 | 전연주</title>
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-<style>
-:root {
-  --bg: #f2f3f6;
-  --surface: #ffffff;
-  --surface2: #e9ebef;
-  --border: #d9dee8;
-  --border-strong: #c3c9d4;
-  --text: #1a1a18;
-  --text-sub: #4a4a46;
-  --text-muted: #8a8a85;
-  --tag-bg: #efefec;
-  --tag-text: #4a4a46;
-  --accent: #1a1a18;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: 'Pretendard', -apple-system, sans-serif; font-weight: 400; line-height: 1.7; font-size: 15px; }
-nav { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: rgba(242,243,246,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 6vw; z-index: 100; }
-.nav-back { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-.nav-back:hover { color: var(--text); }
-.nav-meta { font-size: 0.78rem; color: var(--text-muted); }
-.toc-bar { position: sticky; top: 56px; z-index: 80; background: rgba(242,243,246,0.96); border-bottom: 1px solid var(--border); padding: 0 6vw; overflow-x: auto; scrollbar-width: none; }
-.toc-bar::-webkit-scrollbar { display: none; }
-.toc-inner { display: flex; max-width: 1100px; margin: 0 auto; }
-.toc-item { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; padding: 14px 20px; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
-.toc-item:hover { color: var(--text); border-color: var(--border-strong); }
-.toc-item.active { color: var(--text); font-weight: 600; border-color: var(--text); }
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 6vw; }
-section { border-bottom: 1px solid var(--border); }
-.sec { padding: 72px 0; }
-.sec-num { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.15em; margin-bottom: 8px; }
-.sec-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; }
-.sec-lead { font-size: 0.9rem; color: var(--text-sub); max-width: 680px; line-height: 1.8; margin-bottom: 40px; }
-.hero { padding: 120px 6vw 80px; border-bottom: 1px solid var(--border); max-width: 1100px; margin: 0 auto; }
-.eyebrow { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-.eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--text-muted); }
-.hero-title { font-size: clamp(2rem,4vw,3.2rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px; }
-.hero-desc { font-size: 1rem; color: var(--text-sub); max-width: 600px; line-height: 1.8; margin-bottom: 40px; }
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; }
-.tag { font-size: 0.75rem; padding: 4px 10px; background: var(--tag-bg); color: var(--tag-text); border-radius: 2px; font-weight: 500; }
-.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 40px; }
-.kpi-card { background: var(--surface); padding: 28px 24px; }
-.kpi-num { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-.kpi-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.05em; }
-.kpi-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-.stats-grid { display: flex; gap: 48px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--border); }
-.stat-num { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-.stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-.flow-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; }
-.flow-step { background: var(--surface); padding: 20px 16px; text-align: center; }
-.flow-num { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 8px; }
-.flow-name { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-.flow-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
-.story-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; }
-.story-step { background: var(--surface); padding: 24px; }
-.story-phase { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.12em; margin-bottom: 8px; }
-.story-finding { font-size: 0.875rem; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
-.story-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; }
-.finding-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
-.finding-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; transition: border-color 0.2s; }
-.finding-card:hover { border-color: var(--border-strong); }
-.finding-val { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 6px; }
-.finding-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.finding-desc { font-size: 0.815rem; color: var(--text-sub); line-height: 1.7; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-.three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
-.card { background: var(--surface); border: 1px solid var(--border); padding: 28px; }
-.card-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-.card-body { font-size: 0.815rem; color: var(--text-sub); line-height: 1.75; }
-.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-.method-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; }
-.method-q { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 16px; }
-.method-bad { background: var(--surface2); padding: 12px 14px; margin-bottom: 8px; }
-.method-good { background: var(--surface2); padding: 12px 14px; }
-.method-bad-label { font-size: 0.68rem; font-weight: 600; color: #c0392b; letter-spacing: 0.08em; margin-bottom: 6px; }
-.method-good-label { font-size: 0.68rem; font-weight: 600; color: #27ae60; letter-spacing: 0.08em; margin-bottom: 6px; }
-.method-text { font-size: 0.815rem; color: var(--text-sub); line-height: 1.6; }
-table { width: 100%; border-collapse: collapse; font-size: 0.845rem; }
-th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; border-bottom: 1px solid var(--border); }
-td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); vertical-align: top; line-height: 1.6; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--surface2); }
-.retro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
-.retro-section-title { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-sub); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-.retro-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-.retro-item:last-child { border-bottom: none; margin-bottom: 0; }
-.retro-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-.retro-body { font-size: 0.815rem; color: var(--text-sub); line-height: 1.7; }
-.retro-next { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
-.retro-next::before { content: '→ '; }
-.divider { height: 1px; background: var(--border); margin: 36px 0; }
-footer { padding: 40px 6vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.footer-left { font-size: 0.82rem; color: var(--text-muted); }
-.fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
-code { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.82rem; background: var(--tag-bg); padding: 1px 6px; border-radius: 3px; }
-@media (max-width:900px) { .kpi-grid,.flow-grid { grid-template-columns:1fr 1fr; } .story-grid,.finding-grid,.three-col { grid-template-columns:1fr 1fr; } .method-grid,.two-col,.retro-grid { grid-template-columns:1fr; } }
-@media (max-width:600px) { .kpi-grid,.story-grid,.finding-grid,.three-col { grid-template-columns:1fr; } .stats-grid { gap:24px; } }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>창고 로봇 시스템 출고 지연 원인 분석</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    :root {
+      --case-bg: #f2f3f6;
+      --case-border: #d9dee8;
+      --case-text: #111827;
+    }
+    @keyframes caseFadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    *, *::before, *::after {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: 0 !important;
+    }
+    html, body, #root {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: var(--case-bg) !important;
+      overflow-x: hidden;
+    }
+    body {
+      color: var(--case-text);
+    }
+    #root,
+    #root > div,
+    main,
+    section,
+    footer {
+      background: var(--case-bg) !important;
+    }
+    nav {
+      background: rgba(242, 243, 246, 0.94) !important;
+      border-color: var(--case-border) !important;
+      animation: caseFadeUp 0.65s ease both;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: -0.02em !important;
+    }
+    [style*="background: rgb(244, 245, 247)"],
+    [style*="background: #F4F5F7"],
+    [style*="background:#F4F5F7"],
+    [style*="background: rgb(249, 250, 251)"] {
+      background: var(--case-bg) !important;
+    }
+    .fu,
+    .fu1,
+    .fu2,
+    .fu3,
+    .fu4,
+    .fu5 {
+      animation-duration: 0.68s !important;
+      animation-timing-function: ease !important;
+    }
+    nav > div {
+      padding-right: 72px !important;
+    }
+    @media (max-width: 700px) {
+      body {
+        overflow-x: hidden;
+      }
+      nav > div {
+        padding-right: 54px !important;
+        justify-content: flex-start !important;
+      }
+      nav > div > div:last-child {
+        display: none !important;
+      }
+      section,
+      footer {
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+      }
+      h1 {
+        font-size: 34px !important;
+      }
+      h2 {
+        font-size: 27px !important;
+      }
+      [style*="grid-template-columns: repeat(5"],
+      [style*="grid-template-columns: repeat(4"],
+      [style*="grid-template-columns: repeat(3"],
+      [style*="grid-template-columns: 1fr 1fr"],
+      [style*="grid-template-columns: 220px 1fr"] {
+        grid-template-columns: 1fr !important;
+      }
+      table {
+        min-width: 520px;
+      }
+      table,
+      pre {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+      footer > div,
+      [style*="justify-content: space-between"] {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<nav>
-  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">← 전연주 포트폴리오</a>
-  <span class="nav-meta">Data Analysis Case Study · Project 01</span>
-</nav>
-
-<div class="wrap">
-  <div class="hero">
-    <div class="eyebrow">Data Analysis Case Study · 물류 · 운영 분석</div>
-    <h1 class="hero-title">창고 로봇 시스템<br>출고 지연 원인 분석</h1>
-    <p class="hero-desc">250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고, 중요하지 않다고 본 변수가 핵심이었습니다. 분석 과정에서 결론이 세 번 바뀌었습니다.</p>
-    <div class="tags">
-      <span class="tag">Python</span><span class="tag">LightGBM</span><span class="tag">PSM 인과 검증</span><span class="tag">K-Means 군집화</span><span class="tag">Tableau</span>
-    </div>
-    <div class="stats-grid">
-      <div><div class="stat-num">250개</div><div class="stat-label">분석 창고 수</div></div>
-      <div><div class="stat-num">6.6×</div><div class="stat-label">지연 최대 차이 (idle 최저 vs 최고)</div></div>
-      <div><div class="stat-num">3회</div><div class="stat-label">결론 수정 횟수</div></div>
-      <div><div class="stat-num">78%</div><div class="stat-label">지연 감소 추정 (시뮬레이션)</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="toc-bar">
-  <div class="toc-inner">
-    <a href="#story"    class="toc-item active">분석 과정</a>
-    <a href="#findings" class="toc-item">핵심 발견</a>
-    <a href="#visuals"  class="toc-item">시각화</a>
-    <a href="#method"   class="toc-item">방법론</a>
-    <a href="#priority" class="toc-item">운영 전략</a>
-    <a href="#retro"    class="toc-item">회고</a>
-  </div>
-</div>
-
-<!-- 분석 과정 -->
-<section id="story">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">01</div>
-    <h2 class="sec-title">결론이 세 번 바뀐 과정</h2>
-    <p class="sec-lead">각 단계는 이전 결론을 의심하고 검증하는 방향으로 이어졌습니다. 분석이 깊어질수록 결론이 더 정확해졌습니다.</p>
-    <div class="story-grid fade-in">
-      <div class="story-step"><div class="story-phase">01 · EDA</div><div class="story-finding">idle이 핵심이다</div><div class="story-desc">30% 임계점 발견. 배터리 소모→충전 대기→idle 감소 연쇄 구조 확인.</div></div>
-      <div class="story-step"><div class="story-phase">02 · 모델링</div><div class="story-finding">EDA가 놓친 변수</div><div class="story-desc">pack_utilization 상관계수 0.105 → '관계 없음' 판단했는데 모델 중요도 1위(14.2%).</div></div>
-      <div class="story-step"><div class="story-phase">03 · 경보 규칙</div><div class="story-finding">임계값 방식 실패</div><div class="story-desc">규칙·ML 모두 Precision ~0.12 상한. 단일 시점으론 위기 예측 불가 확인.</div></div>
-      <div class="story-step"><div class="story-phase">04 · 군집화</div><div class="story-finding">취약형 102개 발견</div><div class="story-desc">hub_spoke 창고 67%가 취약 군집 → 레이아웃이 원인인가? 가설 형성.</div></div>
-      <div class="story-step"><div class="story-phase">05 · PSM</div><div class="story-finding">결론이 뒤집혔다</div><div class="story-desc">운영 조건 통제 후 hub_spoke 효과 소멸(p=0.783). 레이아웃이 아닌 운영이 원인.</div></div>
-      <div class="story-step"><div class="story-phase">결론 수정 3회</div><div class="story-finding" style="color:#c0392b">처음엔 의심 → PSM으로 확인</div><div class="story-desc">hub_spoke 구조가 원인 → 운영이 원인. EDA 오판 → 모델이 발견. 경보 기대 → 구조적 상한 발견.</div></div>
-    </div>
-  </div></div>
-</section>
-
-<!-- 핵심 발견 -->
-<section id="findings">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">02</div>
-    <h2 class="sec-title">6가지 핵심 발견</h2>
-    <p class="sec-lead">각 발견은 독립적인 결과가 아니라 하나의 인과 구조로 연결됩니다.</p>
-    <div class="finding-grid fade-in">
-      <div class="finding-card"><div class="finding-val">6.6×</div><div class="finding-title">⚡ idle 비율이 1차 방어선</div><div class="finding-desc">최저 36.3분 vs 최고 5.5분. 30% 아래로 떨어지면 즉각 고착. 배터리 소모→충전 대기→idle 감소 연쇄.</div></div>
-      <div class="finding-card"><div class="finding-val">r=0.105 → 1위</div><div class="finding-title">🔍 숨은 병목 — pack_utilization</div><div class="finding-desc">EDA 상관계수로는 '관계 없음'. 비선형 U자형: 저가동=처리 부족, 고가동=후처리 병목. 반례 분석과 수렴.</div></div>
-      <div class="finding-card"><div class="finding-val">p=0.783</div><div class="finding-title">🧪 PSM 인과 검증</div><div class="finding-desc">hub_spoke +3.69분(p=0.007) → 운영 조건 통제 후 -0.55분(p=0.783). 레이아웃 효과 소멸. 운영 개선이 우선.</div></div>
-      <div class="finding-card"><div class="finding-val">6스냅샷 전</div><div class="finding-title">⏱ 위기는 누적된다</div><div class="finding-desc">경보 규칙 실패 원인. 위기 6스냅샷 전부터 이미 신호가 쌓임. 단일 시점 탐지보다 누적 감지가 필요.</div></div>
-      <div class="finding-card"><div class="finding-val">3.7배</div><div class="finding-title">🗺 복합 병목 조합</div><div class="finding-desc">모두 정상 10.2분 → 3개 동시 나쁨 38.1분. idle만 낮아도 23.5분. idle이 1차, pack이 2차 방어선.</div></div>
-      <div class="finding-card"><div class="finding-val">포장병목형★</div><div class="finding-title">🎯 운영 우선순위 6유형</div><div class="finding-desc">3순위 포장병목형(27.0분)이 1순위 즉시개입형(24.6분)보다 지연 높음. 반례 분석 없인 발견 불가능.</div></div>
-    </div>
-  </div></div>
-</section>
-
-<!-- 시각화 -->
-<section id="visuals">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">03</div>
-    <h2 class="sec-title">주요 시각화</h2>
-    <div class="two-col fade-in">
-      <div class="card">
-        <div class="card-title">idle 비율 구간별 평균 지연 (분)</div>
-        <div style="margin-top:16px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:80px">최저 20%</span><div style="flex:1;height:28px;background:var(--surface2);position:relative"><div style="width:100%;height:100%;background:var(--text);opacity:0.85;display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:#fff;font-weight:600">36.3분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:80px">20~40%</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:77%;height:100%;background:var(--border-strong);display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:var(--text-sub)">28.1분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:80px">40~60%</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:51%;height:100%;background:var(--border-strong);display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:var(--text-sub)">18.4분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:80px">60~80%</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:28%;height:100%;background:var(--border-strong);display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:var(--text-sub)">10.2분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:80px">최고 20%</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:15%;height:100%;background:#27ae60;display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:#fff">5.5분</span></div></div></div>
-        </div>
-        <div style="margin-top:14px;font-size:0.78rem;color:var(--text-muted)">30%가 임계점 — 아래로 떨어지면 즉각 대응 필요</div>
-      </div>
-      <div class="card">
-        <div class="card-title">PSM 매칭 전후 비교</div>
-        <div style="margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:24px">
-          <div>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.08em">매칭 전 — 단순 비교</div>
-            <div style="margin-bottom:10px"><div style="font-size:0.78rem;color:var(--text-sub);margin-bottom:4px">hub_spoke</div><div style="height:32px;background:var(--text);opacity:0.85;display:flex;align-items:center;padding:0 10px;width:80%"><span style="font-size:0.78rem;color:#fff">22.09분</span></div></div>
-            <div><div style="font-size:0.78rem;color:var(--text-sub);margin-bottom:4px">나머지</div><div style="height:32px;background:var(--border-strong);display:flex;align-items:center;padding:0 10px;width:60%"><span style="font-size:0.78rem;color:var(--text)">18.40분</span></div></div>
-            <div style="margin-top:8px;font-size:0.75rem;color:#c0392b">+3.69분 · p=0.007 **</div>
-          </div>
-          <div>
-            <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.08em">PSM 매칭 후 — 운영 조건 통제</div>
-            <div style="margin-bottom:10px"><div style="font-size:0.78rem;color:var(--text-sub);margin-bottom:4px">hub_spoke</div><div style="height:32px;background:var(--border-strong);display:flex;align-items:center;padding:0 10px;width:62%"><span style="font-size:0.78rem;color:var(--text)">21.68분</span></div></div>
-            <div><div style="font-size:0.78rem;color:var(--text-sub);margin-bottom:4px">나머지</div><div style="height:32px;background:var(--border-strong);display:flex;align-items:center;padding:0 10px;width:64%"><span style="font-size:0.78rem;color:var(--text)">22.24분</span></div></div>
-            <div style="margin-top:8px;font-size:0.75rem;color:#27ae60">-0.55분 · p=0.783 (n.s.) — 효과 소멸</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="two-col fade-in">
-      <div class="card">
-        <div class="card-title">복합 병목 조합별 평균 지연</div>
-        <div style="margin-top:16px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:100px">0개 (모두 정상)</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:27%;height:100%;background:#27ae60;display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:#fff">10.2분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:100px">1개</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:47%;height:100%;background:var(--border-strong);display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:var(--text-sub)">17.9분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:100px">2개</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:78%;height:100%;background:var(--border-strong);display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:var(--text-sub)">29.9분</span></div></div></div>
-          <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.78rem;color:var(--text-sub);min-width:100px">3개 (모두 나쁨)</span><div style="flex:1;height:28px;background:var(--surface2)"><div style="width:100%;height:100%;background:var(--text);opacity:0.85;display:flex;align-items:center;padding-left:8px"><span style="font-size:0.75rem;color:#fff">38.1분</span></div></div></div>
-        </div>
-        <div style="margin-top:14px;font-size:0.78rem;color:var(--text-muted)">idle이 1차 방어선 — 정상이면 다른 조건이 나빠도 20분 이하</div>
-      </div>
-      <div class="card">
-        <div class="card-title">pack_utilization U자형 패턴</div>
-        <div style="margin-top:12px;font-size:0.815rem;color:var(--text-sub);line-height:1.7">
-          <p style="margin-bottom:12px">EDA에서는 상관계수 <code>r=0.105</code>로 '관계 없음'으로 판단했으나, LightGBM 모델 중요도에서 <strong>1위(14.2%)</strong>로 나타났습니다.</p>
-          <p style="margin-bottom:12px"><strong>저가동(~10%) 구간:</strong> 29.6분 — 처리량 부족으로 대기</p>
-          <p style="margin-bottom:12px"><strong>최적 구간(60~80%):</strong> 12.0분 — 효율 최대</p>
-          <p><strong>과부하(90%+) 구간:</strong> 29.6분 — 후처리 병목 폭발</p>
-          <div style="margin-top:12px;padding:10px 12px;background:var(--surface2);font-size:0.78rem;color:var(--text-muted)">선형 상관계수는 이 비선형 U자형 구조를 포착하지 못함</div>
-        </div>
-      </div>
-    </div>
-  </div></div>
-</section>
-
-<!-- 방법론 -->
-<section id="method">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">04</div>
-    <h2 class="sec-title">왜 이 방법을 선택했는가</h2>
-    <p class="sec-lead">각 방법은 기법을 써보려고 선택한 게 아닙니다. 그 방법이 아니었으면 잘못된 결론에 도달했을 것이기 때문입니다.</p>
-    <div class="method-grid fade-in">
-      <div class="method-card"><div class="method-q">왜 GroupKFold를 선택했는가?</div><div class="method-bad"><div class="method-bad-label">✗ 다른 방법 썼다면</div><div class="method-text">일반 KFold → 같은 창고 스냅샷이 학습·검증에 동시 포함 → 데이터 누출 → 성능 과대평가</div></div><div style="height:8px"></div><div class="method-good"><div class="method-good-label">✓ 이 방법을 선택한 이유</div><div class="method-text">창고 단위로 완전 분리 → 학습에 없던 창고로만 검증 → 실제 배포 환경 시뮬레이션</div></div></div>
-      <div class="method-card"><div class="method-q">왜 상관계수 대신 모델 중요도를 봤는가?</div><div class="method-bad"><div class="method-bad-label">✗ 다른 방법 썼다면</div><div class="method-text">상관계수만 → pack_utilization r=0.105 '관계 없음' → 핵심 변수 누락 → 잘못된 분석 방향</div></div><div style="height:8px"></div><div class="method-good"><div class="method-good-label">✓ 이 방법을 선택한 이유</div><div class="method-text">비선형 U자형 패턴 포착 가능 → 모델 1위 재발견 → 반례 분석과 수렴 → 신뢰도 상승</div></div></div>
-      <div class="method-card"><div class="method-q">왜 PSM이 필요했는가?</div><div class="method-bad"><div class="method-bad-label">✗ 다른 방법 썼다면</div><div class="method-text">단순 비교 → hub_spoke +3.69분 유의미 → 레이아웃 개선 추진 → 고비용·잘못된 방향</div></div><div style="height:8px"></div><div class="method-good"><div class="method-good-label">✓ 이 방법을 선택한 이유</div><div class="method-text">운영 조건 통제 후 비교 → 효과 소멸(p=0.783) → 레이아웃 X, 운영 개선 O → 비용 절감</div></div></div>
-      <div class="method-card"><div class="method-q">왜 반례 분석을 별도로 진행했는가?</div><div class="method-bad"><div class="method-bad-label">✗ 다른 방법 썼다면</div><div class="method-text">전체 경향만 → 'idle 높으면 안전' 단순 결론 → idle 정상인데 지연 큰 창고 20개 미발견</div></div><div style="height:8px"></div><div class="method-good"><div class="method-good-label">✓ 이 방법을 선택한 이유</div><div class="method-text">공통 원인: pack 과포화 → U자형 분석과 수렴 → 두 독립 분석이 같은 결론 → 신뢰도 상승</div></div></div>
-    </div>
-  </div></div>
-</section>
-
-<!-- 운영 전략 -->
-<section id="priority">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">05</div>
-    <h2 class="sec-title">어떤 창고부터 개입하는가</h2>
-    <p class="sec-lead">★ 포장병목형(3순위)이 즉시개입형(1순위)보다 평균 지연 높음 — 반례 분석 없이는 발견하기 어려운 유형</p>
-    <div class="fade-in" style="background:var(--surface);border:1px solid var(--border)">
-      <table>
-        <thead><tr><th>순위</th><th>유형</th><th>창고 수</th><th>평균 지연</th><th>신호</th><th>권장 조치</th></tr></thead>
-        <tbody>
-          <tr><td>1순위</td><td>즉시개입형</td><td>49개</td><td>24.6분</td><td>고혼잡 + 저idle</td><td>경로 재배정 + 충전 긴급</td></tr>
-          <tr><td>2순위</td><td>배터리위기형</td><td>23개</td><td>23.3분</td><td>저idle + 배터리 나쁨</td><td>사전 충전 스케줄</td></tr>
-          <tr><td><strong>3순위 ★</strong></td><td><strong>포장병목형</strong></td><td>40개</td><td><strong>27.0분</strong></td><td>pack 고가동 (숨은 병목)</td><td>pack 60~80% 조정</td></tr>
-          <tr><td>4순위</td><td>혼잡관리형</td><td>29개</td><td>15.4분</td><td>idle 정상 + 고혼잡</td><td>경로 모니터링</td></tr>
-          <tr><td>5순위</td><td>배터리최적화형</td><td>6개</td><td>17.0분</td><td>idle 정상 + 배터리 나쁨</td><td>정기 충전 최적화</td></tr>
-          <tr><td>6순위</td><td>모니터링형</td><td>103개</td><td>13.5분</td><td>전반적 정상</td><td>정기 모니터링</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div></div>
-</section>
-
-<!-- 회고 -->
-<section id="retro">
-  <div class="wrap"><div class="sec">
-    <div class="sec-num">06</div>
-    <h2 class="sec-title">프로젝트 회고</h2>
-    <div class="retro-grid fade-in">
-      <div>
-        <div class="retro-section-title">잘 된 점</div>
-        <div class="retro-item"><div class="retro-title">결론을 세 번 수정하는 분석 태도</div><div class="retro-body">EDA 결론을 모델로, 모델 결론을 PSM으로 반복 검증. 가설이 틀렸음을 데이터로 증명한 과정이 분석의 핵심 가치였습니다.</div></div>
-        <div class="retro-item"><div class="retro-title">반례 분석으로 신뢰도 상승</div><div class="retro-body">pack_utilization U자형 발견을 반례 분석과 독립적으로 검증하여 두 방법이 같은 결론에 도달. 분석 신뢰도를 높이는 방법을 실감했습니다.</div></div>
-        <div class="retro-item"><div class="retro-title">방법론 선택에 이유 있는 분석</div><div class="retro-body">GroupKFold, PSM, 모델 중요도 각각의 선택 근거를 'X 방법 썼다면 잘못된 결론'으로 명확히 설명할 수 있었습니다.</div></div>
-      </div>
-      <div>
-        <div class="retro-section-title">보완할 점</div>
-        <div class="retro-item"><div class="retro-title">경보 시스템 대안 부재</div><div class="retro-body">Precision ~0.12 상한을 발견하고 '단일 시점의 한계'라고 결론 내렸지만, 연속 상태 감지 방안까지 설계하지 못했습니다.</div><div class="retro-next">LSTM 등 시계열 모델로 누적 신호 감지 시스템 설계</div></div>
-        <div class="retro-item"><div class="retro-title">실제 운영 데이터와의 간극</div><div class="retro-body">시뮬레이션 기반 78% 지연 감소 추정이 실제 운영 환경에서 얼마나 재현될지 검증이 필요합니다.</div><div class="retro-next">파일럿 창고 A/B 테스트로 실제 효과 측정</div></div>
-      </div>
-    </div>
-  </div></div>
-</section>
-
-<footer>
-  <div class="footer-left">창고 로봇 시스템 출고 지연 원인 분석 · 전연주</div>
-  <a href="https://www.yeonjoo.cloud/#projects" style="font-size:0.78rem;color:var(--text-muted);text-decoration:none">← 포트폴리오로 돌아가기</a>
-</footer>
-
-<script>
-const io1=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("visible")}),{threshold:0.08});
-document.querySelectorAll(".fade-in").forEach(el=>io1.observe(el));
-const secs=document.querySelectorAll("section[id]"),tocs=document.querySelectorAll(".toc-item");
-const io2=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){tocs.forEach(t=>t.classList.remove("active"));const a=document.querySelector(`.toc-item[href="#${x.target.id}"]`);if(a)a.classList.add("active");}});},{rootMargin:"-50% 0px -45% 0px"});
-secs.forEach(s=>io2.observe(s));
-</script>
+  <div id="root"></div>
+  <script type="module" src="./assets/warehouse_portfolio.bundle.js"></script>
 </body>
 </html>
