@@ -1,1048 +1,1015 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K리그 패스 좌표 예측 | AI 경진대회</title>
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-<style>
-:root {
-  --bg: #f2f3f6;
-  --surface: #ffffff;
-  --surface2: #e9ebef;
-  --border: #d9dee8;
-  --border-strong: #c3c9d4;
-  --text: #1a1a18;
-  --text-sub: #4a4a46;
-  --text-muted: #8a8a85;
-  --tag-bg: #efefec;
-  --tag-text: #4a4a46;
-  --inferred-bg: #fffbf0;
-  --inferred-border: #e8d9a0;
-  --inferred-text: #7a6520;
-  --inferred-label: #b8920a;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-weight: 400;
-  line-height: 1.7;
-  font-size: 15px;
-}
-@keyframes caseFadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K리그 최종 패스 좌표 예측 AI</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f2f3f6;
+      --surface: #ffffff;
+      --surface-alt: #f7f8fb;
+      --border: #d9dee8;
+      --border-dark: #c3c9d4;
+      --text: #111827;
+      --muted: #667085;
+      --faint: #98a2b3;
+      --accent: #2563eb;
+      --accent-bg: #eff6ff;
+      --accent-dim: #bfdbfe;
+      --green: #10b981;
+      --green-bg: #ecfdf5;
+      --green-dim: #a7f3d0;
+      --red: #ef4444;
+      --red-bg: #fef2f2;
+      --red-dim: #fecaca;
+      --amber: #f59e0b;
+      --amber-bg: #fffbeb;
+      --amber-dim: #fde68a;
+      --purple: #7c3aed;
+      --purple-bg: #f5f3ff;
+      --purple-dim: #ddd6fe;
+    }
 
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 56px;
-  background: rgba(242,243,246,0.94);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 6vw; z-index: 100;
-  animation: caseFadeUp 0.65s ease both;
-}
-.nav-back {
-  font-size: 0.82rem; color: var(--text-muted);
-  text-decoration: none; display: flex; align-items: center; gap: 6px;
-  transition: color 0.2s;
-}
-.nav-back:hover { color: var(--text); }
-.nav-meta { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.04em; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* HERO */
-.hero {
-  padding: 120px 6vw 80px;
-  border-bottom: 1px solid var(--border);
-  max-width: 1100px;
-  margin: 0 auto;
-  animation: caseFadeUp 0.72s ease 0.08s both;
-}
-.hero-eyebrow {
-  font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.1em;
-  text-transform: uppercase; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 12px;
-}
-.hero-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--text-muted); }
-.hero-title {
-  font-size: clamp(2rem,4vw,3.2rem); font-weight: 700;
-  line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 20px;
-}
-.hero-desc { font-size: 1rem; color: var(--text-sub); max-width: 600px; line-height: 1.8; margin-bottom: 40px; }
-.hero-stats {
-  display: flex; gap: 48px; flex-wrap: wrap;
-  padding-top: 32px; border-top: 1px solid var(--border);
-}
-.hero-stat-num { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
-.hero-stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.05em; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* TAGS */
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 40px; }
-.tag { font-size: 0.75rem; padding: 4px 10px; background: var(--tag-bg); color: var(--tag-text); border-radius: 2px; font-weight: 500; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-/* TOC */
-.toc-bar {
-  position: sticky; top: 56px; z-index: 80;
-  background: rgba(242,243,246,0.96);
-  border-bottom: 1px solid var(--border);
-  padding: 0 6vw; overflow-x: auto; scrollbar-width: none;
-  animation: caseFadeUp 0.72s ease 0.16s both;
-}
-.toc-bar::-webkit-scrollbar { display: none; }
-.toc-inner { display: flex; max-width: 1100px; margin: 0 auto; }
-.toc-item {
-  font-size: 0.78rem; color: var(--text-muted); text-decoration: none;
-  padding: 14px 20px; white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-.toc-item:hover { color: var(--text); border-color: var(--border-strong); }
-.toc-item.active { color: var(--text); font-weight: 600; border-color: var(--text); }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-/* SECTION */
-.content-wrap { max-width: 1100px; margin: 0 auto; padding: 0 6vw; }
-section { border-bottom: 1px solid var(--border); }
-.section-inner { padding: 72px 0; }
-.section-num { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.15em; margin-bottom: 8px; }
-.section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; }
-.section-lead { font-size: 0.9rem; color: var(--text-sub); max-width: 680px; line-height: 1.8; margin-bottom: 40px; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-/* INFERRED */
-.inferred {
-  background: var(--inferred-bg); border: 1px solid var(--inferred-border);
-  border-left: 3px solid var(--inferred-label);
-  padding: 16px 20px; border-radius: 0 4px 4px 0;
-  margin: 20px 0; font-size: 0.855rem; color: var(--inferred-text); line-height: 1.7;
-}
-.inferred-label {
-  font-size: 0.68rem; font-weight: 700; color: var(--inferred-label);
-  letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-bottom: 6px;
-}
+    .fu {
+      opacity: 0;
+      animation: fadeUp 0.68s ease forwards;
+    }
 
-/* OVERVIEW - compact */
-.overview-row {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-  background: var(--border); border: 1px solid var(--border); margin-bottom: 16px;
-}
-.overview-card { background: var(--surface); padding: 28px 24px; }
-.ov-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
-.ov-val { font-size: 0.875rem; color: var(--text-sub); line-height: 1.7; }
-.ov-val strong { color: var(--text); font-weight: 600; }
-.ov-val code { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.82rem; background: var(--tag-bg); padding: 1px 6px; border-radius: 3px; }
+    .fu1 { animation-delay: 0.05s; }
+    .fu2 { animation-delay: 0.16s; }
+    .fu3 { animation-delay: 0.28s; }
+    .fu4 { animation-delay: 0.40s; }
+    .fu5 { animation-delay: 0.52s; }
 
-/* EDA */
-.eda-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
-.eda-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; transition: border-color 0.2s; }
-.eda-card:hover { border-color: var(--border-strong); }
-.eda-card.inferred-card { background: var(--inferred-bg); border-color: var(--inferred-border); }
-.eda-icon { font-size: 1.4rem; margin-bottom: 12px; display: block; }
-.eda-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-.eda-body { font-size: 0.815rem; color: var(--text-sub); line-height: 1.7; }
-.eda-body code { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.78rem; background: var(--tag-bg); padding: 1px 5px; border-radius: 3px; color: var(--text); }
-.eda-stat { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-.eda-stat-num { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1; }
-.eda-stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.72s ease, transform 0.72s ease;
+    }
 
-/* DIST VIZ */
-.dist-viz { background: var(--surface); border: 1px solid var(--border); padding: 32px; margin-bottom: 32px; }
-.dist-title { font-size: 0.78rem; font-weight: 600; color: var(--text-sub); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
-.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.bar-label { font-size: 0.78rem; color: var(--text-sub); min-width: 120px; }
-.bar-track { flex: 1; height: 24px; background: var(--surface2); border-radius: 2px; overflow: hidden; position: relative; }
-.bar-fill { height: 100%; border-radius: 2px; background: var(--text); transition: width 1s ease; }
-.bar-val { font-size: 0.78rem; font-family: 'SF Mono','Fira Code',monospace; color: var(--text-sub); min-width: 60px; text-align: right; }
-.bar-fill.secondary { background: var(--border-strong); }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-.dist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(242, 243, 246, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      animation: fadeUp 0.62s ease both;
+    }
 
-/* PITCH */
-.pitch-wrap { background: var(--surface); border: 1px solid var(--border); padding: 36px; margin-bottom: 32px; }
-.pitch-caption { text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 16px; }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
 
-/* FEATURE TABLE */
-.feat-section { margin-bottom: 40px; }
-.feat-section-title {
-  font-size: 0.75rem; font-weight: 600; color: var(--text-sub);
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 0;
-}
-table { width: 100%; border-collapse: collapse; font-size: 0.845rem; }
-th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; border-bottom: 1px solid var(--border); }
-td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text-sub); vertical-align: top; line-height: 1.6; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--surface2); }
-td:first-child { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.78rem; color: var(--text); font-weight: 500; white-space: nowrap; }
+    .brand {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      white-space: nowrap;
+    }
 
-/* BADGE */
-.badge { display: inline-block; font-size: 0.65rem; font-weight: 600; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.06em; vertical-align: middle; margin-left: 4px; }
-.badge-code { background: #e8f0e8; color: #3a7a3a; }
-.badge-inferred { background: #fef3cd; color: #8a6820; }
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
 
-/* PIPELINE */
-.pipeline { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; }
-.pipe-step { background: var(--surface); padding: 20px 16px; text-align: center; }
-.pipe-num { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 8px; }
-.pipe-name { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
-.pipe-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
 
-/* MODEL CARDS */
-.model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
-.model-card { background: var(--surface); border: 1px solid var(--border); padding: 28px; }
-.model-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-.model-header { display: flex; align-items: center; margin-bottom: 6px; }
-.model-name { font-size: 1.1rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
-.model-sub { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 20px; }
-.model-params { list-style: none; font-size: 0.82rem; }
-.model-params li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
-.model-params li:last-child { border-bottom: none; }
-.param-key { color: var(--text-muted); }
-.param-val { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.78rem; color: var(--text); font-weight: 500; }
-.model-note { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-sub); line-height: 1.7; }
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--surface);
+    }
 
-/* MODEL PERF CARD */
-.perf-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; }
-.perf-card { background: var(--surface); padding: 24px 20px; }
-.perf-name { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 14px; }
-.perf-num { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text); line-height: 1; }
-.perf-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
-.perf-rank { font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 2px; display: inline-block; margin-top: 10px; }
-.rank-1 { background: #1a1a18; color: #f9f9f7; }
-.rank-2 { background: #e8e8e4; color: #4a4a46; }
-.rank-3 { background: #f3f3f1; color: #6a6a65; }
-.rank-4 { background: #f8f8f6; color: #8a8a85; }
+    section {
+      padding: 64px 40px;
+      border-bottom: 1px solid var(--border);
+    }
 
-/* ENSEMBLE */
-.ensemble-box { background: var(--surface); border: 1px solid var(--border); padding: 36px; margin-bottom: 32px; }
-.weight-row { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
-.weight-label { font-size: 0.82rem; font-weight: 500; min-width: 90px; color: var(--text); }
-.weight-track { flex: 1; height: 8px; background: var(--tag-bg); border-radius: 4px; overflow: hidden; }
-.weight-fill { height: 100%; border-radius: 4px; background: var(--text); transition: width 1s ease; }
-.weight-val { font-size: 0.78rem; font-family: 'SF Mono','Fira Code',monospace; color: var(--text-sub); min-width: 40px; text-align: right; }
-.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
-.method-box { background: var(--surface2); border: 1px solid var(--border); padding: 22px; }
-.method-name { font-size: 0.78rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-.method-desc { font-size: 0.815rem; color: var(--text-sub); line-height: 1.7; }
+    .section-alt {
+      background: var(--surface-alt);
+    }
 
-/* RESULT */
-.result-banner { background: var(--surface); border: 1px solid var(--border); padding: 36px 40px; margin-bottom: 32px; display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
-.result-rank { font-size: clamp(2rem,4vw,3rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1; color: var(--text); white-space: nowrap; }
-.result-sub { font-size: 0.855rem; color: var(--text-sub); line-height: 1.7; }
-.result-stats { display: flex; gap: 32px; margin-top: 20px; flex-wrap: wrap; }
-.result-stat-num { font-size: 1.1rem; font-weight: 700; color: var(--text); }
-.result-stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; letter-spacing: 0.05em; }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
-/* STORY FLOW */
-.story-flow { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 32px; }
-.story-step { background: var(--surface); padding: 24px; }
-.story-num { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.12em; margin-bottom: 8px; }
-.story-finding { font-size: 0.875rem; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
-.story-desc { font-size: 0.8rem; color: var(--text-sub); line-height: 1.6; }
+    .hero {
+      padding: 64px 40px 48px;
+      border-bottom: 1px solid var(--border);
+    }
 
-/* LESSONS */
-.lessons-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.lesson-card { background: var(--surface); border: 1px solid var(--border); padding: 28px 24px; }
-.lesson-num { font-size: 2rem; font-weight: 800; color: var(--border); letter-spacing: -0.04em; line-height: 1; margin-bottom: 14px; }
-.lesson-title { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
-.lesson-body { font-size: 0.815rem; color: var(--text-sub); line-height: 1.75; }
+    .tag-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
 
-/* DIVIDER */
-.divider { height: 1px; background: var(--border); margin: 36px 0; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
 
-/* FOOTER */
-footer { padding: 40px 6vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.footer-left { font-size: 0.82rem; color: var(--text-muted); }
+    .tag.primary {
+      background: var(--accent-bg);
+      border-color: var(--accent-dim);
+      color: var(--accent);
+    }
 
-/* FADE IN */
-.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.72s ease, transform 0.72s ease; }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
+    h1 {
+      max-width: 760px;
+      margin-bottom: 16px;
+      color: var(--text);
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.035em;
+      word-break: keep-all;
+    }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .overview-row { grid-template-columns: 1fr; }
-  .eda-grid { grid-template-columns: 1fr 1fr; }
-  .model-grid { grid-template-columns: 1fr; }
-  .lessons-grid { grid-template-columns: 1fr 1fr; }
-  .story-flow { grid-template-columns: 1fr 1fr; }
-  .pipeline { grid-template-columns: repeat(4,1fr); }
-  .method-grid { grid-template-columns: 1fr; }
-  .perf-grid { grid-template-columns: 1fr 1fr; }
-  .dist-grid { grid-template-columns: 1fr; }
-  .result-banner { grid-template-columns: 1fr; gap: 20px; }
-}
-@media (max-width: 600px) {
-  .eda-grid, .lessons-grid, .story-flow, .perf-grid { grid-template-columns: 1fr; }
-  .pipeline { grid-template-columns: 1fr 1fr; }
-  .hero-stats { gap: 28px; }
-  .result-banner { grid-template-columns: 1fr; gap: 16px; padding: 28px 24px; }
-}
-</style>
+    h1 span {
+      color: var(--accent);
+    }
+
+    .hero-copy {
+      max-width: 650px;
+      margin-bottom: 28px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+
+    .hero-copy strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 9px 18px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      transition: opacity 0.15s, transform 0.15s, border-color 0.15s;
+      cursor: pointer;
+    }
+
+    .button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .button:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+      border-color: var(--border-dark);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--border-dark);
+      box-shadow: 0 6px 22px rgba(15, 23, 42, 0.07);
+      transform: translateY(-1px);
+    }
+
+    .kpi-card {
+      padding: 20px 24px;
+    }
+
+    .kpi-label {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 31px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-value.accent { color: var(--accent); }
+    .kpi-value.green { color: var(--green); }
+    .kpi-value.purple { color: var(--purple); }
+
+    .kpi-sub {
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 3px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    h2 {
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      word-break: keep-all;
+    }
+
+    .section-copy {
+      max-width: 620px;
+      margin-bottom: 36px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .info-card {
+      padding: 24px;
+    }
+
+    .info-title {
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .info-value {
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .info-body {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .flow-step {
+      min-height: 112px;
+      padding: 16px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .flow-num {
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .flow-name {
+      margin-bottom: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .flow-desc {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+
+    .note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--accent-dim);
+      background: var(--accent-bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    .mini-title {
+      margin-bottom: 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+
+    th {
+      background: var(--surface-alt);
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    td {
+      color: var(--text);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .metric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 64px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metric-name,
+    .metric-score {
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .metric-score {
+      text-align: right;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e5e7eb;
+    }
+
+    .bar-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transition: width 0.9s ease;
+    }
+
+    .bar-fill.visible {
+      width: var(--w);
+    }
+
+    .lesson-card {
+      padding: 22px 24px;
+    }
+
+    .lesson-num {
+      margin-bottom: 10px;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    footer {
+      padding: 40px;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 940px) {
+      .kpi-grid,
+      .grid-4,
+      .grid-3,
+      .grid-2,
+      .flow {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav,
+      .hero,
+      section,
+      footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 27px;
+      }
+
+      .kpi-grid,
+      .grid-4,
+      .grid-3,
+      .grid-2,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-row {
+        grid-template-columns: 92px 1fr 52px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-
-<nav>
-  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">← 전연주 포트폴리오</a>
-  <span class="nav-meta">Dacon · K리그-서울시립대 AI 경진대회 · Track 1</span>
-</nav>
-
-<!-- HERO -->
-<div class="content-wrap">
-  <div class="hero">
-    <div class="hero-eyebrow">Data Analysis Case Study · Competition</div>
-    <h1 class="hero-title">K리그 경기 내<br>최종 패스 좌표 예측 AI</h1>
-    <p class="hero-desc">
-      K리그 실제 경기 데이터를 기반으로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측하는 AI 모델 개발.
-      CatBoost · LightGBM · XGBoost · CNN 4개 모델을 설계하고 앙상블하여 상위 7%를 달성했습니다.
-    </p>
-    <div class="tags">
-      <span class="tag">CatBoost</span>
-      <span class="tag">LightGBM</span>
-      <span class="tag">XGBoost</span>
-      <span class="tag">PyTorch CNN</span>
-      <span class="tag">GroupKFold</span>
-      <span class="tag">Pseudo Labeling</span>
-      <span class="tag">앙상블 최적화</span>
-      <span class="tag">Python</span>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num">TOP 7%</div>
-        <div class="hero-stat-label">최종 순위</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">4개</div>
-        <div class="hero-stat-label">앙상블 모델</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">15,428</div>
-        <div class="hero-stat-label">학습 에피소드 수</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">13.05m</div>
-        <div class="hero-stat-label">앙상블 OOF MAE</div>
+  <nav>
+    <div class="nav-inner">
+      <div class="brand">데이터 분석 포트폴리오</div>
+      <div class="nav-links">
+        <a href="#overview">개요</a>
+        <a href="#eda">EDA</a>
+        <a href="#features">피처 엔지니어링</a>
+        <a href="#modeling">모델링</a>
+        <a href="#ensemble">앙상블</a>
+        <a href="#results">결과</a>
       </div>
     </div>
-  </div>
-</div>
+  </nav>
 
-<!-- TOC -->
-<div class="toc-bar">
-  <div class="toc-inner">
-    <a href="#overview" class="toc-item active">대회 개요</a>
-    <a href="#eda"      class="toc-item">EDA</a>
-    <a href="#features" class="toc-item">피처 엔지니어링</a>
-    <a href="#modeling" class="toc-item">모델링</a>
-    <a href="#ensemble" class="toc-item">앙상블</a>
-    <a href="#results"  class="toc-item">결과</a>
-    <a href="#lessons"  class="toc-item">회고</a>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════
-  01 대회 개요
-══════════════════════════════ -->
-<section id="overview">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">01</div>
-      <h2 class="section-title">대회 개요</h2>
-
-      <div class="overview-row fade-in">
-        <div class="overview-card">
-          <div class="ov-label">Task</div>
-          <div class="ov-val">
-            K리그 경기 내 플레이 시퀀스의 <strong>마지막 패스 도착 좌표 (end_x, end_y)</strong> 예측.<br>
-            좌표는 FIFA 공식 권장 규격 <strong>105 × 68m</strong> 그리드에 매핑된 상대 좌표.
-            패스 목적지는 경기 맥락 전체를 시계열로 이해해야 예측 가능한 고차원 문제입니다.
-          </div>
-        </div>
-        <div class="overview-card">
-          <div class="ov-label">평가 지표</div>
-          <div class="ov-val">
-            유클리드 거리 기반 <strong>MAE</strong><br>
-            <code>√((pred_x - true_x)² + (pred_y - true_y)²)</code> 의 평균.<br>
-            x, y 오차를 동시에 최소화해야 하므로 두 방향을 별도 모델로 각각 예측하는 2-head 구조를 채택했습니다.
-          </div>
-        </div>
+  <header class="hero">
+    <div class="container">
+      <div class="tag-row fu fu1">
+        <span class="tag primary">AI 경진대회</span>
+        <span class="tag">CatBoost</span>
+        <span class="tag">LightGBM</span>
+        <span class="tag">XGBoost</span>
+        <span class="tag">PyTorch CNN</span>
+        <span class="tag">GroupKFold</span>
+        <span class="tag">Pseudo Labeling</span>
       </div>
-    </div>
-  </div>
-</section>
 
+      <h1 class="fu fu2">
+        K리그 경기 내<br />
+        <span>최종 패스 좌표</span> 예측 AI
+      </h1>
 
-<!-- ══════════════════════════════
-  02 EDA
-══════════════════════════════ -->
-<section id="eda">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">02</div>
-      <h2 class="section-title">탐색적 데이터 분석</h2>
-      <p class="section-lead">
-        OOF 예측 결과(15,428개 에피소드)를 직접 분석하여 데이터 분포와 모델 오차 패턴을 파악했습니다.
-        피처 설계 방향과 모델 선택에 직접 영향을 준 인사이트를 중심으로 정리합니다.
+      <p class="hero-copy fu fu3">
+        K리그 실제 경기 데이터를 기반으로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측하는 AI 모델 개발.
+        <strong>CatBoost · LightGBM · XGBoost · CNN 4개 모델을 설계하고 앙상블하여 상위 7%를 달성했습니다.</strong>
       </p>
 
-      <!-- 패스 도착지 분포 -->
-      <div class="pitch-wrap fade-in">
-        <div class="dist-title">패스 도착 좌표 분포 (true_x, true_y · 15,428건)</div>
-        <div class="dist-grid">
-          <div>
-            <p style="font-size:0.8rem;color:var(--text-sub);margin-bottom:16px;line-height:1.7">
-              <strong>x축 (공격 방향, 0→105m)</strong> — 전체 패스의 <strong>55%</strong>가 공격 3분의 1 구역(70m 이상)에서 종료.
-              평균 도착 x좌표가 <strong>68.5m</strong>로 피치 정중앙(52.5m)보다 공격 방향으로 치우쳐 있습니다.
-              이는 K리그 경기에서 전진 패스 비중이 높다는 도메인 특성을 반영합니다.
-            </p>
-            <div class="bar-row"><span class="bar-label">공격권 (70~105m)</span><div class="bar-track"><div class="bar-fill" style="width:55%"></div></div><span class="bar-val">55.0%</span></div>
-            <div class="bar-row"><span class="bar-label">중원 (35~70m)</span><div class="bar-track"><div class="bar-fill secondary" style="width:33.9%"></div></div><span class="bar-val">33.9%</span></div>
-            <div class="bar-row"><span class="bar-label">수비권 (0~35m)</span><div class="bar-track"><div class="bar-fill secondary" style="width:11%"></div></div><span class="bar-val">11.0%</span></div>
-          </div>
-          <div>
-            <p style="font-size:0.8rem;color:var(--text-sub);margin-bottom:16px;line-height:1.7">
-              <strong>y축 (폭 방향, 0→68m)</strong> — 양쪽 사이드라인 근처(y &lt; 5m 또는 y &gt; 63m)에 전체의 <strong>35.1%</strong>가 집중.
-              반면 중앙 구역(23~45m)은 19.0%에 불과합니다. 사이드 패스가 중앙 패스보다 약 1.8배 많은 구조로,
-              y좌표 예측이 상대적으로 어려운 이유입니다.
-            </p>
-            <div class="bar-row"><span class="bar-label">오른쪽 사이드 (45~68m)</span><div class="bar-track"><div class="bar-fill" style="width:39.9%"></div></div><span class="bar-val">39.9%</span></div>
-            <div class="bar-row"><span class="bar-label">왼쪽 사이드 (0~23m)</span><div class="bar-track"><div class="bar-fill secondary" style="width:35.4%"></div></div><span class="bar-val">35.4%</span></div>
-            <div class="bar-row"><span class="bar-label">중앙 (23~45m)</span><div class="bar-track"><div class="bar-fill secondary" style="width:19%"></div></div><span class="bar-val">19.0%</span></div>
-          </div>
-        </div>
+      <div class="button-row fu fu4">
+        <a href="#" class="button primary">Dacon 대회 ↗</a>
+        <a href="#" class="button">GitHub ↗</a>
+        <a href="#" class="button">발표 PPT ↓</a>
       </div>
 
-      <!-- 오차 분포 -->
-      <div class="dist-viz fade-in">
-        <div class="dist-title">모델 오차 분포 (LGBM OOF 기준)</div>
-        <div class="dist-grid">
-          <div>
-            <p style="font-size:0.8rem;color:var(--text-sub);margin-bottom:16px;line-height:1.7">
-              오차 분포가 <strong>오른쪽으로 긴 꼬리(right-skewed)</strong>를 가집니다.
-              절반(50%) 이상은 10.7m 이내로 예측하지만, 상위 10% 케이스는 오차가 27.5m 이상으로 급격히 커집니다.
-              이는 예측하기 어려운 롱패스, 측면 전환 등 특수 상황이 소수 존재하기 때문입니다.
+      <div class="kpi-grid fu fu5">
+        <article class="card kpi-card">
+          <div class="kpi-label">최종 순위</div>
+          <div class="kpi-value accent">TOP 7%</div>
+          <div class="kpi-sub">K리그-서울시립대 AI 경진대회</div>
+        </article>
+        <article class="card kpi-card">
+          <div class="kpi-label">앙상블 모델</div>
+          <div class="kpi-value">4개</div>
+          <div class="kpi-sub">CatBoost · LGBM · XGB · CNN</div>
+        </article>
+        <article class="card kpi-card">
+          <div class="kpi-label">학습 에피소드 수</div>
+          <div class="kpi-value purple">15,428</div>
+          <div class="kpi-sub">플레이 시퀀스 단위 학습</div>
+        </article>
+        <article class="card kpi-card">
+          <div class="kpi-label">앙상블 OOF MAE</div>
+          <div class="kpi-value green">13.05m</div>
+          <div class="kpi-sub">유클리드 거리 기반 MAE</div>
+        </article>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="overview">
+      <div class="container">
+        <div class="section-label">대회 개요</div>
+        <h2>무엇을 예측했는가</h2>
+        <p class="section-copy">
+          경기 내 플레이 시퀀스를 입력으로 받아 마지막 패스의 도착 좌표를 예측했습니다.
+          좌표는 FIFA 공식 권장 규격 105 × 68m 그리드에 매핑된 상대 좌표입니다.
+        </p>
+
+        <div class="grid-2 reveal">
+          <article class="card info-card">
+            <div class="info-title">Task</div>
+            <div class="info-value">end_x, end_y 예측</div>
+            <p class="info-body">
+              K리그 경기 내 플레이 시퀀스의 마지막 패스 도착 좌표를 예측합니다.
+              패스 목적지는 경기 맥락 전체를 시계열로 이해해야 예측 가능한 고차원 문제입니다.
             </p>
-            <div class="bar-row"><span class="bar-label">5m 이하 (정확)</span><div class="bar-track"><div class="bar-fill" style="width:20.7%"></div></div><span class="bar-val">20.7%</span></div>
-            <div class="bar-row"><span class="bar-label">5~15m</span><div class="bar-track"><div class="bar-fill secondary" style="width:46.3%"></div></div><span class="bar-val">46.3%</span></div>
-            <div class="bar-row"><span class="bar-label">15~30m</span><div class="bar-track"><div class="bar-fill secondary" style="width:25%"></div></div><span class="bar-val">25.0%</span></div>
-            <div class="bar-row"><span class="bar-label">30m 이상 (대형 오차)</span><div class="bar-track"><div class="bar-fill secondary" style="width:8%"></div></div><span class="bar-val">8.0%</span></div>
-          </div>
-          <div>
-            <p style="font-size:0.8rem;color:var(--text-sub);margin-bottom:16px;line-height:1.7">
-              <strong>x방향 MAE(8.37m)와 y방향 MAE(8.41m)가 거의 동일</strong>합니다.
-              당초 y방향이 더 어려울 것으로 예상했지만, 실제로는 두 방향 모두 비슷한 난이도였습니다.
-              사이드 쏠림이 심한 y축이지만, x축은 공격 방향으로의 긴 패스 오차가 이를 상쇄하는 구조입니다.
+          </article>
+          <article class="card info-card">
+            <div class="info-title">평가 지표</div>
+            <div class="info-value">유클리드 거리 MAE</div>
+            <p class="info-body">
+              √((pred_x - true_x)² + (pred_y - true_y)²)의 평균을 최소화합니다.
+              x, y 오차를 동시에 낮추기 위해 두 방향을 별도 모델로 예측하는 2-head 구조를 선택했습니다.
             </p>
-            <div style="padding:16px;background:var(--surface2);border-radius:2px">
-              <div style="display:flex;gap:24px">
-                <div>
-                  <div style="font-size:1.2rem;font-weight:700;letter-spacing:-0.02em">8.37m</div>
-                  <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px">MAE (x방향)</div>
-                </div>
-                <div style="color:var(--border-strong);font-size:1.5rem;line-height:2">≈</div>
-                <div>
-                  <div style="font-size:1.2rem;font-weight:700;letter-spacing:-0.02em">8.41m</div>
-                  <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px">MAE (y방향)</div>
-                </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="eda" class="section-alt">
+      <div class="container">
+        <div class="section-label">탐색적 데이터 분석</div>
+        <h2>분포와 오차 패턴에서 모델 설계 힌트를 찾았습니다</h2>
+        <p class="section-copy">
+          OOF 예측 결과 15,428개 에피소드를 직접 분석하여 좌표 분포, 오차 분포,
+          시퀀스 구조가 모델 설계에 어떤 영향을 주는지 확인했습니다.
+        </p>
+
+        <div class="grid-3 reveal">
+          <article class="card info-card">
+            <div class="info-title">패스 도착 x좌표 분포</div>
+            <div class="info-value accent">55.0%</div>
+            <p class="info-body">
+              전체 패스의 55%가 공격 3분의 1 구역(70m 이상)에서 종료되었습니다.
+              평균 도착 x좌표는 68.5m로, 전진 패스 비중이 높다는 도메인 특성을 반영합니다.
+            </p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">패스 도착 y좌표 분포</div>
+            <div class="info-value purple">35.1%</div>
+            <p class="info-body">
+              양쪽 사이드라인 근처에 전체의 35.1%가 집중되었습니다.
+              사이드 패스가 중앙 패스보다 약 1.8배 많은 구조입니다.
+            </p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">모델 오차 분포</div>
+            <div class="info-value">27.5m+</div>
+            <p class="info-body">
+              절반 이상은 10.7m 이내로 예측하지만, 상위 10% 케이스는 오차가 27.5m 이상으로 커졌습니다.
+              롱패스와 측면 전환이 대형 오차의 주요 후보였습니다.
+            </p>
+          </article>
+        </div>
+
+        <div class="grid-2 reveal" style="margin-top:16px">
+          <article class="card info-card">
+            <div class="mini-title">좌표 난이도 비교</div>
+            <div class="metric-list">
+              <div class="metric-row">
+                <span class="metric-name">x방향 MAE</span>
+                <div class="bar-track"><div class="bar-fill" style="--w: 83%"></div></div>
+                <span class="metric-score">8.37m</span>
               </div>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:12px">차이: 0.04m — 사실상 동일 난이도</p>
+              <div class="metric-row">
+                <span class="metric-name">y방향 MAE</span>
+                <div class="bar-track"><div class="bar-fill" style="--w: 84%"></div></div>
+                <span class="metric-score">8.41m</span>
+              </div>
             </div>
-          </div>
+            <p class="note">
+              y방향이 더 어려울 것으로 예상했지만, 실제로는 두 방향 모두 비슷한 난이도였습니다.
+              y축은 사이드 쏠림, x축은 공격 방향 롱패스 오차가 서로 난이도를 맞췄습니다.
+            </p>
+          </article>
+          <article class="card info-card">
+            <div class="mini-title">EDA에서 모델링으로 이어진 결정</div>
+            <table>
+              <tbody>
+                <tr><th>시퀀스 길이</th><td>최근 K=20개 이벤트만 사용하고, 짧은 시퀀스는 Zero-padding 처리</td></tr>
+                <tr><th>좌표 경계</th><td>최종 예측 시 clip(0,105), clip(0,68)로 물리적으로 불가능한 좌표 방지</td></tr>
+                <tr><th>선수 정보</th><td>player_spread, 평균 활동 위치 등 선수별 활동 반경 통계를 피처화</td></tr>
+              </tbody>
+            </table>
+          </article>
         </div>
       </div>
+    </section>
 
-      <!-- 6개 EDA 카드 -->
-      <div class="eda-grid fade-in">
-        <div class="eda-card">
-          <span class="eda-icon">⏱</span>
-          <div class="eda-title">시퀀스 길이와 K=20 설정</div>
-          <div class="eda-body">
-            각 game_episode별 이벤트 수가 불균일하게 분포. 지나치게 긴 시퀀스는 오래된 이벤트를 포함해 노이즈를 유발할 수 있어 최근 <code>K=20</code>개만 사용. 짧은 시퀀스는 Zero-padding 적용. <code>len(g) &lt; 2</code> 에피소드는 학습 제외.
-          </div>
-        </div>
-
-        <div class="eda-card">
-          <span class="eda-icon">📍</span>
-          <div class="eda-title">좌표 이상값과 클리핑</div>
-          <div class="eda-body">
-            end_x, end_y 좌표가 경기장 경계(0~105, 0~68)를 미세하게 벗어나는 케이스가 존재. 부동소수점 오차 또는 좌표 매핑 오류로 추정. 최종 예측 시 <code>clip(0, 105)</code>, <code>clip(0, 68)</code>으로 처리하여 물리적으로 불가능한 예측값 방지.
-          </div>
-        </div>
-
-        <div class="eda-card">
-          <span class="eda-icon">⚽</span>
-          <div class="eda-title">사이드 라인 쏠림 현상</div>
-          <div class="eda-body">
-            y &lt; 5m(왼쪽 사이드라인 근처)에 <strong>17.9%</strong>, y &gt; 63m(오른쪽)에 <strong>17.2%</strong>가 집중.
-            양 사이드를 합치면 전체의 35.1%가 필드 폭의 상하 7.4% 구간에 집중. 사이드 패스가 전술적으로 매우 빈번하게 활용된다는 의미입니다.
-            <div class="eda-stat">
-              <div class="eda-stat-num">35.1%</div>
-              <div class="eda-stat-label">사이드라인 근처(y &lt;5 또는 y &gt;63) 패스 비율</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="eda-card">
-          <span class="eda-icon">👤</span>
-          <div class="eda-title">선수별 활동 반경 분산</div>
-          <div class="eda-body">
-            player_id별 start 좌표 표준편차를 산출하면 선수마다 활동 반경이 뚜렷하게 다릅니다. 수비수·골키퍼는 좁은 반경에 고정, 공격형 미드필더는 넓게 활동. 이 통계를 피처로 사용하면 모델이 포지션 정보 없이도 선수 역할을 근사합니다.
-          </div>
-        </div>
-
-        <div class="eda-card">
-          <span class="eda-icon">🔢</span>
-          <div class="eda-title">결측값 처리 전략</div>
-          <div class="eda-body">
-            type_name, result_name에 결측값 존재 → <code>"Unknown"</code> 으로 대체 후 별도 범주로 처리.
-            team_id 결측 → <code>-1</code>로 채워 정수형 범주 처리.
-            테스트셋 마지막 이벤트의 end_x/y는 존재하지 않으므로 Gap 피처 계산 시 직전 이벤트 end 좌표를 참조하는 방식으로 처리.
-          </div>
-        </div>
-
-        <div class="eda-card">
-          <span class="eda-icon">🔍</span>
-          <div class="eda-title">사이드 패스에서의 중앙 회귀 현상</div>
-          <div class="eda-body">
-            사이드라인 패스(y&lt;5 또는 y&gt;63)의 평균 오차는 <strong>14.44m</strong>로 중앙 패스(13.31m)보다 큽니다.
-            y&lt;5인 케이스에서 실제 평균 y=1.68m인데 모델은 11.56m로 예측 — <strong>약 10m 중앙 방향 과대추정</strong>.
-            pred의 표준편차(21.0m)가 true(23.9m)보다 작아, 모델이 전반적으로 극단값을 중앙으로 당기는 경향이 수치로 확인됩니다.
-          </div>
-        </div>
-      </div>
-
-      <div class="inferred fade-in">
-        <span class="inferred-label">핵심 인사이트</span>
-        <strong>공격 방향 쏠림 + 사이드 쏠림이 동시에 존재합니다.</strong>
-        x축은 공격권(70m+)으로, y축은 양쪽 사이드라인으로 치우쳐 분포가 비대칭입니다.
-        이 비대칭 분포에서 단순한 중앙값 예측보다 나은 성능을 내려면 이벤트 시퀀스 전체의 맥락(이전 패스 방향, 선수 포지션, 이벤트 타입)을 반영한 피처가 필수적입니다.
-        실제로 선수별 활동 반경·위치 통계, Gap 피처, 시계열 Lag 피처가 이 역할을 담당합니다.
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════
-  03 피처 엔지니어링
-══════════════════════════════ -->
-<section id="features">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">03</div>
-      <h2 class="section-title">피처 엔지니어링</h2>
-      <p class="section-lead">
-        단순 좌표값이 아닌 경기 맥락을 담은 피처를 설계했습니다.
-        <strong>Residual 예측 방식</strong>을 채택하여 end_x/y의 절댓값 대신
-        start 대비 변화량(dx, dy)을 예측함으로써 학습 안정성을 높였습니다.
-      </p>
-
-      <div class="inferred fade-in">
-        <span class="inferred-label">설계 의도</span>
-        <strong>왜 Residual(변화량) 예측인가.</strong> 절댓값(end_x)을 직접 예측하면 모델이 피치 전체 범위(0~105m)를 커버해야 합니다.
-        변화량(end_x − start_x)을 예측하면 대부분의 패스가 소규모 이동이라 분포가 0 근방에 집중되어 MAE 기반 학습이 더 안정적입니다.
-        최종 좌표는 <code style="font-family:monospace">start_x + pred_dx × 105</code> 로 복원합니다.
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="feat-section fade-in">
-        <div class="feat-section-title">그룹 1 — 현재 상태 피처 (Last Timestep)</div>
-        <table>
-          <thead><tr><th>피처명</th><th>설명</th><th>계산 방법</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>last_sx / last_sy</td>
-              <td>마지막 이벤트의 정규화된 시작 좌표</td>
-              <td>start_x / 105.0, start_y / 68.0</td>
-              </tr>
-            <tr>
-              <td>speed_last</td>
-              <td>마지막 시점의 이동 속도</td>
-              <td>√(dx²+dy²) / dt, dt 최소 0.01 클리핑</td>
-              </tr>
-            <tr>
-              <td>angle_last</td>
-              <td>마지막 이동 방향 (라디안)</td>
-              <td>arctan2(dy, dx)</td>
-              </tr>
-            <tr>
-              <td>cat_type / cat_result</td>
-              <td>이벤트 종류 및 결과 범주형 인코딩</td>
-              <td>CatBoost는 문자열 그대로, LGBM/XGB는 LabelEncoder 후 정수 입력</td>
-              </tr>
-            <tr>
-              <td>cat_team_id / cat_player_id</td>
-              <td>팀 ID, 선수 ID</td>
-              <td>결측은 -1로 대체 후 범주형 처리</td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="feat-section fade-in">
-        <div class="feat-section-title">그룹 2 — Gap 피처 (이벤트 연속성)</div>
-        <table>
-          <thead><tr><th>피처명</th><th>설명</th><th>설계 의도</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>gap_x / gap_y</td>
-              <td>직전 이벤트의 end 좌표와 현재 start 좌표의 차이</td>
-              <td>연속 이벤트 간의 "점프"를 감지. 볼 소유권 전환 여부 신호</td>
-              </tr>
-            <tr>
-              <td>gap_dist</td>
-              <td>gap의 유클리드 거리</td>
-              <td>√(gap_x²+gap_y²). 값이 크면 클리어런스/인터셉트 상황일 가능성</td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="feat-section fade-in">
-        <div class="feat-section-title">그룹 3 — 시계열 Lag 피처 (최근 K개 이벤트 요약)</div>
-        <table>
-          <thead><tr><th>피처명</th><th>설명</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>sx_lag0~2 / sy_lag0~2</td>
-              <td>직전 3개 이벤트의 start 좌표 (가장 최근 = lag0)</td>
-              </tr>
-            <tr>
-              <td>speed_lag0~2</td>
-              <td>직전 3개 이벤트의 이동 속도</td>
-              </tr>
-            <tr>
-              <td>angle_lag0~2</td>
-              <td>직전 3개 이벤트의 이동 방향</td>
-              </tr>
-            <tr>
-              <td>prev1_type ~ prev3_type</td>
-              <td>직전 1~3번째 이벤트 타입 (범주형)</td>
-              </tr>
-            <tr>
-              <td>zone_x / zone_y</td>
-              <td>피치를 구역(공격/중원/수비, 왼쪽/중앙/오른쪽)으로 분류한 범주형 피처. CatBoost pseudo 재학습 시 추가</td>
-              <td>OOF 분석에서 구역별 패스 분포가 비균일(공격 55%, 수비 11%)함을 확인. 구역 정보가 모델에 맥락 제공</td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="feat-section fade-in">
-        <div class="feat-section-title">그룹 4 — 통계 피처 (선수 히스토리)</div>
-        <table>
-          <thead><tr><th>피처명</th><th>설명</th><th>설계 의도</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>player_spread</td>
-              <td>선수별 start 좌표 표준편차 평균</td>
-              <td>활동 반경 넓은 선수(미드필더) vs 좁은 선수(골키퍼) 구분. EDA에서 선수별 분산이 크게 다름을 확인</td>
-              </tr>
-            <tr>
-              <td>player_mean_x / _y</td>
-              <td>선수의 평균 활동 위치</td>
-              <td>포지션 근사치. x 평균이 높은 선수(공격수)는 전방 패스를 보내는 경향이 강함</td>
-              </tr>
-            <tr>
-              <td>team_attack_ratio</td>
-              <td>팀별 공격 이벤트 비율 (true_x &gt; 70 패스 비율)</td>
-              <td>OOF 분석(198경기)에서 게임별 공격 비율이 35.1%~74.1%로 2배 이상 차이. std=0.070으로 팀/경기마다 전술 성향이 뚜렷하게 다름을 확인</td>
-              </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════
-  04 모델링
-══════════════════════════════ -->
-<section id="modeling">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">04</div>
-      <h2 class="section-title">모델링 파이프라인</h2>
-
-      <div class="pipeline fade-in">
-        <div class="pipe-step">
-          <div class="pipe-num">01</div>
-          <div class="pipe-name">데이터 로드 & 정렬</div>
-          <div class="pipe-desc">game_id → episode → time 순 정렬</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">02</div>
-          <div class="pipe-name">피처 엔지니어링</div>
-          <div class="pipe-desc">make_smart_features() K=20 윈도우</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">03</div>
-          <div class="pipe-name">GroupKFold CV</div>
-          <div class="pipe-desc">5-Fold game_id 기준 그룹화</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">04</div>
-          <div class="pipe-name">Multi-Seed 학습</div>
-          <div class="pipe-desc">Seeds [42, 2024, 777] 앙상블</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">05</div>
-          <div class="pipe-name">OOF 생성</div>
-          <div class="pipe-desc">모델별 OOF 저장</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">06</div>
-          <div class="pipe-name">Pseudo Labeling</div>
-          <div class="pipe-desc">Test 예측값으로 학습 데이터 보강</div>
-        </div>
-        <div class="pipe-step">
-          <div class="pipe-num">07</div>
-          <div class="pipe-name">앙상블 최적화</div>
-          <div class="pipe-desc">Monte Carlo / Scipy 가중치 탐색</div>
-        </div>
-      </div>
-
-      <div class="inferred fade-in">
-        <span class="inferred-label">GroupKFold 선택 이유</span>
-        일반 KFold를 사용하면 같은 경기(game_id)의 이벤트가 train과 valid에 동시에 들어가 데이터 누수가 발생합니다.
-        GroupKFold(groups=game_id)를 사용하면 한 경기 전체가 항상 같은 fold에 속해
-        실제 새 경기에 대한 일반화 성능을 올바르게 측정할 수 있습니다.
-      </div>
-
-      <div class="divider"></div>
-
-      <!-- 모델별 OOF 성능 -->
-      <p style="font-size:0.78rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;font-weight:600">모델별 OOF 성능 (유클리드 거리 MAE)</p>
-      <div class="perf-grid fade-in">
-        <div class="perf-card">
-          <div class="perf-name">CatBoost</div>
-          <div class="perf-num">13.15m</div>
-          <div class="perf-label">OOF MAE</div>
-          <div class="perf-label" style="margin-top:4px">중앙값 10.17m</div>
-          <span class="perf-rank rank-1">1위</span>
-        </div>
-        <div class="perf-card">
-          <div class="perf-name">XGBoost</div>
-          <div class="perf-num">13.27m</div>
-          <div class="perf-label">OOF MAE</div>
-          <div class="perf-label" style="margin-top:4px">중앙값 10.33m</div>
-          <span class="perf-rank rank-2">2위</span>
-        </div>
-        <div class="perf-card">
-          <div class="perf-name">LightGBM</div>
-          <div class="perf-num">13.32m</div>
-          <div class="perf-label">OOF MAE</div>
-          <div class="perf-label" style="margin-top:4px">중앙값 10.69m</div>
-          <span class="perf-rank rank-3">3위</span>
-        </div>
-        <div class="perf-card">
-          <div class="perf-name">CNN</div>
-          <div class="perf-num">14.45m</div>
-          <div class="perf-label">OOF MAE</div>
-          <div class="perf-label" style="margin-top:4px">중앙값 11.27m</div>
-          <span class="perf-rank rank-4">4위</span>
-        </div>
-      </div>
-
-      <div class="model-grid fade-in">
-        <div class="model-card">
-          <div class="model-header">
-            <span class="model-dot" style="background:#1a1a18"></span>
-            <div class="model-name">CatBoost</div>
-          </div>
-          <div class="model-sub">핵심 모델 · 앙상블 기준 · Pseudo Labeling 적용</div>
-          <ul class="model-params">
-            <li><span class="param-key">loss_function</span><span class="param-val">MAE</span></li>
-            <li><span class="param-key">iterations</span><span class="param-val">5,000</span></li>
-            <li><span class="param-key">learning_rate</span><span class="param-val">0.05</span></li>
-            <li><span class="param-key">depth</span><span class="param-val">7</span></li>
-            <li><span class="param-key">random_strength</span><span class="param-val">1.5</span></li>
-            <li><span class="param-key">cat_features</span><span class="param-val">type, result, team, player</span></li>
-            <li><span class="param-key">early_stopping</span><span class="param-val">100 rounds</span></li>
-          </ul>
-          <div class="model-note">
-            범주형 변수를 별도 인코딩 없이 직접 처리하는 CatBoost 장점을 활용. Pool 객체로 메모리 효율적 학습. Pseudo Labeling 후 zone_x/zone_y, prev1~3_type 등 피처 추가.
-          </div>
-        </div>
-        <div class="model-card">
-          <div class="model-header">
-            <span class="model-dot" style="background:#5a7a5a"></span>
-            <div class="model-name">LightGBM</div>
-          </div>
-          <div class="model-sub">안정적인 기반 모델 · 빠른 학습 속도</div>
-          <ul class="model-params">
-            <li><span class="param-key">objective</span><span class="param-val">regression_l1 (MAE)</span></li>
-            <li><span class="param-key">n_estimators</span><span class="param-val">30,000</span></li>
-            <li><span class="param-key">learning_rate</span><span class="param-val">0.005</span></li>
-            <li><span class="param-key">num_leaves</span><span class="param-val">100</span></li>
-            <li><span class="param-key">feature_fraction</span><span class="param-val">0.8</span></li>
-            <li><span class="param-key">bagging_fraction</span><span class="param-val">0.8</span></li>
-            <li><span class="param-key">early_stopping</span><span class="param-val">100 rounds</span></li>
-          </ul>
-          <div class="model-note">
-            낮은 learning_rate(0.005) + 높은 n_estimators 조합으로 충분한 반복 학습. early_stopping으로 과적합 방지. 범주형 변수는 LabelEncoder 후 수치 입력.
-          </div>
-        </div>
-        <div class="model-card">
-          <div class="model-header">
-            <span class="model-dot" style="background:#4a6a8a"></span>
-            <div class="model-name">XGBoost</div>
-          </div>
-          <div class="model-sub">다양성 확보 · 더 깊은 트리 구조</div>
-          <ul class="model-params">
-            <li><span class="param-key">objective</span><span class="param-val">reg:absoluteerror</span></li>
-            <li><span class="param-key">n_estimators</span><span class="param-val">5,000</span></li>
-            <li><span class="param-key">learning_rate</span><span class="param-val">0.01</span></li>
-            <li><span class="param-key">max_depth</span><span class="param-val">8</span></li>
-            <li><span class="param-key">subsample</span><span class="param-val">0.8</span></li>
-            <li><span class="param-key">tree_method</span><span class="param-val">hist</span></li>
-            <li><span class="param-key">early_stopping</span><span class="param-val">200 rounds</span></li>
-          </ul>
-          <div class="model-note">
-            LGBM보다 깊은 max_depth=8 설정. hist 모드로 속도 최적화. 앙상블 다양성(diversity) 확보를 위해 포함.
-          </div>
-        </div>
-        <div class="model-card">
-          <div class="model-header">
-            <span class="model-dot" style="background:#7a5a8a"></span>
-            <div class="model-name">CNN + Attention</div>
-          </div>
-          <div class="model-sub">딥러닝 모델 · 시퀀스 패턴 학습 · PyTorch</div>
-          <ul class="model-params">
-            <li><span class="param-key">아키텍처</span><span class="param-val">ResidualBlock + SE-Block</span></li>
-            <li><span class="param-key">풀링</span><span class="param-val">AttentionPooling</span></li>
-            <li><span class="param-key">입력</span><span class="param-val">3D Sequence (K × features)</span></li>
-            <li><span class="param-key">타겟</span><span class="param-val">dx, dy (2-head)</span></li>
-            <li><span class="param-key">패딩</span><span class="param-val">Zero-padding for short seqs</span></li>
-          </ul>
-          <div class="model-note">
-            SE-Block으로 피처 중요도, AttentionPooling으로 시퀀스 내 중요 시점을 각각 학습. GBDT 모델들과 다른 귀납 편향으로 앙상블 시너지 기대.
-          </div>
-        </div>
-      </div>
-
-      <!-- Pseudo Labeling -->
-      <div style="background:var(--surface);border:1px solid var(--border);padding:32px" class="fade-in">
-        <div class="section-num" style="margin-bottom:8px">Pseudo Labeling</div>
-        <p style="font-size:0.875rem;color:var(--text-sub);line-height:1.8;max-width:800px">
-          1차 CatBoost 모델로 Test set 예측값을 생성 → 이 예측값을 정답(pseudo label)으로 삼아 Train + Test를 합친 데이터셋으로 재학습. Test 데이터의 특성 분포를 학습에 반영해 domain gap을 줄이는 기법.
-          <br><br>
-          <strong>구현 주의사항:</strong> Pseudo label의 group을 -1로 설정하여 GroupKFold validation 시 이 데이터가 항상 train side에만 포함되도록 처리. OOF 계산은 원본 train 데이터 기준으로만 수행.
+    <section id="features">
+      <div class="container">
+        <div class="section-label">피처 엔지니어링</div>
+        <h2>절댓값이 아니라 변화량을 예측했습니다</h2>
+        <p class="section-copy">
+          end_x/y의 절댓값을 직접 예측하는 대신, 마지막 start 좌표 대비 변화량(dx, dy)을 예측했습니다.
+          대부분의 패스 이동량이 0 근방에 모이기 때문에 MAE 기반 학습이 더 안정적이었습니다.
         </p>
+
+        <div class="grid-2 reveal">
+          <article class="card info-card">
+            <div class="info-title">Residual 예측 방식</div>
+            <div class="info-value">start + pred_delta</div>
+            <p class="info-body">
+              피치 전체 범위(0~105m)를 바로 맞히는 대신 변화량을 예측한 뒤
+              start_x + pred_dx × 105 방식으로 최종 좌표를 복원했습니다.
+            </p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">피처 설계 방향</div>
+            <div class="info-value green">맥락 + 도메인</div>
+            <p class="info-body">
+              마지막 이벤트 상태, 이벤트 간 gap, 최근 3개 lag, 선수·팀 통계 피처를 조합해
+              시계열 맥락과 축구 도메인 정보를 함께 반영했습니다.
+            </p>
+          </article>
+        </div>
+
+        <div class="card info-card reveal" style="margin-top:16px">
+          <table>
+            <thead>
+              <tr>
+                <th>피처 그룹</th>
+                <th>주요 피처</th>
+                <th>설계 의도</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>현재 상태</td>
+                <td>last_sx, last_sy, speed_last, angle_last</td>
+                <td>마지막 이벤트의 위치와 이동 방향을 직접 반영</td>
+              </tr>
+              <tr>
+                <td>Gap 피처</td>
+                <td>gap_x, gap_y, gap_dist</td>
+                <td>직전 이벤트 종료 좌표와 현재 시작 좌표 간 점프를 감지</td>
+              </tr>
+              <tr>
+                <td>Lag 피처</td>
+                <td>sx_lag0~2, speed_lag0~2, prev1_type~prev3_type</td>
+                <td>최근 플레이 흐름과 이벤트 타입의 연속성을 요약</td>
+              </tr>
+              <tr>
+                <td>통계 피처</td>
+                <td>player_spread, player_mean_x/y, team_attack_ratio</td>
+                <td>선수 역할과 팀 전술 성향을 모델이 간접적으로 학습하도록 설계</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-
-<!-- ══════════════════════════════
-  05 앙상블
-══════════════════════════════ -->
-<section id="ensemble">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">05</div>
-      <h2 class="section-title">앙상블 전략</h2>
-      <p class="section-lead">
-        4개 모델의 OOF 예측값을 기반으로 최적 가중치를 탐색했습니다.
-        두 가지 최적화 방법을 실험하고, 최종적으로 LGBM + CatBoost 2모델 앙상블로 확정했습니다.
-      </p>
-
-      <div class="ensemble-box fade-in">
-        <div class="section-num" style="margin-bottom:16px">최종 앙상블 결과</div>
-        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:24px">
-          4모델 전체 앙상블과 LGBM + CatBoost 2모델 앙상블 간 점수 차이가 없어 단순화. OOF 기준 13.05m 달성.
+    <section id="modeling" class="section-alt">
+      <div class="container">
+        <div class="section-label">모델링 파이프라인</div>
+        <h2>검증 누수를 막고, 모델 다양성을 확보했습니다</h2>
+        <p class="section-copy">
+          같은 경기의 이벤트가 train과 valid에 섞이지 않도록 GroupKFold를 적용했고,
+          GBDT 3개 모델과 CNN 모델을 결합해 서로 다른 귀납 편향을 확보했습니다.
         </p>
-        <div class="weight-row">
-          <span class="weight-label">CatBoost</span>
-          <div class="weight-track"><div class="weight-fill" style="width:58%"></div></div>
-          <span class="weight-val">~0.58</span>
-        </div>
-        <div class="weight-row">
-          <span class="weight-label">LightGBM</span>
-          <div class="weight-track"><div class="weight-fill" style="width:42%"></div></div>
-          <span class="weight-val">~0.42</span>
-        </div>
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:8px">단일 최고 모델 CatBoost(13.15m) → 앙상블(13.05m): 0.10m 개선</p>
 
-        <div class="method-grid">
-          <div class="method-box">
-            <div class="method-name">방법 1 — Monte Carlo Search</div>
-            <div class="method-desc">
-              10만 회 랜덤 가중치 샘플링 후 OOF MAE가 가장 낮은 조합 선택. 구현이 단순하고 전역 최적해 탐색 가능. 가중치 합 = 1 제약 내에서 탐색.
-            </div>
-          </div>
-          <div class="method-box">
-            <div class="method-name">방법 2 — Scipy SLSQP 최적화</div>
-            <div class="method-desc">
-              <code style="font-family:monospace;font-size:0.78rem">scipy.optimize.minimize</code> SLSQP 알고리즘으로 가중치 합 = 1, 각 가중치 ∈ [0,1] 제약 조건 하에서 MAE 최소화. 경사 기반으로 빠르게 수렴.
-            </div>
-          </div>
+        <div class="flow reveal">
+          <div class="flow-step"><div class="flow-num">01</div><div class="flow-name">데이터 정렬</div><div class="flow-desc">game_id → episode → time 순 정렬</div></div>
+          <div class="flow-step"><div class="flow-num">02</div><div class="flow-name">피처 생성</div><div class="flow-desc">make_smart_features(), K=20 윈도우</div></div>
+          <div class="flow-step"><div class="flow-num">03</div><div class="flow-name">GroupKFold</div><div class="flow-desc">game_id 기준 5-Fold 검증</div></div>
+          <div class="flow-step"><div class="flow-num">04</div><div class="flow-name">Multi-Seed</div><div class="flow-desc">Seeds 42, 2024, 777</div></div>
+          <div class="flow-step"><div class="flow-num">05</div><div class="flow-name">OOF 생성</div><div class="flow-desc">모델별 OOF 예측 저장</div></div>
+          <div class="flow-step"><div class="flow-num">06</div><div class="flow-name">Pseudo Labeling</div><div class="flow-desc">Test 예측값으로 학습 보강</div></div>
+          <div class="flow-step"><div class="flow-num">07</div><div class="flow-name">앙상블 최적화</div><div class="flow-desc">Monte Carlo / SLSQP 가중치 탐색</div></div>
+        </div>
+
+        <div class="note reveal">
+          일반 KFold를 사용하면 같은 경기(game_id)의 이벤트가 train과 valid에 동시에 들어가 데이터 누수가 발생합니다.
+          GroupKFold를 사용해 한 경기 전체가 항상 같은 fold에 속하도록 설계했습니다.
+        </div>
+
+        <div class="grid-4 reveal" style="margin-top:24px">
+          <article class="card info-card">
+            <div class="info-title">CatBoost</div>
+            <div class="info-value accent">13.15m</div>
+            <p class="info-body">범주형 변수를 직접 처리하는 핵심 모델. Pseudo Labeling 적용 후 앙상블 기준 모델로 사용.</p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">XGBoost</div>
+            <div class="info-value">13.27m</div>
+            <p class="info-body">깊은 트리 구조와 hist 모드로 앙상블 다양성을 확보하기 위해 포함.</p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">LightGBM</div>
+            <div class="info-value purple">13.32m</div>
+            <p class="info-body">낮은 learning rate와 높은 반복 학습으로 안정적인 기반 모델 역할.</p>
+          </article>
+          <article class="card info-card">
+            <div class="info-title">CNN + Attention</div>
+            <div class="info-value">14.45m</div>
+            <p class="info-body">ResidualBlock, SE-Block, AttentionPooling으로 시퀀스 패턴 학습.</p>
+          </article>
         </div>
       </div>
+    </section>
+
+    <section id="ensemble">
+      <div class="container">
+        <div class="section-label">앙상블 전략</div>
+        <h2>4개 모델을 실험하고, 최종적으로 2개 모델로 단순화했습니다</h2>
+        <p class="section-copy">
+          4모델 전체 앙상블과 LGBM + CatBoost 2모델 앙상블 간 점수 차이가 크지 않아
+          최종 제출은 더 단순하고 안정적인 2모델 조합으로 확정했습니다.
+        </p>
+
+        <div class="grid-2 reveal">
+          <article class="card info-card">
+            <div class="mini-title">최종 앙상블 가중치</div>
+            <div class="metric-list">
+              <div class="metric-row">
+                <span class="metric-name">CatBoost</span>
+                <div class="bar-track"><div class="bar-fill" style="--w: 58%"></div></div>
+                <span class="metric-score">0.58</span>
+              </div>
+              <div class="metric-row">
+                <span class="metric-name">LightGBM</span>
+                <div class="bar-track"><div class="bar-fill" style="--w: 42%"></div></div>
+                <span class="metric-score">0.42</span>
+              </div>
+            </div>
+            <p class="note">단일 최고 모델 CatBoost 13.15m → 앙상블 13.05m로 0.10m 개선했습니다.</p>
+          </article>
+          <article class="card info-card">
+            <div class="mini-title">가중치 탐색 방법</div>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Monte Carlo</th>
+                  <td>10만 회 랜덤 가중치 샘플링 후 OOF MAE가 가장 낮은 조합 선택</td>
+                </tr>
+                <tr>
+                  <th>Scipy SLSQP</th>
+                  <td>가중치 합 = 1, 각 가중치 ∈ [0,1] 제약에서 MAE 최소화</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="section-alt">
+      <div class="container">
+        <div class="section-label">최종 결과</div>
+        <h2>상위 7%를 달성했습니다</h2>
+        <p class="section-copy">
+          K리그-서울시립대 공개 AI 경진대회 Track 1 알고리즘 부문에서
+          앙상블 OOF MAE 13.05m를 기준으로 최종 상위 7%를 달성했습니다.
+        </p>
+
+        <div class="grid-4 reveal">
+          <article class="card kpi-card"><div class="kpi-label">성과</div><div class="kpi-value accent">TOP 7%</div><div class="kpi-sub">최종 순위</div></article>
+          <article class="card kpi-card"><div class="kpi-label">OOF MAE</div><div class="kpi-value green">13.05m</div><div class="kpi-sub">앙상블 기준</div></article>
+          <article class="card kpi-card"><div class="kpi-label">검증 전략</div><div class="kpi-value">5-Fold</div><div class="kpi-sub">GroupKFold CV</div></article>
+          <article class="card kpi-card"><div class="kpi-label">안정화</div><div class="kpi-value purple">3 Seeds</div><div class="kpi-sub">Multi-Seed 앙상블</div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="lessons">
+      <div class="container">
+        <div class="section-label">배운 점 & 회고</div>
+        <h2>모델 수보다 검증 설계와 피처 품질이 중요했습니다</h2>
+        <p class="section-copy">
+          절댓값 직접 예측에서 Residual 예측으로 방향을 전환하고,
+          GroupKFold와 도메인 피처를 통해 안정적인 성능 개선을 만들었습니다.
+        </p>
+
+        <div class="grid-3 reveal">
+          <article class="card lesson-card">
+            <div class="lesson-num">01</div>
+            <div class="info-title">Residual 예측의 효과</div>
+            <p class="info-body">변화량을 예측하자 타겟 분포가 0 근방에 집중되어 MAE 기반 학습이 더 안정적이었습니다.</p>
+          </article>
+          <article class="card lesson-card">
+            <div class="lesson-num">02</div>
+            <div class="info-title">GroupKFold의 중요성</div>
+            <p class="info-body">같은 경기 이벤트가 train과 valid에 섞이는 문제를 막아 신뢰할 수 있는 OOF를 만들었습니다.</p>
+          </article>
+          <article class="card lesson-card">
+            <div class="lesson-num">03</div>
+            <div class="info-title">Multi-Seed 앙상블</div>
+            <p class="info-body">3개 시드 평균만으로도 단일 시드 대비 유의미한 안정화 효과가 있었습니다.</p>
+          </article>
+          <article class="card lesson-card">
+            <div class="lesson-num">04</div>
+            <div class="info-title">Pseudo Labeling 디테일</div>
+            <p class="info-body">validation leak을 방지하는 구현 세부가 OOF 신뢰도와 최종 점수를 좌우했습니다.</p>
+          </article>
+          <article class="card lesson-card">
+            <div class="lesson-num">05</div>
+            <div class="info-title">도메인 피처의 힘</div>
+            <p class="info-body">선수별 활동 반경과 평균 위치 같은 축구 도메인 통계 피처가 모델 성능에 기여했습니다.</p>
+          </article>
+          <article class="card lesson-card">
+            <div class="lesson-num">06</div>
+            <div class="info-title">앙상블 최적화 결과</div>
+            <p class="info-body">최종적으로 LGBM + CatBoost 2모델만으로도 4모델 앙상블과 거의 같은 점수를 냈습니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>데이터 분석 포트폴리오</span>
+      <span>K리그 최종 패스 좌표 예측 AI · Dacon × 서울시립대</span>
     </div>
-  </div>
-</section>
+  </footer>
 
+  <script>
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
 
-<!-- ══════════════════════════════
-  06 결과
-══════════════════════════════ -->
-<section id="results">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">06</div>
-      <h2 class="section-title">최종 결과</h2>
+    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
-      <div class="result-banner fade-in">
-        <div class="result-rank">TOP 7%</div>
-        <div>
-          <div class="result-sub">
-            K리그-서울시립대 공개 AI 경진대회 Track 1 알고리즘 부문<br>
-  
-          </div>
-          <div class="result-stats">
-            <div>
-              <div class="result-stat-num">13.05m</div>
-              <div class="result-stat-label">앙상블 OOF MAE</div>
-            </div>
-            <div>
-              <div class="result-stat-num">4개 모델</div>
-              <div class="result-stat-label">개발 및 실험</div>
-            </div>
-            <div>
-              <div class="result-stat-num">3 Seeds</div>
-              <div class="result-stat-label">Multi-Seed 앙상블</div>
-            </div>
-            <div>
-              <div class="result-stat-num">5-Fold</div>
-              <div class="result-stat-label">GroupKFold CV</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
 
-
-<!-- ══════════════════════════════
-  07 회고
-══════════════════════════════ -->
-<section id="lessons">
-  <div class="content-wrap">
-    <div class="section-inner">
-      <div class="section-num">07</div>
-      <h2 class="section-title">배운 점 & 회고</h2>
-
-      <div class="story-flow fade-in">
-        <div class="story-step">
-          <div class="story-num">처음 접근</div>
-          <div class="story-finding">절댓값 직접 예측</div>
-          <div class="story-desc">피치 전체(0~105m) 범위를 커버해야 해 학습 불안정</div>
-        </div>
-        <div class="story-step">
-          <div class="story-num">방향 전환</div>
-          <div class="story-finding">Residual 예측</div>
-          <div class="story-desc">분포가 0 근방에 집중되어 MAE 학습 안정성 향상</div>
-        </div>
-        <div class="story-step">
-          <div class="story-num">모델 확장</div>
-          <div class="story-finding">4개 모델 앙상블</div>
-          <div class="story-desc">GBDT 3개 + CNN으로 귀납 편향 다양화</div>
-        </div>
-        <div class="story-step">
-          <div class="story-num">데이터 확장</div>
-          <div class="story-finding">Pseudo Labeling</div>
-          <div class="story-desc">추가 점수 향상. 구현 디테일이 성패를 가름</div>
-        </div>
-        <div class="story-step">
-          <div class="story-num">앙상블 최적화</div>
-          <div class="story-finding">2모델로도 충분</div>
-          <div class="story-desc">모델 수보다 다양성과 품질이 핵심</div>
-        </div>
-        <div class="story-step">
-          <div class="story-num">최종</div>
-          <div class="story-finding">상위 7% 달성</div>
-          <div class="story-desc">신뢰 가능한 검증 설계가 전체 파이프라인의 기반</div>
-        </div>
-      </div>
-
-      <div class="lessons-grid fade-in">
-        <div class="lesson-card">
-          <div class="lesson-num">01</div>
-          <div class="lesson-title">Residual 예측의 효과</div>
-          <div class="lesson-body">end_x를 직접 예측하는 대신 변화량을 예측하는 방식이 학습에 유리합니다. 대부분의 패스가 작은 이동이라 타겟 분포가 0 근방에 집중되어 MAE 기반 학습에서 더 빠른 수렴과 안정성을 제공합니다.</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-num">02</div>
-          <div class="lesson-title">GroupKFold의 중요성</div>
-          <div class="lesson-body">같은 경기(game_id) 내 이벤트가 train과 valid에 섞이면 OOF 점수가 과도하게 낙관적으로 측정됩니다. 올바른 검증 설계가 앙상블 가중치 최적화의 신뢰도를 결정합니다.</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-num">03</div>
-          <div class="lesson-title">Multi-Seed 앙상블</div>
-          <div class="lesson-body">[42, 2024, 777] 3개 시드로 학습한 모델을 평균하는 것만으로 단일 시드 대비 유의미한 성능 향상이 있었습니다. 코드 주석에서도 "점수 향상의 치트키"로 표현될 만큼 효과적이었습니다.</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-num">04</div>
-          <div class="lesson-title">Pseudo Labeling의 디테일</div>
-          <div class="lesson-body">Test 데이터를 pseudo label로 활용할 때 group=-1 처리로 validation leak을 방지하는 세심한 구현이 필수입니다. 잘못 구현하면 OOF 점수가 부풀려져 앙상블 최적화가 틀어집니다.</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-num">05</div>
-          <div class="lesson-title">도메인 피처의 힘</div>
-          <div class="lesson-body">선수별 활동 반경(player_spread), 평균 위치(player_mean_x/y) 등 축구 도메인 지식에서 파생된 통계 피처가 모델 성능에 크게 기여했습니다. EDA로 확인한 선수별 활동 패턴 차이가 피처 설계의 근거가 되었습니다.</div>
-        </div>
-        <div class="lesson-card">
-          <div class="lesson-num">06</div>
-          <div class="lesson-title">앙상블 최적화 결과</div>
-          <div class="lesson-body">Monte Carlo vs Scipy SLSQP 두 방법을 모두 실험했습니다. 최종적으로 LGBM + CatBoost 2모델만으로도 4모델 전체 앙상블과 점수 차이가 없었습니다. 모델 수보다 다양성과 품질이 중요하다는 교훈을 얻었습니다.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-left">K리그 패스 좌표 예측 AI · Dacon × 서울시립대 2026</div>
-  <a href="https://www.yeonjoo.cloud/#projects" style="font-size:0.78rem;color:var(--text-muted);text-decoration:none">← 전연주 포트폴리오로 돌아가기</a>
-</footer>
-
-<script>
-const io1 = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.08});
-document.querySelectorAll('.fade-in').forEach(el => io1.observe(el));
-
-const sections = document.querySelectorAll('section[id]');
-const tocItems = document.querySelectorAll('.toc-item');
-const io2 = new IntersectionObserver(e => {
-  e.forEach(x => {
-    if(x.isIntersecting){
-      tocItems.forEach(t => t.classList.remove('active'));
-      const a = document.querySelector(`.toc-item[href="#${x.target.id}"]`);
-      if(a) a.classList.add('active');
-    }
-  });
-}, {rootMargin:'-50% 0px -45% 0px'});
-sections.forEach(s => io2.observe(s));
-
-const bars = document.querySelectorAll('.weight-fill, .bar-fill');
-const io3 = new IntersectionObserver(e => {
-  e.forEach(x => {
-    if(x.isIntersecting){
-      const w = x.target.style.width;
-      x.target.style.width = '0';
-      requestAnimationFrame(() => { x.target.style.width = w; });
-      io3.unobserve(x.target);
-    }
-  });
-}, {threshold:0.5});
-bars.forEach(b => io3.observe(b));
-</script>
+    document.querySelectorAll(".bar-fill").forEach((el) => barObserver.observe(el));
+  </script>
 </body>
 </html>
