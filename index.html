@@ -1525,6 +1525,15 @@
       font-size: 18px;
       line-height: 1;
     }
+    main {
+      display: flex;
+      flex-direction: column;
+    }
+    main > .hero { order: 1; }
+    #about { order: 2; }
+    #projects { order: 3; }
+    #skills { order: 4; }
+    #contact { order: 5; }
     footer { padding: 28px 0; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); }
 
     @media (max-width: 860px) {
@@ -1636,8 +1645,8 @@
       <a class="brand" href="#top">전연주 · Jeon Yeonjoo</a>
       <div class="nav-links">
         <a href="#about">About</a>
-        <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </div>
     </nav>
@@ -1766,7 +1775,7 @@
     <section id="skills" aria-labelledby="skills-title">
       <div class="section-inner">
         <div class="section-heading">
-          <span class="section-num">02</span>
+          <span class="section-num">03</span>
           <h2 id="skills-title">Skills</h2>
         </div>
         <div class="skills-grid" aria-label="기술 숙련도">
@@ -1843,7 +1852,7 @@
     <section class="projects" id="projects" aria-labelledby="projects-title">
       <div class="section-inner">
         <div class="section-heading">
-          <span class="section-num">03</span>
+          <span class="section-num">02</span>
           <h2 id="projects-title">Projects</h2>
         </div>
         <p class="section-note">각 프로젝트를 클릭하면 상세 분석 과정과 구현 내용을 확인할 수 있습니다.</p>
