@@ -81,8 +81,8 @@ const Card = ({ children, style, hover = true }) => {
     <div
       style={{
         background: C.surface, borderRadius: 12,
-        border: `1px solid ${hov && hover ? C.borderDark : C.border}`,
-        transition: "border-color 0.2s, box-shadow 0.2s",
+        border: `1px solid ${C.border}`,
+        transition: "box-shadow 0.2s",
         boxShadow: hov && hover ? "0 4px 20px rgba(0,0,0,0.06)" : "0 1px 4px rgba(0,0,0,0.04)",
         ...style,
       }}
@@ -182,28 +182,50 @@ const Nav = () => {
         <div style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 500, color: C.text }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { label: "분석 과정", href: "#story" },
-            { label: "핵심 발견", href: "#findings" },
-            { label: "시각화", href: "#viz" },
-            { label: "방법론", href: "#method" },
-            { label: "운영 전략", href: "#priority" },
-            { label: "경진대회", href: "#competition" },
-          ].map(({ label, href }) => (
-            <a key={label} href={href} style={{
-              fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
-              transition: "background 0.15s, color 0.15s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.text; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.muted; }}
-            >{label}</a>
-          ))}
-        </div>
       </div>
     </nav>
   );
 };
+
+const sectionTabs = [
+  { label: "분석 스토리", href: "#story" },
+  { label: "핵심 발견", href: "#findings" },
+  { label: "시각화", href: "#viz" },
+  { label: "방법론", href: "#method" },
+  { label: "운영 전략", href: "#priority" },
+  { label: "경진대회", href: "#competition" },
+  { label: "한계", href: "#limits" },
+];
+
+const SectionTabs = () => (
+  <div style={{
+    position: "sticky", top: 56, zIndex: 90,
+    background: C.bg, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+  }}>
+    <div style={{
+      maxWidth: 1100, margin: "0 auto", padding: "0 40px",
+      display: "flex", gap: 24, overflowX: "auto",
+    }}>
+      {sectionTabs.map(({ label, href }) => (
+        <a key={label} href={href} style={{
+          display: "inline-flex", alignItems: "center", height: 56,
+          fontSize: 13, color: C.muted, fontWeight: 500, whiteSpace: "nowrap",
+          borderBottom: "2px solid transparent",
+          transition: "color 0.15s, border-color 0.15s",
+        }}
+          onMouseEnter={e => {
+            e.currentTarget.style.color = C.text;
+            e.currentTarget.style.borderBottomColor = C.text;
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.color = C.muted;
+            e.currentTarget.style.borderBottomColor = "transparent";
+          }}
+        >{label}</a>
+      ))}
+    </div>
+  </div>
+);
 
 /* ─── HERO ───────────────────────────────────── */
 const Hero = () => (
@@ -220,42 +242,21 @@ const Hero = () => (
         lineHeight: 1.15, letterSpacing: "-0.02em", color: C.text,
         marginBottom: 16, maxWidth: 700,
       }}>
-        창고 로봇 시스템<br />
-        <span style={{ color: C.accent }}>출고 지연</span> 원인 분석
+        DACON 스마트 창고<br />
+        <span style={{ color: C.accent }}>출고 지연</span> 예측
       </h1>
 
       <p className="fu fu3" style={{
         fontSize: 17, color: C.muted, lineHeight: 1.7,
-        marginBottom: 28, maxWidth: 580,
+        marginBottom: 48, maxWidth: 640,
       }}>
         250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고,
-        중요하지 않다고 본 변수가 핵심이었습니다.
-        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀌었고, 그 인사이트로 경진대회 상위 15%를 달성했습니다.</strong>
+        중요하지 않다고 본 변수가 핵심.
+        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀜. 그 인사이트로 경진대회 상위 15% 달성.</strong>
       </p>
 
-      <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
-        {[
-          { label: "태블로 대시보드", primary: true },
-          { label: "GitHub ↗" },
-          { label: "보고서 PDF ↓" },
-          { label: "발표 PPT ↓" },
-        ].map(({ label, primary }) => (
-          <button key={label} style={{
-            padding: "9px 18px", borderRadius: 7, cursor: "pointer",
-            fontSize: 13, fontWeight: 500,
-            background: primary ? C.accent : C.surface,
-            color: primary ? "#fff" : C.text,
-            border: primary ? "none" : `1px solid ${C.border}`,
-            transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-          >{label}</button>
-        ))}
-      </div>
-
       {/* KPI 4개 */}
-      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+      <div className="fu fu4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
         {[
           { label: "분석 창고 수", val: "250개", sub: "4개 레이아웃 유형", color: C.text },
           { label: "지연 최대 차이", val: "6.6×", sub: "idle 최저 vs 최고", color: C.accent },
@@ -294,8 +295,8 @@ const StoryFlow = () => {
           결론이 세 번 바뀐 과정
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 560 }}>
-          각 단계는 이전 결론을 의심하고 검증하는 방향으로 이어졌습니다.
-          분석이 깊어질수록 결론이 더 정확해졌습니다.
+          각 단계는 이전 결론을 의심하고 검증하는 방향으로 연결.
+          분석이 깊어질수록 결론은 더 정확해짐.
         </p>
 
         <div style={{ position: "relative" }}>
@@ -369,7 +370,7 @@ const Findings = () => {
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <SecLabel>핵심 발견</SecLabel>
         <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>6가지 핵심 발견</h2>
-        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6 }}>각 발견은 독립적인 결과가 아니라 하나의 인과 구조로 연결됩니다.</p>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6 }}>각 발견은 독립 결과가 아니라 하나의 인과 구조로 연결.</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
           {items.map(({ icon, title, val, sub, color }) => (
             <Card key={title} style={{ padding: "24px", borderTop: `3px solid ${color}`, borderRadius: "0 0 12px 12px" }}>
@@ -599,9 +600,9 @@ const VizSection = () => {
       <div style={{ background: C.accentBg, borderRadius: 8, padding: "12px 16px", marginBottom: 16, border: `1px solid ${C.accentDim}` }}>
         <div style={{ fontSize: 12, fontWeight: 600, color: C.accent, marginBottom: 4 }}>경보 규칙이 실패한 이유</div>
         <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>
-          위기가 갑자기 터지는 게 아니었습니다.
-          <strong> 6스냅샷 전부터 이미 idle이 낮고 혼잡이 높은 상태가 지속됩니다.</strong>
-          단일 시점에서 잡으려 했으니 놓친 것 — 연속 상태 누적 감지가 필요합니다.
+          위기는 갑자기 터지는 사건이 아님.
+          <strong> 6스냅샷 전부터 이미 idle이 낮고 혼잡이 높은 상태 지속.</strong>
+          단일 시점 탐지로는 누락 — 연속 상태 누적 감지 필요.
         </div>
       </div>
       <ResponsiveContainer width="100%" height={220}>
@@ -636,7 +637,7 @@ const VizSection = () => {
           데이터로 보는 발견들
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-          각 차트는 독립적인 결과가 아니라 하나의 분석 흐름으로 이어집니다.
+          각 차트는 독립적인 결과가 아니라 하나의 분석 흐름으로 이어짐.
         </p>
 
         {/* 탭 */}
@@ -679,8 +680,8 @@ const MethodSection = () => {
           왜 이 방법을 선택했는가
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          각 방법은 기법을 써보려고 선택한 게 아닙니다.
-          그 방법이 아니었으면 잘못된 결론에 도달했을 것이기 때문입니다.
+          각 방법은 기법을 써보려고 선택한 것이 아님.
+          그 방법이 아니었다면 잘못된 결론에 도달했을 가능성.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -730,7 +731,7 @@ const ParadoxSection = () => (
         왜 일부 창고는 일반 패턴을 따르지 않았는가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6, maxWidth: 560 }}>
-        좋은 분석은 안 맞는 사례를 봅니다. 예외가 시스템 구조를 더 깊이 이해하게 해줍니다.
+        좋은 분석은 안 맞는 사례를 봄. 예외가 시스템 구조를 더 깊이 이해하게 해줌.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
@@ -786,8 +787,8 @@ const ParadoxSection = () => (
           두 반례의 공통 원인 — pack_utilization 과포화
         </div>
         <div style={{ fontSize: 14, color: C.text, lineHeight: 1.6 }}>
-          U자형 분석(모델 발견)과 반례 분석(예외 탐색)이 독립적인 방법으로 같은 결론에 도달했습니다.
-          서로 다른 접근이 같은 답을 가리킬 때 분석의 신뢰도가 올라갑니다.
+          U자형 분석(모델 발견)과 반례 분석(예외 탐색)이 독립적인 방법으로 같은 결론에 도달.
+          서로 다른 접근이 같은 답을 가리킬 때 분석 신뢰도 상승.
         </div>
       </Card>
     </div>
@@ -813,7 +814,7 @@ const PrioritySection = () => {
           운영 우선순위 매트릭스
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 8, lineHeight: 1.6, maxWidth: 560 }}>
-          250개 창고를 6개 운영 유형으로 분류하고 맞춤 개입 전략을 제시합니다.
+          250개 창고를 6개 운영 유형으로 분류하고 맞춤 개입 전략 제시.
         </p>
         <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 16px", marginBottom: 28, display: "inline-block" }}>
           <span style={{ fontSize: 13, color: C.amber, fontWeight: 600 }}>★ </span>
@@ -841,8 +842,8 @@ const PrioritySection = () => {
                   display: "grid", gridTemplateColumns: "100px 130px 70px 80px 1fr 1fr 100px",
                   gap: 12, padding: "14px 20px",
                   background: hov ? C.bg : C.surface,
-                  border: `1px solid ${hov ? C.borderDark : C.border}`,
-                  borderRadius: 8, alignItems: "center",
+                  border: `1px solid ${C.border}`,
+                  alignItems: "center",
                   borderLeft: `3px solid ${color}`,
                   borderRadius: "0 8px 8px 0",
                   transition: "all 0.15s",
@@ -953,7 +954,7 @@ const CompetitionSection = () => {
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 20, lineHeight: 1.6, maxWidth: 620 }}>
           EDA 인사이트를 바탕으로 피처를 설계하고, CatBoost·LightGBM 앙상블로
-          출고 지연 시간(avg_delay_minutes_next_30m)을 예측해 상위 15%를 달성했습니다.
+          출고 지연 시간(avg_delay_minutes_next_30m)을 예측해 상위 15% 달성.
         </p>
 
         {/* 성과 배너 */}
@@ -1013,7 +1014,7 @@ const CompetitionSection = () => {
           {activeTab === 0 && (
             <div>
               <div style={{ fontSize: 13, color: C.muted, marginBottom: 16, lineHeight: 1.6 }}>
-                LightGBM(MAE/Huber)과 CatBoost(MAE/RMSE) 이종 앙상블. 손실함수·깊이·시드가 모두 다른 5종 8개 모델을 가중 평균합니다.
+                LightGBM(MAE/Huber)과 CatBoost(MAE/RMSE) 이종 앙상블. 손실함수·깊이·시드가 모두 다른 5종 8개 모델 가중 평균.
               </div>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
@@ -1068,7 +1069,7 @@ const CompetitionSection = () => {
           {activeTab === 1 && (
             <div>
               <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>
-                600개+ 피처는 6개 그룹으로 설계되었습니다. 각 그룹은 EDA 인사이트를 직접 모델 입력으로 변환한 결과입니다.
+                600개+ 피처는 6개 그룹으로 설계. 각 그룹은 EDA 인사이트를 직접 모델 입력으로 변환한 결과.
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 {featureGroups.map(({ icon, title, color, count, desc, detail }) => (
@@ -1092,7 +1093,7 @@ const CompetitionSection = () => {
           {activeTab === 2 && (
             <div>
               <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>
-                OOF MAE 기반으로 가중치를 결정했습니다. 단순 평균이 아닌 검증 성능 비례 가중 평균.
+                OOF MAE 기반으로 가중치 결정. 단순 평균이 아닌 검증 성능 비례 가중 평균.
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
                 {/* 가중치 시각화 */}
@@ -1182,19 +1183,19 @@ const CompetitionSection = () => {
 
 
 const LimitsSection = () => (
-  <section style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
+  <section id="limits" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <SecLabel>한계 및 향후 방향</SecLabel>
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         솔직한 한계 진단
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        좋은 분석은 성공만 보여주지 않습니다. 한계를 명시하는 것이 신뢰도를 높입니다.
+        좋은 분석은 성공만 보여주지 않음. 한계를 명시할수록 신뢰도 상승.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {[
-          { title: "경보 규칙 Precision ~0.12 상한", desc: "단일 시점 변수만으로는 위기 예측이 구조적으로 어렵습니다. 단일 변수 상위 10% 구간도 위기율 11% 수준이 이론적 상한.", next: "LSTM/GRU로 스냅샷 시퀀스 학습 → 위기 누적 패턴 포착", color: C.red },
+          { title: "경보 규칙 Precision ~0.12 상한", desc: "단일 시점 변수만으로는 위기 예측이 구조적으로 어려움. 단일 변수 상위 10% 구간도 위기율 11% 수준이 이론적 상한.", next: "LSTM/GRU로 스냅샷 시퀀스 학습 → 위기 누적 패턴 포착", color: C.red },
           { title: "PSM 소표본 (30쌍)", desc: "매칭 쌍이 30개로 소표본이고 충전 중 비율·고장 횟수의 표준화 평균 차이(SMD)가 0.25 초과. hub_spoke 효과 없음은 잠정적 결론.", next: "더 많은 창고 데이터 확보 후 재검증 필요", color: C.amber },
           { title: "모델 수요폭증형 과소예측", desc: "300분+ 구간에서 평균 잔차 +328분. 설비 용량 자체가 수요를 따라가지 못하는 케이스는 운영 변수로 설명 불가.", next: "수요폭증형 별도 모델 + 앙상블 구성", color: C.amber },
           { title: "ROI 가정 기반 추정", desc: "연간 절감 추정치(~1,855억원)는 출고 100건/시나리오, 1분=500원 등 가정에 매우 민감. 절대 금액보다 상대 우선순위가 핵심.", next: "파일럿 창고 적용 후 실제 데이터로 검증 필요", color: C.muted },
@@ -1224,21 +1225,19 @@ const Footer = () => (
         <div style={{ fontFamily: "'Lora', serif", fontSize: 16, color: C.text, marginBottom: 4 }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ fontSize: 13, color: C.muted }}>창고 로봇 출고 지연 원인 분석</div>
+        <div style={{ fontSize: 13, color: C.muted }}>스마트 창고 출고 지연 예측</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
-        {["GitHub ↗", "보고서 PDF", "태블로 대시보드", "발표 PPT"].map(t => (
-          <button key={t} style={{
-            padding: "7px 14px", borderRadius: 6, fontSize: 12,
-            background: "transparent", color: C.muted,
-            border: `1px solid ${C.border}`, cursor: "pointer",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            transition: "all 0.15s",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
-          >{t}</button>
-        ))}
+        <a href="./portfolio_case_instacart.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: C.accent, color: "#fff",
+          border: `1px solid ${C.accent}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "opacity 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+        >다음 프로젝트 →</a>
       </div>
     </div>
   </footer>
@@ -1252,6 +1251,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <SectionTabs />
         <StoryFlow />
         <Findings />
         <VizSection />
