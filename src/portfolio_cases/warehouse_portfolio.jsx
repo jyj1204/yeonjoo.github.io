@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine
@@ -1264,4 +1265,9 @@ export default function App() {
       <Footer />
     </div>
   );
+}
+
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  createRoot(rootElement).render(<App />);
 }

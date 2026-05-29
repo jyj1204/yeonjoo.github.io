@@ -1923,7 +1923,7 @@
         <div class="project-modal theme-light exact-react" id="instacart-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="instacart-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            <iframe class="exact-frame" title="Instacart 구매 로그 기반 개인화 마케팅 전략" src="portfolio_case_instacart.html"></iframe>
+            <iframe class="exact-frame" title="Instacart 구매 로그 기반 개인화 마케팅 전략" data-src="portfolio_case_instacart.html"></iframe>
 
             <header class="case-hero case-animate">
               <h3 class="case-title" id="instacart-modal-title">
@@ -1937,7 +1937,7 @@
         <div class="project-modal theme-light exact-react" id="jewelry-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="jewelry-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            <iframe class="exact-frame" title="쥬얼리 브랜드 R사 타겟 리포지셔닝과 광고 예산 최적화" src="portfolio_case_jewelry.html"></iframe>
+            <iframe class="exact-frame" title="쥬얼리 브랜드 R사 타겟 리포지셔닝과 광고 예산 최적화" data-src="portfolio_case_jewelry.html"></iframe>
 
             <header class="case-hero case-animate">
               <h3 class="case-title" id="jewelry-modal-title">
@@ -1951,7 +1951,7 @@
         <div class="project-modal theme-light exact-react" id="warehouse-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="warehouse-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            <iframe class="exact-frame" title="창고 로봇 시스템 출고 지연 원인 분석" src="portfolio_case_warehouse.html"></iframe>
+            <iframe class="exact-frame" title="DACON 스마트 창고 출고 지연 예측" data-src="portfolio_case_warehouse.html"></iframe>
 
             <header class="case-hero case-animate">
               <div class="case-toolbar">
@@ -2244,7 +2244,7 @@
         <div class="project-modal theme-light exact-react" id="kleague-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="kleague-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            <iframe class="exact-frame" title="K리그 최종 패스 좌표 예측 AI" src="portfolio_case_kleague.html?v=anim-font-20260528"></iframe>
+            <iframe class="exact-frame" title="K리그 최종 패스 좌표 예측 AI" data-src="portfolio_case_kleague.html?v=anim-font-20260528"></iframe>
 
             <header class="case-hero case-animate">
               <h3 class="case-title" id="kleague-modal-title">
@@ -2258,7 +2258,7 @@
         <div class="project-modal theme-light detective-case exact-react" id="detective-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="detective-modal-title">
           <div class="modal-dialog" tabindex="-1">
             <button class="modal-close" type="button" data-modal-close aria-label="프로젝트 상세 닫기">×</button>
-            <iframe class="exact-frame" title="AI 탐정게임 개발 Detective" src="portfolio_case_detective.html"></iframe>
+            <iframe class="exact-frame" title="AI 탐정게임 개발 Detective" data-src="portfolio_case_detective.html"></iframe>
 
             <header class="case-hero case-animate">
               <div class="case-toolbar">
@@ -2556,6 +2556,14 @@
           dialog.focus();
         }
         const frame = modal.querySelector(".exact-frame");
+        if (frame) {
+          const baseSrc = frame.dataset.src || frame.getAttribute("src");
+          if (baseSrc) {
+            frame.dataset.src = baseSrc;
+            const separator = baseSrc.includes("?") ? "&" : "?";
+            frame.src = `${baseSrc}${separator}modal=${Date.now()}`;
+          }
+        }
         const restartFrameAnimation = () => {
           frame?.contentWindow?.postMessage({ type: "restart-kleague-animation" }, "*");
         };
