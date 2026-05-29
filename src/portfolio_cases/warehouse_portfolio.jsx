@@ -189,6 +189,7 @@ const Nav = () => {
             { label: "시각화", href: "#viz" },
             { label: "방법론", href: "#method" },
             { label: "운영 전략", href: "#priority" },
+            { label: "경진대회", href: "#competition" },
           ].map(({ label, href }) => (
             <a key={label} href={href} style={{
               fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
@@ -209,8 +210,8 @@ const Hero = () => (
   <section style={{ padding: "64px 40px 48px", borderBottom: `1px solid ${C.border}` }}>
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       <div className="fu fu1" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-        {["물류 · 운영 분석", "LightGBM", "PSM 인과 검증", "K-Means 군집화", "Python · Tableau"].map((t, i) => (
-          <Tag key={t} color={i === 0 ? C.accent : C.muted} bg={i === 0 ? C.accentBg : C.bg}>{t}</Tag>
+        {["물류 · 운영 분석", "LightGBM", "CatBoost", "PSM 인과 검증", "K-Means 군집화", "경진대회 상위 15%"].map((t, i) => (
+          <Tag key={t} color={i === 5 ? C.green : i === 0 ? C.accent : C.muted} bg={i === 5 ? C.greenBg : i === 0 ? C.accentBg : C.bg}>{t}</Tag>
         ))}
       </div>
 
@@ -229,7 +230,7 @@ const Hero = () => (
       }}>
         250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고,
         중요하지 않다고 본 변수가 핵심이었습니다.
-        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀌었습니다.</strong>
+        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀌었고, 그 인사이트로 경진대회 상위 15%를 달성했습니다.</strong>
       </p>
 
       <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
@@ -259,7 +260,7 @@ const Hero = () => (
           { label: "분석 창고 수", val: "250개", sub: "4개 레이아웃 유형", color: C.text },
           { label: "지연 최대 차이", val: "6.6×", sub: "idle 최저 vs 최고", color: C.accent },
           { label: "결론 수정 횟수", val: "3회", sub: "가설 → 검증 → 수정", color: C.text },
-          { label: "지연 감소 추정", val: "78%", sub: "가정 기반 시뮬레이션", color: C.green },
+          { label: "경진대회 성적", val: "상위 15%", sub: "예측 모델 MAE 최적화", color: C.green },
         ].map(({ label, val, sub, color }) => (
           <Card key={label} style={{ padding: "20px 24px" }}>
             <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 500 }}>{label}</div>
@@ -864,7 +865,322 @@ const PrioritySection = () => {
   );
 };
 
-/* ─── LIMITS SECTION ─────────────────────────── */
+/* ─── COMPETITION SECTION ────────────────────── */
+const CompetitionSection = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = ["모델 구성", "피처 엔지니어링", "앙상블 전략", "결과"];
+
+  const modelRows = [
+    { name: "lgbm_l1_raw_deeper", family: "LightGBM", obj: "MAE", iter: "2,400", leaves: "112", seeds: 3, weight: "20%", transform: "none" },
+    { name: "lgbm_huber_log_deeper", family: "LightGBM", obj: "Huber", iter: "2,400", leaves: "128", seeds: 1, weight: "8%", transform: "log1p" },
+    { name: "catboost_mae_log_depth7", family: "CatBoost", obj: "MAE", iter: "3,000", leaves: "depth=7", seeds: 2, weight: "46%", transform: "log1p" },
+    { name: "catboost_mae_log_depth6", family: "CatBoost", obj: "MAE", iter: "3,000", leaves: "depth=6", seeds: 1, weight: "16%", transform: "log1p" },
+    { name: "catboost_rmse_log_depth7", family: "CatBoost", obj: "RMSE", iter: "3,000", leaves: "depth=7", seeds: 1, weight: "10%", transform: "log1p" },
+  ];
+
+  const featureGroups = [
+    {
+      icon: "⏱",
+      title: "시계열 피처",
+      color: C.accent,
+      count: "22개 변수 × 8종",
+      desc: "lag1~3, diff1, rollmean3/6/8, rollmax, rollstd, EWM(α=0.4). 시나리오 내 누적 패턴을 포착.",
+      detail: "congestion_score, fault_count 등 9개 핵심 변수는 8스냅샷 롤링 통계 추가 계산"
+    },
+    {
+      icon: "📐",
+      title: "물리적 병목 피처",
+      color: C.red,
+      count: "30개+ 조합 변수",
+      desc: "inflow÷robot, queue÷charger, pack_util², order×avg_trip_distance 등. 실제 운영 부하를 수치화.",
+      detail: "EDA 분석의 병목 인과구조를 수학적으로 표현 — 분석 인사이트가 모델로 연결됨"
+    },
+    {
+      icon: "🔄",
+      title: "안전 누적 통계",
+      color: C.amber,
+      count: "7개 변수 × 7종",
+      desc: "시나리오 내 prev 기반 cummax, cummean, cumstd. 현재 값 ÷ 누적 최대 비율로 상대적 심각도 측정.",
+      detail: "리크 없는 순수 과거 기반 — 현재 시점에서 '얼마나 나빠졌는가'를 정량화"
+    },
+    {
+      icon: "🏗",
+      title: "레이아웃 인코딩",
+      color: C.green,
+      count: "타겟 인코딩 + 원핫",
+      desc: "layout_id: smoothed target encoding (smoothing=10). layout_type: 4개 원핫. 교차검증 내 fold별 피팅으로 리크 방지.",
+      detail: "PSM 분석 결과(레이아웃보다 운영) 반영 — 레이아웃을 배경 변수로만 활용"
+    },
+    {
+      icon: "🚨",
+      title: "병목 개시 이벤트",
+      color: C.purple,
+      count: "charging, queue 각 5종",
+      desc: "최초 발생 시점, 발생 여부, 현재 - 발생 시점 경과, 조기 발생 여부 등. 위기 누적 패턴 캡처.",
+      detail: "경보 규칙 실패 분석에서 발견한 '누적 신호'를 피처로 직접 모델링"
+    },
+    {
+      icon: "📊",
+      title: "교차 병목 피처",
+      color: C.text,
+      count: "6개 조합 상호작용",
+      desc: "congestion8×fault8, queue8×wait8, inflow8÷active8 등. 복합 병목의 롤링 평균 상호작용.",
+      detail: "단일 변수로 놓치는 복합 병목(idle×pack×battery 38.1분) 현상을 피처로 구현"
+    },
+  ];
+
+  const ensembleData = [
+    { name: "CatBoost\nMAE depth7", weight: 46, color: C.accent },
+    { name: "CatBoost\nMAE depth6", weight: 16, color: C.accent + "AA" },
+    { name: "LightGBM\nMAE", weight: 20, color: C.amber },
+    { name: "CatBoost\nRMSE", weight: 10, color: C.green },
+    { name: "LightGBM\nHuber", weight: 8, color: C.muted },
+  ];
+
+  const designDecisions = [
+    { q: "왜 CatBoost에 72% 가중치를 줬는가?", a: "5-Fold GroupKFold OOF 검증에서 CatBoost가 일관되게 LightGBM보다 낮은 MAE를 기록. 특히 log1p 변환 + MAE loss 조합이 지연 시간의 우편향(skewed) 분포에 적합했기 때문." },
+    { q: "왜 log1p 타겟 변환을 썼는가?", a: "avg_delay_minutes는 0~수백 분 우편향 분포. log1p 변환으로 극단값 영향을 줄이고 Huber/MAE 계열 손실함수와 결합 시 잔차 분포가 안정화됨. 예측 후 expm1 역변환." },
+    { q: "왜 GroupKFold를 유지했는가?", a: "시나리오 단위 완전 분리. 같은 시나리오의 다른 스냅샷이 학습/검증에 동시 포함되면 시계열 리크 발생. 실제 unseen 시나리오 예측력을 OOF에서 신뢰도 있게 측정." },
+    { q: "expanding 통계를 왜 제거했는가?", a: "v6에서 expanding 통계 추가 시 OOF MAE 일시 개선 → 실제 리더보드에서 오히려 하락. 타겟과의 미묘한 리크 가능성 확인 후 전량 제거. 안전한 prev 기반 누적 통계만 유지." },
+  ];
+
+  return (
+    <section id="competition" style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}`, background: C.surfaceAlt }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <SecLabel>경진대회 모델링</SecLabel>
+        <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
+          분석 → 예측 모델 — 상위 15%
+        </h2>
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 20, lineHeight: 1.6, maxWidth: 620 }}>
+          EDA 인사이트를 바탕으로 피처를 설계하고, CatBoost·LightGBM 앙상블로
+          출고 지연 시간(avg_delay_minutes_next_30m)을 예측해 상위 15%를 달성했습니다.
+        </p>
+
+        {/* 성과 배너 */}
+        <div style={{
+          background: `linear-gradient(135deg, ${C.accent}08, ${C.green}08)`,
+          border: `1px solid ${C.accentDim}`,
+          borderRadius: 12, padding: "20px 28px", marginBottom: 36,
+          display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap",
+        }}>
+          {[
+            { label: "최종 성적", val: "상위 15%", color: C.green },
+            { label: "평가 지표", val: "MAE", color: C.accent },
+            { label: "검증 방식", val: "5-Fold GroupKFold", color: C.text },
+            { label: "총 모델 수", val: "8개 (5종 × 멀티시드)", color: C.text },
+            { label: "피처 수", val: "600개+", color: C.text },
+          ].map(({ label, val, color }) => (
+            <div key={label} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <div style={{ fontSize: 11, color: C.faint, fontWeight: 500 }}>{label}</div>
+              <div style={{ fontSize: 15, fontWeight: 600, color, fontFamily: color === C.green ? "'Lora', serif" : undefined }}>{val}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* 분석 → 모델 연결 설명 */}
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 12 }}>분석 인사이트가 모델 설계에 어떻게 연결됐는가</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+            {[
+              { from: "위기는 단일 시점이 아닌 누적", arrow: "→", to: "lag/rolling 피처, 누적 통계, onset 이벤트 피처", color: C.accent },
+              { from: "pack_utilization 비선형 U자형", arrow: "→", to: "pack_util² 비선형 항 + 조합 상호작용 피처 명시적 추가", color: C.amber },
+              { from: "레이아웃보다 운영이 원인 (PSM)", arrow: "→", to: "layout_id는 target encoding 배경변수로만, 운영 변수 중심 설계", color: C.green },
+            ].map(({ from, arrow, to, color }) => (
+              <div key={from} style={{ background: C.surface, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.border}`, borderTop: `3px solid ${color}` }}>
+                <div style={{ fontSize: 12, color: C.muted, marginBottom: 6, lineHeight: 1.4 }}>{from}</div>
+                <div style={{ fontSize: 13, color, fontWeight: 600, marginBottom: 6 }}>{arrow}</div>
+                <div style={{ fontSize: 12, color: C.text, lineHeight: 1.45 }}>{to}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 탭 */}
+        <div style={{ display: "flex", gap: 0, borderBottom: `1px solid ${C.border}`, marginBottom: 24 }}>
+          {tabs.map((t, i) => (
+            <button key={t} onClick={() => setActiveTab(i)} style={{
+              padding: "10px 18px", fontSize: 13, cursor: "pointer", fontWeight: activeTab === i ? 600 : 400,
+              background: "transparent", border: "none", whiteSpace: "nowrap",
+              color: activeTab === i ? C.accent : C.muted,
+              borderBottom: activeTab === i ? `2px solid ${C.accent}` : "2px solid transparent",
+              transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
+            }}>{t}</button>
+          ))}
+        </div>
+
+        <Card style={{ padding: "28px 32px" }}>
+          {/* 탭 0: 모델 구성 */}
+          {activeTab === 0 && (
+            <div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 16, lineHeight: 1.6 }}>
+                LightGBM(MAE/Huber)과 CatBoost(MAE/RMSE) 이종 앙상블. 손실함수·깊이·시드가 모두 다른 5종 8개 모델을 가중 평균합니다.
+              </div>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: C.bg }}>
+                      {["모델명", "계열", "Loss", "트리 수", "깊이/리프", "시드수", "앙상블 가중치", "타겟 변환"].map(h => (
+                        <th key={h} style={{ padding: "8px 12px", textAlign: "left", color: C.muted, fontWeight: 600, borderBottom: `1px solid ${C.border}`, whiteSpace: "nowrap" }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {modelRows.map((r, i) => (
+                      <tr key={r.name} style={{ background: i % 2 === 0 ? C.surface : C.surfaceAlt }}>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <Mono size={11} color={C.text}>{r.name}</Mono>
+                        </td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <Tag color={r.family === "CatBoost" ? C.accent : C.amber}>{r.family}</Tag>
+                        </td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}`, color: C.text, fontWeight: 500 }}>{r.obj}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <Mono size={11}>{r.iter}</Mono>
+                        </td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <Mono size={11}>{r.leaves}</Mono>
+                        </td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}`, textAlign: "center", color: C.muted }}>{r.seeds}</td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ width: 60, height: 6, background: C.bg, borderRadius: 3, overflow: "hidden" }}>
+                              <div style={{ width: r.weight, height: "100%", background: r.family === "CatBoost" ? C.accent : C.amber, borderRadius: 3, transition: "width 0.3s" }} />
+                            </div>
+                            <span style={{ fontSize: 12, fontWeight: 600, color: C.text }}>{r.weight}</span>
+                          </div>
+                        </td>
+                        <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
+                          <Tag color={r.transform === "log1p" ? C.green : C.muted}>{r.transform}</Tag>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ marginTop: 16, padding: "12px 16px", background: C.accentBg, borderRadius: 8, border: `1px solid ${C.accentDim}` }}>
+                <span style={{ fontSize: 12, color: C.accent, fontWeight: 600 }}>멀티시드 전략: </span>
+                <span style={{ fontSize: 12, color: C.text }}>동일 하이퍼파라미터에 다른 시드 3개를 돌려 분산을 줄임. lgbm_l1_raw_deeper는 seed 42·123·777 앙상블 → 단일 시드 대비 OOF MAE 안정화.</span>
+              </div>
+            </div>
+          )}
+
+          {/* 탭 1: 피처 엔지니어링 */}
+          {activeTab === 1 && (
+            <div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>
+                600개+ 피처는 6개 그룹으로 설계되었습니다. 각 그룹은 EDA 인사이트를 직접 모델 입력으로 변환한 결과입니다.
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                {featureGroups.map(({ icon, title, color, count, desc, detail }) => (
+                  <div key={title} style={{ background: C.bg, borderRadius: 10, padding: "16px 18px", border: `1px solid ${C.border}`, borderLeft: `3px solid ${color}` }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                      <span style={{ fontSize: 18 }}>{icon}</span>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{title}</div>
+                        <Tag color={color}>{count}</Tag>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5, marginBottom: 8 }}>{desc}</div>
+                    <div style={{ fontSize: 11, color, lineHeight: 1.4, fontStyle: "italic" }}>→ {detail}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 탭 2: 앙상블 전략 */}
+          {activeTab === 2 && (
+            <div>
+              <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>
+                OOF MAE 기반으로 가중치를 결정했습니다. 단순 평균이 아닌 검증 성능 비례 가중 평균.
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                {/* 가중치 시각화 */}
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" }}>모델별 앙상블 가중치</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {ensembleData.map(({ name, weight, color }) => (
+                      <div key={name}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                          <span style={{ fontSize: 12, color: C.text }}>{name.replace("\n", " ")}</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color }}>{weight}%</span>
+                        </div>
+                        <div style={{ height: 8, background: C.bg, borderRadius: 4, overflow: "hidden" }}>
+                          <div style={{ width: `${weight * 2}%`, height: "100%", background: color, borderRadius: 4, transition: "width 0.5s ease" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 설계 근거 */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {designDecisions.map(({ q, a }) => (
+                    <div key={q} style={{ background: C.bg, borderRadius: 8, padding: "12px 14px", border: `1px solid ${C.border}` }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: C.text, marginBottom: 5 }}>Q. {q}</div>
+                      <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{a}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 탭 3: 결과 */}
+          {activeTab === 3 && (
+            <div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+                {/* 버전 히스토리 */}
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" }}>버전별 개선 히스토리</div>
+                  {[
+                    { ver: "v1", desc: "기본 lag/rolling 피처 + LightGBM MAE", result: "베이스라인", color: C.faint },
+                    { ver: "v4", desc: "물리적 병목 비율 피처 추가 (인사이트 반영)", result: "MAE 개선", color: C.muted },
+                    { ver: "v5", desc: "CatBoost 추가 + log1p 타겟 변환", result: "리더보드 상승", color: C.amber },
+                    { ver: "v6", desc: "onset 이벤트 + 안전 누적 통계 + target encoding", result: "안정화", color: C.accent },
+                    { ver: "v7", desc: "이종 앙상블 + 멀티시드 + expanding 제거", result: "상위 15% 달성", color: C.green },
+                  ].map(({ ver, desc, result, color }) => (
+                    <div key={ver} style={{ display: "flex", gap: 12, padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
+                      <div style={{ width: 28, height: 28, borderRadius: 6, background: color + "20", border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Mono color={color} size={10}>{ver}</Mono>
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 12, color: C.text, marginBottom: 2 }}>{desc}</div>
+                        <Tag color={color}>{result}</Tag>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 핵심 교훈 */}
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" }}>모델링에서 배운 것</div>
+                  {[
+                    { icon: "💡", title: "분석 인사이트가 피처의 품질을 결정한다", desc: "pack_utilization²(비선형), onset 이벤트(누적), charge_pressure(복합 비율) — 모두 EDA에서 발견한 구조를 수식으로 변환한 결과. 도메인 없이는 만들 수 없는 피처.", color: C.accent },
+                    { icon: "⚠️", title: "리더보드 성능과 OOF 성능은 다를 수 있다", desc: "v6에서 expanding 통계가 OOF MAE를 개선했지만 리더보드에서는 오히려 하락. 미묘한 리크 의심 → 제거 후 안정화. OOF 개선 = 실제 개선이 아닐 수 있음.", color: C.red },
+                    { icon: "🎯", title: "CatBoost가 log1p + MAE 조합에서 강했다", desc: "우편향 분포(지연 시간)에서 log1p 변환 후 MAE 최소화는 실제 오차 패턴과 잘 맞음. LightGBM Huber를 8%만 넣은 것도 다양성을 위한 최소 포함.", color: C.green },
+                  ].map(({ icon, title, desc, color }) => (
+                    <Card key={title} style={{ padding: "16px 18px", marginBottom: 10, borderLeft: `3px solid ${color}` }}>
+                      <div style={{ display: "flex", gap: 10 }}>
+                        <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+                        <div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: C.text, marginBottom: 6 }}>{title}</div>
+                          <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.55 }}>{desc}</div>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </Card>
+      </div>
+    </section>
+  );
+};
+
+
 const LimitsSection = () => (
   <section style={{ padding: "64px 40px", borderBottom: `1px solid ${C.border}` }}>
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
@@ -942,6 +1258,7 @@ export default function App() {
         <MethodSection />
         <ParadoxSection />
         <PrioritySection />
+        <CompetitionSection />
         <LimitsSection />
       </main>
       <Footer />
