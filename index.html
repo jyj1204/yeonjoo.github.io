@@ -552,7 +552,7 @@
     }
     body.theme-dark .projects { background: #0d1017; }
     .projects .section-heading { align-items: baseline; }
-    .projects .section-note, .projects .project-card p, .projects .project-meta { color: var(--muted); }
+    .projects .section-note, .projects .project-card p, .projects .project-period, .projects .project-meta { color: var(--muted); }
     .projects .section-note {
       max-width: none;
       margin: -22px 0 30px 0;
@@ -560,7 +560,7 @@
     }
     .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     .project-card {
-      min-height: 250px;
+      min-height: 262px;
       display: flex;
       flex-direction: column;
       border: 1px solid #d9dee8;
@@ -635,6 +635,13 @@
       background: rgba(139, 92, 246, 0.08);
     }
     .project-card h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.32; font-weight: 700; }
+    .project-period {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 500;
+    }
     .project-card p {
       margin: 0;
       min-height: 48px;
@@ -1863,7 +1870,8 @@
             </div>
             <span class="project-icon" aria-hidden="true">📦</span>
             <h3>DACON 스마트 창고 출고 지연 예측</h3>
-            <p>250,000건 운영 데이터를 기반으로 출고 지연을 예측하고, DACON 상위 15%를 달성한 분석 프로젝트</p>
+            <span class="project-period">2026.04 - 2026.05 (상위 15%)</span>
+            <p>250,000건 운영 데이터를 기반으로 출고 지연의 원인과 개선 우선순위를 도출한 분석 프로젝트</p>
             <div class="project-meta"><span>Python</span><span>LightGBM</span><span>PSM</span><span>Clustering</span></div>
           </button>
           <button class="project-card" id="project-02" type="button" data-modal-open="instacart-modal" aria-label="Instacart 구매 로그 기반 개인화 마케팅 전략 상세 보기">
@@ -1873,6 +1881,7 @@
             </div>
             <span class="project-icon" aria-hidden="true">🛒</span>
             <h3>Instacart 구매 로그 기반 개인화 마케팅 전략</h3>
+            <span class="project-period">2025.07 - 2025.08</span>
             <p>300만 건 이상의 주문 로그에서 고객 생애주기와 재구매 타이밍을 분석해 개인화 마케팅 전략을 설계한 프로젝트</p>
             <div class="project-meta"><span>SQL</span><span>Python</span><span>Tableau</span><span>Marketing</span></div>
           </button>
@@ -1883,6 +1892,7 @@
             </div>
             <span class="project-icon" aria-hidden="true">💍</span>
             <h3>쥬얼리 브랜드 R사 타겟 리포지셔닝</h3>
+            <span class="project-period">2025.10 - 2025.11</span>
             <p>광고 성과와 리뷰 데이터를 결합해 실제 구매자 페르소나를 재정의하고 예산 재배치 전략을 도출한 프로젝트</p>
             <div class="project-meta"><span>Ad Analytics</span><span>Persona</span><span>Python</span><span>Tableau</span></div>
           </button>
@@ -1893,7 +1903,8 @@
             </div>
             <span class="project-icon" aria-hidden="true">⚽</span>
             <h3>DACON K리그 경기 내 최종 패스 좌표 예측</h3>
-            <p>K리그 실제 경기 데이터를 기반으로 최종 패스 도착 좌표를 예측하고, DACON 상위 7%를 달성한 AI 경진대회 프로젝트</p>
+            <span class="project-period">2025.12 - 2026.01 (상위 7%)</span>
+            <p>K리그 실제 경기 데이터를 기반으로 최종 패스 도착 좌표를 예측하고 앙상블 모델을 설계한 AI 경진대회 프로젝트</p>
             <div class="project-meta"><span>Python</span><span>CatBoost</span><span>LightGBM</span><span>GroupKFold</span></div>
           </button>
           <button class="project-card" id="project-05" type="button" data-modal-open="detective-modal" aria-label="AI 추리게임 개발 HTML/CSS/JS + GPT API 상세 보기">
@@ -1903,6 +1914,7 @@
             </div>
             <span class="project-icon" aria-hidden="true">🔎</span>
             <h3>AI 추리게임 개발<br />HTML/CSS/JS + GPT API</h3>
+            <span class="project-period">2024</span>
             <p>GPT API 기반 AI 용의자와 대화하며 단서를 수집하고 최종 추리를 완성하는 인터랙티브 웹 게임 프로젝트</p>
             <div class="project-meta"><span>JavaScript</span><span>GPT API</span><span>Prompt Engineering</span><span>Vibe Coding</span></div>
           </button>
