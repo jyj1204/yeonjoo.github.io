@@ -190,25 +190,6 @@ const Nav = () => {
         <div style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 500, color: C.text }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { label: "개요", href: "#overview" },
-            { label: "데이터", href: "#data" },
-            { label: "WHO", href: "#who" },
-            { label: "WHEN", href: "#when" },
-            { label: "WHAT", href: "#what" },
-            { label: "HOW", href: "#how" },
-            { label: "회고", href: "#retro" },
-          ].map(({ label, href }) => (
-            <a key={label} href={href} style={{
-              fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
-              transition: "background 0.15s, color 0.15s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.text; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.muted; }}
-            >{label}</a>
-          ))}
-        </div>
       </div>
     </nav>
   );
@@ -316,30 +297,10 @@ const Hero = () => (
         marginBottom: 28, maxWidth: 600,
       }}>
         300만 건 이상의 실제 주문 로그에서 <strong style={{ color: C.text }}>고객 생애주기 신호</strong>를 포착하고,
-        누구에게 · 언제 · 무엇을 추천할지 데이터 기반 마케팅 전략으로 설계했습니다.
+        누구에게 · 언제 · 무엇을 추천할지 데이터 기반 마케팅 전략으로 설계.
       </p>
 
-      <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
-        {[
-          { label: "Kaggle 데이터셋 ↗", primary: true },
-          { label: "GitHub ↗" },
-          { label: "발표 PPT ↓" },
-        ].map(({ label, primary }) => (
-          <button key={label} style={{
-            padding: "9px 18px", borderRadius: 7, cursor: "pointer",
-            fontSize: 13, fontWeight: 500,
-            background: primary ? C.accent : C.surface,
-            color: primary ? "#fff" : C.text,
-            border: primary ? "none" : `1px solid ${C.border}`,
-            transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-          >{label}</button>
-        ))}
-      </div>
-
-      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginTop: 48 }}>
         {[
           { label: "총 주문 수", val: "300만+", sub: "Kaggle 공개 prior 주문 기록", color: C.accent },
           { label: "고객 수", val: "20만+", sub: "생애주기 3단계로 세분화", color: C.text },
@@ -366,14 +327,14 @@ const OverviewSection = () => (
         왜 이 분석인가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 600 }}>
-        이커머스 시장의 고객 유지 경쟁이 심화될수록, 방대한 로그 속 유의미한 신호를 포착하는 능력이 핵심입니다.
-        단순 판매량이 아닌 <strong style={{ color: C.text }}>고객 행동 변곡점</strong>에서 전략을 도출했습니다.
+        이커머스 시장의 고객 유지 경쟁이 심화될수록, 방대한 로그 속 유의미한 신호를 포착하는 능력이 핵심.
+        단순 판매량이 아닌 <strong style={{ color: C.text }}>고객 행동 변곡점</strong>에서 전략 도출.
       </p>
 
       {/* 분석 흐름 */}
       <div style={{ marginBottom: 40 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 16 }}>5단계 분석 프로세스</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 0, overflowX: "auto", paddingBottom: 8 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, minmax(120px, 1fr))", gap: 16, overflowX: "auto", paddingBottom: 8 }}>
           {[
             { step: "01", label: "데이터 통합", desc: "7개 테이블 병합\n피처 엔지니어링", color: C.muted },
             { step: "02", label: "WHO", desc: "고객 생애주기\n3단계 세분화", color: C.accent },
@@ -381,19 +342,19 @@ const OverviewSection = () => (
             { step: "04", label: "WHAT", desc: "상품 조합 시너지\n저성과 부서 개선", color: C.amber },
             { step: "05", label: "HOW", desc: "마케팅 실행\n액션 플랜", color: C.green },
           ].map(({ step, label, desc, color }, i, arr) => (
-            <div key={step} style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+            <div key={step} style={{ position: "relative", minWidth: 120 }}>
               <div style={{
                 background: C.surface, border: `1px solid ${color}40`,
                 borderRadius: 10, padding: "14px 18px", textAlign: "center",
-                borderTop: `3px solid ${color}`, minWidth: 120,
+                borderTop: `3px solid ${color}`, height: "100%",
               }}>
                 <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: C.faint, marginBottom: 4 }}>{step}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>{label}</div>
                 <div style={{ fontSize: 11, color: C.muted, whiteSpace: "pre-line", lineHeight: 1.5 }}>{desc}</div>
               </div>
               {i < arr.length - 1 && (
-                <div style={{ display: "flex", alignItems: "center", padding: "0 8px" }}>
-                  <div style={{ width: 24, height: 1, background: C.border }} />
+                <div style={{ position: "absolute", top: "50%", right: -14, transform: "translateY(-50%)", zIndex: 2, display: "flex", alignItems: "center", pointerEvents: "none" }}>
+                  <div style={{ width: 12, height: 1, background: C.border }} />
                   <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: `6px solid ${C.borderDark}` }} />
                 </div>
               )}
@@ -480,7 +441,7 @@ const DataSection = () => {
           분석 인프라 구축
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          Kaggle Instacart 데이터셋 7개 테이블을 통합하고, 분석 목적에 맞는 핵심 지표를 설계했습니다.
+          Kaggle Instacart 데이터셋 7개 테이블을 통합하고, 분석 목적에 맞는 핵심 지표 설계.
         </p>
 
         {/* 데이터셋 규모 */}
@@ -600,8 +561,8 @@ const WhoSection = () => {
           고객 생애주기 기반 등급 정의
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-          재주문 횟수 기반 통계적 변곡점(10회)에서 고객 단계가 나뉩니다.
-          단순 주문 횟수가 아닌 <strong style={{ color: C.text }}>재주문 확률 안정성</strong>이 세분화 기준입니다.
+          재주문 횟수 기반 통계적 변곡점(10회)에서 고객 단계가 나뉨.
+          단순 주문 횟수가 아닌 <strong style={{ color: C.text }}>재주문 확률 안정성</strong>이 세분화 기준.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
@@ -658,11 +619,11 @@ const WhoSection = () => {
         </div>
 
         {/* 세그먼트 전략 탭 */}
-        <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 16 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 16, alignItems: "stretch" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, height: "100%" }}>
             {segments.map(({ name, badge, color }, i) => (
               <button key={i} onClick={() => setActiveSegment(i)} style={{
-                padding: "12px 16px", borderRadius: 8, cursor: "pointer", textAlign: "left",
+                padding: "12px 16px", borderRadius: 8, cursor: "pointer", textAlign: "left", flex: 1,
                 background: activeSegment === i ? color + "15" : C.surface,
                 border: `1px solid ${activeSegment === i ? color + "40" : C.border}`,
                 borderLeft: `3px solid ${activeSegment === i ? color : "transparent"}`,
@@ -710,7 +671,7 @@ const WhenSection = () => (
         언제 마케팅할 것인가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-        재구매 간격 일치율로 '평균의 함정'을 피하고, 요일·시간대 분석으로 개인화 푸시 타이밍을 최적화했습니다.
+        재구매 간격 일치율로 '평균의 함정'을 피하고, 요일·시간대 분석으로 개인화 푸시 타이밍 최적화.
       </p>
 
       {/* 재구매 간격 일치율 설명 */}
@@ -721,9 +682,9 @@ const WhenSection = () => (
 
           {/* User A vs B 시각화 */}
           {[
-            { label: "User A (규칙적)", gaps: [14, 15, 14], color: C.green, rate: "일치율 HIGH" },
-            { label: "User B (불규칙)", gaps: [2, 25, 7], color: C.red, rate: "일치율 LOW" },
-          ].map(({ label, gaps, color, rate }) => (
+            { label: "User A (규칙적)", gaps: [14, 15, 14], widths: [52, 56, 52], color: C.green, rate: "일치율 HIGH" },
+            { label: "User B (불규칙)", gaps: [2, 25, 7], widths: [18, 92, 34], color: C.red, rate: "일치율 LOW" },
+          ].map(({ label, gaps, widths, color, rate }) => (
             <div key={label} style={{ marginBottom: 16 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 600, color: C.text }}>{label}</span>
@@ -736,7 +697,7 @@ const WhenSection = () => (
                     {i < 3 && (
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <div style={{ fontSize: 9, color: C.faint, marginBottom: 1 }}>{gaps[i]}일</div>
-                        <div style={{ width: 50, height: 1, background: C.borderDark }} />
+                        <div style={{ width: widths[i], height: 1, background: C.borderDark }} />
                       </div>
                     )}
                   </div>
@@ -860,17 +821,17 @@ const WhatSection = () => (
         무엇을 추천할 것인가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-        연관 규칙 분석으로 상품 조합 시너지를 찾고, 잔차 분석으로 판매량 대비 재구매율이 낮은 부서를 개선합니다.
+        연관 규칙 분석으로 상품 조합 시너지를 찾고, 잔차 분석으로 판매량 대비 재구매율이 낮은 부서 개선.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
         {/* 상품 조합 시너지 */}
-        <Card style={{ padding: "24px 28px" }}>
+        <Card style={{ padding: "24px 28px", display: "flex", flexDirection: "column", minHeight: 456 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>상품 조합 시너지 (연관 규칙 분석)</div>
           <div style={{ fontSize: 12, color: C.muted, marginBottom: 20, lineHeight: 1.5 }}>Produce 부서 중심으로 교차 부서 연관 관계 분석 → 크로스 셀링 번들 기획</div>
 
           {/* 네트워크 다이어그램 */}
-          <div style={{ position: "relative", height: 200, background: C.bg, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "relative", height: 250, background: C.bg, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, flexShrink: 0 }}>
             {/* 중심 */}
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 2 }}>
               <div style={{ background: C.accent, borderRadius: "50%", width: 68, height: 68, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", boxShadow: `0 0 0 8px ${C.accentDim}` }}>
@@ -880,10 +841,10 @@ const WhatSection = () => (
             </div>
             {/* 주변 노드 */}
             {[
-              { label: "Dairy Eggs", sub: "우유·요거트", x: "50%", y: "4%", tx: "-50%", ty: "0" },
+              { label: "Dairy Eggs", sub: "우유·요거트", x: "50%", y: "6%", tx: "-50%", ty: "0" },
               { label: "Bakery", sub: "빵", x: "86%", y: "22%", tx: "-100%", ty: "0" },
               { label: "Snacks", sub: "프레츨", x: "88%", y: "65%", tx: "-100%", ty: "0" },
-              { label: "Frozen", sub: "아이스크림", x: "50%", y: "84%", tx: "-50%", ty: "0" },
+              { label: "Frozen", sub: "아이스크림", x: "50%", y: "78%", tx: "-50%", ty: "0" },
               { label: "Beverages", sub: "주스·탄산", x: "12%", y: "65%", tx: "0", ty: "0" },
               { label: "Bakery", sub: "베이커리", x: "10%", y: "22%", tx: "0", ty: "0" },
             ].map(({ label, sub, x, y, tx, ty }, i) => (
@@ -896,7 +857,7 @@ const WhatSection = () => (
             ))}
           </div>
 
-          <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 8 }}>
             {[
               { bundle: "스무디 번들", items: "바나나 + 딸기 + 우유", color: C.teal },
               { bundle: "건강 식사 세트", items: "바나나 + 프레츨 스낵", color: C.green },
@@ -946,7 +907,7 @@ const HowSection = () => (
         종합 마케팅 실행 전략
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-        WHO · WHEN · WHAT 분석 결과를 하나의 실행 가능한 마케팅 프레임워크로 통합합니다.
+        WHO · WHEN · WHAT 분석 결과를 하나의 실행 가능한 마케팅 프레임워크로 통합.
       </p>
 
       {/* 3개 축 */}
@@ -1032,7 +993,7 @@ const RetroSection = () => (
         솔직한 평가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어렵습니다.
+        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
@@ -1045,8 +1006,8 @@ const RetroSection = () => (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
               { title: "비즈니스 목적에 부합하는 지표 설계", desc: "단순 재구매율의 한계를 보완한 재구매 점수 설계로 실질 매출 기여 상품 식별. 평균의 함정을 피하기 위한 일치율 지표 도입으로 개별 행동 패턴 기반 타겟팅 근거 마련." },
-              { title: "데이터 근거 기반 고객 세분화", desc: "재주문 확률의 통계적 변곡점을 기준으로 고객 라이프사이클을 정의하여 마케팅 우선순위와 단계별 전략 방향성을 수립했습니다." },
-              { title: "전략 실행력을 고려한 인사이트 도출", desc: "[WHO-WHEN-WHAT] 구조를 통해 분석 결과가 단순 현황 파악에 그치지 않고, 실무에 적용 가능한 액션 플랜으로 연결되도록 설계했습니다." },
+              { title: "데이터 근거 기반 고객 세분화", desc: "재주문 확률의 통계적 변곡점을 기준으로 고객 라이프사이클을 정의하여 마케팅 우선순위와 단계별 전략 방향성 수립." },
+              { title: "전략 실행력을 고려한 인사이트 도출", desc: "[WHO-WHEN-WHAT] 구조를 통해 분석 결과가 단순 현황 파악에 그치지 않고, 실무에 적용 가능한 액션 플랜으로 연결되도록 설계." },
             ].map(({ title, desc }) => (
               <Card key={title} style={{ padding: "18px 22px" }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 6 }}>{title}</div>
@@ -1065,8 +1026,8 @@ const RetroSection = () => (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
               { title: "추천 알고리즘 고도화 필요", desc: "현재 규칙 기반 분석을 넘어 협업 필터링 또는 딥러닝 기반 모델을 도입하면 더 정교한 개인화 추천 성능 확보 가능.", next: "협업 필터링(CF) 또는 딥러닝 추천 모델 도입" },
-              { title: "외부 변수 데이터 부재", desc: "주문 로그 외 프로모션 노출 정보, 유입 채널 등 외부 변수 데이터 부재로 구매 동기 파악에 한계가 있었습니다.", next: "프로모션·유입 채널 데이터 연계 분석" },
-              { title: "A/B 테스트 성과 검증 미비", desc: "도출된 전략의 실제 구매 전환율 기여도를 확인할 수 있는 실험 설계 및 사후 성과 분석 프로세스가 부족했습니다.", next: "전략별 A/B 테스트 설계 및 정량적 검증" },
+              { title: "외부 변수 데이터 부재", desc: "주문 로그 외 프로모션 노출 정보, 유입 채널 등 외부 변수 데이터 부재로 구매 동기 파악에 한계.", next: "프로모션·유입 채널 데이터 연계 분석" },
+              { title: "A/B 테스트 성과 검증 미비", desc: "도출된 전략의 실제 구매 전환율 기여도를 확인할 수 있는 실험 설계 및 사후 성과 분석 프로세스 부족.", next: "전략별 A/B 테스트 설계 및 정량적 검증" },
             ].map(({ title, desc, next }) => (
               <Card key={title} style={{ padding: "18px 22px" }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 6 }}>{title}</div>
@@ -1092,10 +1053,10 @@ const Footer = () => (
         <div style={{ fontFamily: "'Lora', serif", fontSize: 16, color: C.text, marginBottom: 4 }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ fontSize: 13, color: C.muted }}>Instacart 구매 로그 기반 개인화 마케팅 전략 — 시그넘팀</div>
+        <div style={{ fontSize: 13, color: C.muted }}>Instacart 구매 로그 기반 개인화 마케팅 전략</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
-        {["Kaggle 데이터셋 ↗", "GitHub ↗", "발표 PPT", "다음 프로젝트 →"].map(t => (
+        {["다음 프로젝트 →"].map(t => (
           <button key={t} style={{
             padding: "7px 14px", borderRadius: 6, fontSize: 12,
             background: t === "다음 프로젝트 →" ? C.accent : "transparent",
