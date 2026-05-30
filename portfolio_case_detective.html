@@ -20,10 +20,11 @@
       min-height: 100%;
       margin: 0;
       background: var(--case-bg) !important;
+      overflow-x: clip;
+      overflow-y: visible;
     }
     body {
       color: var(--case-text);
-      overflow-x: hidden;
     }
     #root,
     #root > div,
@@ -49,9 +50,27 @@
     nav > div {
       padding-right: 72px !important;
     }
+    .case-section-tabs {
+      position: sticky !important;
+      top: 56px !important;
+      z-index: 120 !important;
+      background: rgba(242, 243, 246, 0.96) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+    }
+    .case-section-tabs > div::-webkit-scrollbar {
+      display: none;
+    }
+    section[id] {
+      scroll-margin-top: 132px;
+    }
     @media (max-width: 700px) {
       body {
-        overflow-x: hidden;
+        overflow-x: clip;
+      }
+      .case-section-tabs {
+        top: 56px !important;
       }
       nav > div {
         padding-right: 54px !important;
@@ -96,6 +115,6 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="./assets/detective_game_portfolio.bundle.js"></script>
+  <script type="module" src="./assets/detective_game_portfolio.bundle.js?v=toc-20260530"></script>
 </body>
 </html>

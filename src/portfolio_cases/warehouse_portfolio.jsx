@@ -198,39 +198,73 @@ const sectionTabs = [
   { label: "한계", href: "#limits" },
 ];
 
-const SectionTabs = () => (
-  <div className="case-section-tabs" style={{
-    position: "sticky", top: 56, zIndex: 120,
-    background: "rgba(242, 243, 246, 0.96)",
-    borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
-    backdropFilter: "blur(10px)",
-    WebkitBackdropFilter: "blur(10px)",
-    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.04)",
-  }}>
-    <div style={{
-      maxWidth: 1100, margin: "0 auto", padding: "0 40px",
-      display: "flex", gap: 24, overflowX: "auto", scrollbarWidth: "none",
+const useActiveSection = (tabs) => {
+  const [activeHref, setActiveHref] = useState(tabs[0]?.href || "");
+
+  useEffect(() => {
+    const sectionIds = tabs.map(({ href }) => href.slice(1));
+    const updateActive = () => {
+      let current = sectionIds[0];
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= 150) current = id;
+      });
+      setActiveHref(`#${current}`);
+    };
+
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [tabs]);
+
+  return activeHref;
+};
+
+const SectionTabs = () => {
+  const activeHref = useActiveSection(sectionTabs);
+
+  return (
+    <div className="case-section-tabs" style={{
+      position: "sticky", top: 56, zIndex: 120,
+      background: "rgba(242, 243, 246, 0.96)",
+      borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+      backdropFilter: "blur(10px)",
+      WebkitBackdropFilter: "blur(10px)",
+      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.04)",
     }}>
-      {sectionTabs.map(({ label, href }) => (
-        <a key={label} href={href} style={{
-          display: "inline-flex", alignItems: "center", height: 56,
-          fontSize: 13, color: C.muted, fontWeight: 500, whiteSpace: "nowrap",
-          borderBottom: "2px solid transparent",
-          transition: "color 0.15s, border-color 0.15s",
-        }}
-          onMouseEnter={e => {
-            e.currentTarget.style.color = C.text;
-            e.currentTarget.style.borderBottomColor = C.text;
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.color = C.muted;
-            e.currentTarget.style.borderBottomColor = "transparent";
-          }}
-        >{label}</a>
-      ))}
+      <div style={{
+        maxWidth: 1100, margin: "0 auto", padding: "0 40px",
+        display: "flex", gap: 24, overflowX: "auto", scrollbarWidth: "none",
+      }}>
+        {sectionTabs.map(({ label, href }) => {
+          const active = activeHref === href;
+          return (
+            <a key={label} href={href} aria-current={active ? "true" : undefined} style={{
+              display: "inline-flex", alignItems: "center", height: 56,
+              fontSize: 13, color: active ? C.text : C.muted,
+              fontWeight: active ? 700 : 500, whiteSpace: "nowrap",
+              borderBottom: `2px solid ${active ? C.text : "transparent"}`,
+              transition: "color 0.15s, border-color 0.15s",
+            }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = C.text;
+                e.currentTarget.style.borderBottomColor = C.text;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = active ? C.text : C.muted;
+                e.currentTarget.style.borderBottomColor = active ? C.text : "transparent";
+              }}
+            >{label}</a>
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 /* ─── HERO ───────────────────────────────────── */
 const Hero = () => (
@@ -1100,18 +1134,18 @@ const CompetitionSection = () => {
               <div style={{ fontSize: 13, color: C.muted, marginBottom: 20, lineHeight: 1.6 }}>
                 OOF MAE 기반으로 가중치 결정. 단순 평균이 아닌 검증 성능 비례 가중 평균.
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, alignItems: "stretch" }}>
                 {/* 가중치 시각화 */}
-                <div>
+                <div style={{ display: "flex", flexDirection: "column", minHeight: 360 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: C.muted, marginBottom: 14, textTransform: "uppercase", letterSpacing: "0.05em" }}>모델별 앙상블 가중치</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 16, flex: 1 }}>
                     {ensembleData.map(({ name, weight, color }) => (
                       <div key={name}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                           <span style={{ fontSize: 12, color: C.text }}>{name.replace("\n", " ")}</span>
                           <span style={{ fontSize: 12, fontWeight: 600, color }}>{weight}%</span>
                         </div>
-                        <div style={{ height: 8, background: C.bg, borderRadius: 4, overflow: "hidden" }}>
+                        <div style={{ height: 9, background: C.bg, borderRadius: 5, overflow: "hidden" }}>
                           <div style={{ width: `${weight * 2}%`, height: "100%", background: color, borderRadius: 4, transition: "width 0.5s ease" }} />
                         </div>
                       </div>

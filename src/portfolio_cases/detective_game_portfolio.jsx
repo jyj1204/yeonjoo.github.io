@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
 
 /* ─── 색상 시스템 ─────────────────────────────── */
 const C = {
@@ -136,6 +137,83 @@ const Nav = () => {
         </div>
       </div>
     </nav>
+  );
+};
+
+const sectionTabs = [
+  { label: "개요", href: "#overview" },
+  { label: "AI 설계", href: "#ai" },
+  { label: "시나리오", href: "#scenario" },
+  { label: "기술 구현", href: "#tech" },
+  { label: "Vibe Coding", href: "#vibe" },
+  { label: "한계와 성과", href: "#limits" },
+];
+
+const useActiveSection = (tabs) => {
+  const [activeHref, setActiveHref] = useState(tabs[0]?.href || "");
+
+  useEffect(() => {
+    const sectionIds = tabs.map(({ href }) => href.slice(1));
+    const updateActive = () => {
+      let current = sectionIds[0];
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= 150) current = id;
+      });
+      setActiveHref(`#${current}`);
+    };
+
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
+    };
+  }, [tabs]);
+
+  return activeHref;
+};
+
+const SectionTabs = () => {
+  const activeHref = useActiveSection(sectionTabs);
+
+  return (
+    <div className="case-section-tabs" style={{
+      position: "sticky", top: 56, zIndex: 120,
+      background: "rgba(242, 243, 246, 0.96)",
+      borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+      backdropFilter: "blur(10px)",
+      WebkitBackdropFilter: "blur(10px)",
+      boxShadow: "0 8px 18px rgba(15, 23, 42, 0.04)",
+    }}>
+      <div style={{
+        maxWidth: 1100, margin: "0 auto", padding: "0 40px",
+        display: "flex", gap: 24, overflowX: "auto", scrollbarWidth: "none",
+      }}>
+        {sectionTabs.map(({ label, href }) => {
+          const active = activeHref === href;
+          return (
+            <a key={label} href={href} aria-current={active ? "true" : undefined} style={{
+              display: "inline-flex", alignItems: "center", height: 56,
+              fontSize: 13, color: active ? C.text : C.muted,
+              fontWeight: active ? 700 : 500, whiteSpace: "nowrap",
+              borderBottom: `2px solid ${active ? C.text : "transparent"}`,
+              transition: "color 0.15s, border-color 0.15s",
+            }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = C.text;
+                e.currentTarget.style.borderBottomColor = C.text;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = active ? C.text : C.muted;
+                e.currentTarget.style.borderBottomColor = active ? C.text : "transparent";
+              }}
+            >{label}</a>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
@@ -990,6 +1068,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero />
+        <SectionTabs />
         <OverviewSection />
         <AISection />
         <ScenarioSection />
@@ -1000,4 +1079,9 @@ export default function App() {
       <Footer />
     </div>
   );
+}
+
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  createRoot(rootElement).render(<App />);
 }
