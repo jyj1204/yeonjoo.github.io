@@ -38,7 +38,8 @@ const Fonts = () => (
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: ${C.bg}; color: ${C.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; }
+    body { background: ${C.bg}; color: ${C.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; word-break: keep-all; overflow-wrap: break-word; }
+    p, div, span, a, button { word-break: keep-all; }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: ${C.bg}; }
     ::-webkit-scrollbar-thumb { background: ${C.borderDark}; border-radius: 3px; }

@@ -45,7 +45,8 @@ const Fonts = () => (
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: ${C.bg}; color: ${C.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; }
+    body { background: ${C.bg}; color: ${C.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; word-break: keep-all; overflow-wrap: break-word; }
+    p, div, span, a, button { word-break: keep-all; }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: ${C.bg}; }
     ::-webkit-scrollbar-thumb { background: ${C.borderDark}; border-radius: 3px; }
@@ -192,25 +193,6 @@ const Nav = () => {
         <div style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 500, color: C.text }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { label: "개요", href: "#overview" },
-            { label: "데이터", href: "#data" },
-            { label: "비효율 구간", href: "#inefficiency" },
-            { label: "페르소나", href: "#persona" },
-            { label: "세그먼트", href: "#segment" },
-            { label: "전략", href: "#strategy" },
-            { label: "회고", href: "#retro" },
-          ].map(({ label, href }) => (
-            <a key={label} href={href} style={{
-              fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
-              transition: "background 0.15s, color 0.15s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.text; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.muted; }}
-            >{label}</a>
-          ))}
-        </div>
       </div>
     </nav>
   );
@@ -315,32 +297,12 @@ const Hero = () => (
 
       <p className="fu fu3" style={{
         fontSize: 17, color: C.muted, lineHeight: 1.7,
-        marginBottom: 28, maxWidth: 600,
+        marginBottom: 44, maxWidth: 600,
       }}>
-        매출 <strong style={{ color: C.text }}>28% 하락, ROAS 17% 급감</strong>. 광고 예산의 30%가 잘못된 타겟에 낭비되고 있었습니다.
+        매출 <strong style={{ color: C.text }}>28% 하락, ROAS 17% 급감</strong>. 광고 예산의 30%가 잘못된 타겟에 낭비 중.
         리뷰 데이터 형태소 분석으로 실제 구매자 페르소나를 재정의하고,
-        추가 예산 없이 ROAS 23% 반등 시뮬레이션을 도출했습니다.
+        추가 예산 없이 ROAS 23% 반등 시뮬레이션 도출.
       </p>
-
-      <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
-        {[
-          { label: "태블로 대시보드", primary: true },
-          { label: "GitHub ↗" },
-          { label: "발표 PPT ↓" },
-        ].map(({ label, primary }) => (
-          <button key={label} style={{
-            padding: "9px 18px", borderRadius: 7, cursor: "pointer",
-            fontSize: 13, fontWeight: 500,
-            background: primary ? C.accent : C.surface,
-            color: primary ? "#fff" : C.text,
-            border: primary ? "none" : `1px solid ${C.border}`,
-            transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-          >{label}</button>
-        ))}
-      </div>
 
       <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
         {[
@@ -369,14 +331,21 @@ const OverviewSection = () => (
         무엇이 문제였는가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 600 }}>
-        광고비는 그대로인데 성과가 떨어지고 있었습니다.
-        데이터를 열어보니 문제는 예산 규모가 아니라 <strong style={{ color: C.text }}>어디에 쓰는가</strong>였습니다.
+        광고비는 그대로인데 성과는 하락.
+        데이터를 열어보니 문제는 예산 규모가 아니라 <strong style={{ color: C.text }}>어디에 쓰는가</strong>.
       </p>
 
       {/* 5단계 분석 프로세스 */}
       <div style={{ marginBottom: 40 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 16 }}>5단계 분석 프로세스</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 0, overflowX: "auto", paddingBottom: 8 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(112px, 1fr) 32px minmax(112px, 1fr) 32px minmax(112px, 1fr) 32px minmax(112px, 1fr) 32px minmax(112px, 1fr)",
+          alignItems: "center",
+          gap: 10,
+          overflowX: "auto",
+          paddingBottom: 8,
+        }}>
           {[
             { step: "01", label: "데이터 전처리", desc: "고유키 생성\n효율 지표 설계", color: C.muted },
             { step: "02", label: "비효율 구간 식별", desc: "예산 누수 규모\n산출", color: C.red },
@@ -384,19 +353,19 @@ const OverviewSection = () => (
             { step: "04", label: "세그먼트 분류", desc: "재구매 주기\n단기/장기 분류", color: C.purple },
             { step: "05", label: "예산 최적화", desc: "재배치 시뮬레이션\nROAS 전망", color: C.green },
           ].map(({ step, label, desc, color }, i, arr) => (
-            <div key={step} style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+            <div key={step} style={{ display: "contents" }}>
               <div style={{
                 background: C.surface, border: `1px solid ${color}40`,
                 borderRadius: 10, padding: "14px 18px", textAlign: "center",
-                borderTop: `3px solid ${color}`, minWidth: 120,
+                borderTop: `3px solid ${color}`, minWidth: 112,
               }}>
                 <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: C.faint, marginBottom: 4 }}>{step}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>{label}</div>
                 <div style={{ fontSize: 11, color: C.muted, whiteSpace: "pre-line", lineHeight: 1.5 }}>{desc}</div>
               </div>
               {i < arr.length - 1 && (
-                <div style={{ display: "flex", alignItems: "center", padding: "0 8px" }}>
-                  <div style={{ width: 24, height: 1, background: C.border }} />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: 18, height: 1, background: C.border }} />
                   <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: `6px solid ${C.borderDark}` }} />
                 </div>
               )}
@@ -483,7 +452,7 @@ const DataSection = () => {
           분석 인프라 구축
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          실제 기업 광고 데이터를 정제하고, 성과 측정을 위한 핵심 지표를 설계했습니다.
+          실제 기업 광고 데이터를 정제하고, 성과 측정을 위한 핵심 지표 설계.
         </p>
 
         {/* 전처리 탭 */}
@@ -555,7 +524,7 @@ const InefficiencySection = () => (
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
         오픈 타겟 방식의 구조적 문제 — 연령·성별을 특정하지 않고 집행한 광고가
-        실제로는 <strong style={{ color: C.text }}>미스매칭 구간에 집중 노출</strong>되고 있었습니다.
+        실제로는 <strong style={{ color: C.text }}>미스매칭 구간에 집중 노출</strong>.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 20, marginBottom: 20 }}>
@@ -567,7 +536,7 @@ const InefficiencySection = () => (
           <div style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>
             회색: 저효율 구간 / 파란색: 고효율 구간 — 여성 45~64세에서 5.2배 격차
           </div>
-          <ResponsiveContainer width="100%" height={240}>
+          <ResponsiveContainer width="100%" height={320}>
             <BarChart data={DATA.ctrByTarget} margin={{ top: 4, right: 8, left: -24, bottom: 40 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
               <XAxis dataKey="target" tick={{ fontSize: 9, fill: C.faint }} angle={-35} textAnchor="end" interval={0} />
@@ -659,7 +628,7 @@ const PersonaSection = () => {
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 600 }}>
           트리 모델의 분기점 탐색과 리뷰 데이터 형태소 분석. 두 방법이 독립적으로
-          <strong style={{ color: C.text }}> 같은 결론</strong>에 도달했습니다.
+          <strong style={{ color: C.text }}> 같은 결론</strong>에 도달.
         </p>
 
         {/* 탭 */}
@@ -789,9 +758,9 @@ const PersonaSection = () => {
             </Card>
 
             {/* 문제-해결 */}
-            <Card style={{ padding: "24px 28px" }}>
+            <Card style={{ padding: "24px 28px", display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 20 }}>페르소나 미스매칭이 만든 구조적 문제</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
                 <div style={{ background: C.redBg, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.redDim}` }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: C.red, marginBottom: 6 }}>⚠ Problem</div>
                   <div style={{ fontSize: 13, color: C.text, lineHeight: 1.6 }}>
@@ -802,7 +771,7 @@ const PersonaSection = () => {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <div style={{ fontSize: 20, color: C.faint }}>↓</div>
                 </div>
-                <div style={{ background: C.greenBg, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.greenDim}` }}>
+                <div style={{ background: C.greenBg, borderRadius: 8, padding: "14px 16px", border: `1px solid ${C.greenDim}`, marginTop: "auto" }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: C.green, marginBottom: 6 }}>✓ Solution</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {[
@@ -877,8 +846,8 @@ const SegmentSection = () => {
           기존 등급제를 넘어선 새로운 분류
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-          비회원 74%, 실버 이상 1.5% 미만. 등급으로는 아무것도 보이지 않았습니다.
-          재주문 기간이라는 새로운 기준으로 세분화했습니다.
+          비회원 74%, 실버 이상 1.5% 미만. 등급으로는 아무것도 보이지 않음.
+          재주문 기간이라는 새로운 기준으로 세분화.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
@@ -1003,7 +972,7 @@ const StrategySection = () => (
         저효율 예산 30%를 고효율 '가족 세트'로 재배치
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-        추가 예산 없이, 기존 예산 재배치만으로 ROAS 23% 반등이 가능합니다.
+        추가 예산 없이, 기존 예산 재배치만으로 ROAS 23% 반등 가능.
       </p>
 
       {/* 3가지 전략 축 */}
@@ -1031,7 +1000,11 @@ const StrategySection = () => (
             color: C.green,
           },
         ].map(({ num, label, before, after, desc, color }) => (
-          <Card key={num} style={{ padding: "24px", borderTop: `3px solid ${color}`, borderRadius: "0 0 12px 12px" }}>
+          <Card key={num} style={{
+            padding: "24px",
+            borderTop: `3px solid ${color}`,
+            background: `linear-gradient(${color}, ${color}) top / 100% 3px no-repeat, ${C.surface}`,
+          }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <div style={{ width: 28, height: 28, borderRadius: "50%", background: color + "15", border: `1px solid ${color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Mono color={color} size={12}>{num}</Mono>
@@ -1103,7 +1076,7 @@ const RetroSection = () => (
         솔직한 평가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어렵습니다.
+        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -1117,15 +1090,15 @@ const RetroSection = () => (
             {[
               {
                 title: "데이터 기반 페르소나 재정의",
-                desc: "리뷰 데이터 형태소 분석으로 실제 구매 동기가 연인 선물이 아닌 가족의 안녕·재물운임을 발견. 트리 모델 분기점 탐색과 독립적으로 같은 결론에 도달하여 신뢰도를 높였습니다.",
+                desc: "리뷰 데이터 형태소 분석으로 실제 구매 동기가 연인 선물이 아닌 가족의 안녕·재물운임을 발견. 트리 모델 분기점 탐색과 독립적으로 같은 결론에 도달하여 신뢰도 상승.",
               },
               {
                 title: "비효율 구간 식별 → 즉각적 비용 절감 제안",
-                desc: "추가 예산 없이 타겟 재배치만으로 ROAS 23% 반등 시뮬레이션을 정량적으로 도출. 분석이 실무 액션으로 직결됩니다.",
+                desc: "추가 예산 없이 타겟 재배치만으로 ROAS 23% 반등 시뮬레이션을 정량적으로 도출. 분석이 실무 액션으로 직결.",
               },
               {
                 title: "재구매 주기 기반 세그먼트 고도화",
-                desc: "기존 등급제 한계를 극복하기 위해 재주문 기간이라는 새로운 기준을 도입. 단기/중기/장기 구매자별 CRM 액션 플랜까지 설계했습니다.",
+                desc: "기존 등급제 한계를 극복하기 위해 재주문 기간이라는 새로운 기준을 도입. 단기/중기/장기 구매자별 CRM 액션 플랜까지 설계.",
               },
             ].map(({ title, desc }) => (
               <Card key={title} style={{ padding: "18px 22px" }}>
@@ -1146,17 +1119,17 @@ const RetroSection = () => (
             {[
               {
                 title: "시각적 요소 분석의 부재",
-                desc: "고효율 광고 소재들이 공통적으로 가진 시각적 특징까지는 수치화하여 분석하지 못했습니다. 쥬얼리 산업 특성상 이미지가 구매 결정에 큰 영향을 미치는 만큼, 이미지 인식 등을 활용한 분석이 필요합니다.",
+                desc: "고효율 광고 소재들이 공통적으로 가진 시각적 특징까지는 수치화하지 못함. 쥬얼리 산업 특성상 이미지가 구매 결정에 큰 영향을 미치는 만큼, 이미지 인식 등을 활용한 분석 필요.",
                 next: "Computer Vision으로 광고 소재 시각 특성 분석",
               },
               {
                 title: "성과 시뮬레이션의 변수 단순화",
-                desc: "ROAS 23% 상승 전망 시, 경쟁사 프로모션이나 시장 트렌드 변화 같은 외부 변수를 배제한 채 내부 광고 효율 지표 위주로 산출했습니다.",
+                desc: "ROAS 23% 상승 전망 시, 경쟁사 프로모션이나 시장 트렌드 변화 같은 외부 변수를 배제한 채 내부 광고 효율 지표 위주로 산출.",
                 next: "시장 외부 변수 포함 보수적 시나리오 제시 필요",
               },
               {
                 title: "단기 구매자 과도기 추가 검증 필요",
-                desc: "Top 5 판매량과의 상관관계가 '25.03 이후 소멸(-0.26)된 현상은 흥미롭지만, 원인 분석이 충분하지 않았습니다. 트렌드 변화인지 데이터 특이점인지 검증이 필요합니다.",
+                desc: "Top 5 판매량과의 상관관계가 '25.03 이후 소멸(-0.26)된 현상은 흥미롭지만, 원인 분석이 충분하지 않음. 트렌드 변화인지 데이터 특이점인지 검증 필요.",
                 next: "기간 확장 데이터로 상관 소멸 원인 재분석",
               },
             ].map(({ title, desc, next }) => (
@@ -1187,19 +1160,16 @@ const Footer = () => (
         <div style={{ fontSize: 13, color: C.muted }}>쥬얼리 브랜드 R사 — 타겟 리포지셔닝 및 광고 예산 최적화</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
-        {["태블로 대시보드", "GitHub ↗", "발표 PPT", "← 이전 프로젝트"].map(t => (
-          <button key={t} style={{
-            padding: "7px 14px", borderRadius: 6, fontSize: 12,
-            background: t === "← 이전 프로젝트" ? C.accent : "transparent",
-            color: t === "← 이전 프로젝트" ? "#fff" : C.muted,
-            border: t === "← 이전 프로젝트" ? "none" : `1px solid ${C.border}`,
-            cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-            transition: "all 0.15s",
-          }}
-            onMouseEnter={e => { if (t !== "← 이전 프로젝트") { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; } }}
-            onMouseLeave={e => { if (t !== "← 이전 프로젝트") { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; } }}
-          >{t}</button>
-        ))}
+        <a href="./portfolio_case_kleague.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: C.accent, color: "#fff",
+          border: `1px solid ${C.accent}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "opacity 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+        >다음 프로젝트 →</a>
       </div>
     </div>
   </footer>

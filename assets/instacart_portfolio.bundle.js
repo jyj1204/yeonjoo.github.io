@@ -42,7 +42,8 @@ Error generating stack: `+n.message+`
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: ${A.bg}; color: ${A.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; }
+    body { background: ${A.bg}; color: ${A.text}; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; word-break: keep-all; overflow-wrap: break-word; }
+    p, div, span, a, button { word-break: keep-all; }
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: ${A.bg}; }
     ::-webkit-scrollbar-thumb { background: ${A.borderDark}; border-radius: 3px; }
