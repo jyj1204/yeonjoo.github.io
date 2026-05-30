@@ -199,13 +199,17 @@ const sectionTabs = [
 ];
 
 const SectionTabs = () => (
-  <div style={{
-    position: "sticky", top: 56, zIndex: 90,
-    background: C.bg, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+  <div className="case-section-tabs" style={{
+    position: "sticky", top: 56, zIndex: 120,
+    background: "rgba(242, 243, 246, 0.96)",
+    borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`,
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    boxShadow: "0 8px 18px rgba(15, 23, 42, 0.04)",
   }}>
     <div style={{
       maxWidth: 1100, margin: "0 auto", padding: "0 40px",
-      display: "flex", gap: 24, overflowX: "auto",
+      display: "flex", gap: 24, overflowX: "auto", scrollbarWidth: "none",
     }}>
       {sectionTabs.map(({ label, href }) => (
         <a key={label} href={href} style={{
