@@ -1056,20 +1056,16 @@ const Footer = () => (
         <div style={{ fontSize: 13, color: C.muted }}>Instacart 구매 로그 기반 개인화 마케팅 전략</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
-        {["다음 프로젝트 →"].map(t => (
-          <button key={t} style={{
-            padding: "7px 14px", borderRadius: 6, fontSize: 12,
-            background: t === "다음 프로젝트 →" ? C.accent : "transparent",
-            color: t === "다음 프로젝트 →" ? "#fff" : C.muted,
-            border: t === "다음 프로젝트 →" ? "none" : `1px solid ${C.border}`,
-            cursor: "pointer",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            transition: "all 0.15s",
-          }}
-            onMouseEnter={e => { if (t !== "다음 프로젝트 →") { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; } }}
-            onMouseLeave={e => { if (t !== "다음 프로젝트 →") { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; } }}
-          >{t}</button>
-        ))}
+        <a href="./portfolio_case_jewelry.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: C.accent, color: "#fff",
+          border: `1px solid ${C.accent}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "opacity 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
+        >다음 프로젝트 →</a>
       </div>
     </div>
   </footer>
