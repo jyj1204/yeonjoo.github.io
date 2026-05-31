@@ -79,13 +79,13 @@ section{border-bottom:1px solid var(--border);}
 .kpi-sub{font-size:.72rem;color:var(--faint);}
 
 /* PROCESS FLOW */
-.process-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding-bottom:8px;margin-bottom:36px;scrollbar-width:none;}
+.process-flow{display:grid;grid-template-columns:minmax(132px,1fr) 32px minmax(132px,1fr) 32px minmax(132px,1fr) 32px minmax(132px,1fr) 32px minmax(132px,1fr);align-items:stretch;gap:10px;overflow-x:auto;padding-bottom:8px;margin-bottom:36px;scrollbar-width:none;}
 .process-flow::-webkit-scrollbar{display:none;}
-.process-step{background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;border-top:3px solid;padding:16px 18px;text-align:center;min-width:130px;flex-shrink:0;}
+.process-step{background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;border-top:3px solid;padding:16px 18px;text-align:center;min-width:132px;min-height:116px;height:100%;display:flex;flex-direction:column;justify-content:center;}
 .ps-num{font-family:"IBM Plex Mono","SF Mono","Fira Code",monospace;font-size:.68rem;color:var(--faint);margin-bottom:6px;letter-spacing:.1em;}
 .ps-title{font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.3;}
 .ps-desc{font-size:.72rem;color:var(--muted);white-space:pre-line;line-height:1.5;}
-.process-arrow{display:flex;align-items:center;padding:0 8px;}
+.process-arrow{display:flex;align-items:center;justify-content:center;padding:0;}
 .pa-line{width:20px;height:1px;background:var(--border);}
 .pa-head{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:6px solid var(--border-dark);}
 
@@ -185,10 +185,12 @@ section{border-bottom:1px solid var(--border);}
 .notice{border-radius:8px;padding:12px 16px;border:1px solid;margin-bottom:16px;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
-footer{padding:40px 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.footer-left{font-size:.82rem;color:var(--muted);}
+footer{padding:40px 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:24px;}
+.footer-left{display:flex;flex-direction:column;gap:6px;}
+.footer-title{font-size:.9rem;color:var(--text);font-weight:600;}
+.footer-sub{font-size:.82rem;color:var(--muted);}
 .footer-links{display:flex;gap:8px;}
-.footer-btn{padding:6px 14px;border-radius:6px;font-size:.78rem;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:inherit;transition:all .15s;}
+.footer-btn{padding:9px 18px;border-radius:6px;font-size:.82rem;font-weight:600;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;}
 .footer-btn:hover{border-color:var(--border-dark);color:var(--text);}
 .footer-btn.primary{background:var(--blue);color:#fff;border:none;}
 
@@ -211,26 +213,24 @@ tr:hover td{background:var(--surface2);}
 <body>
 
 <nav>
-  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">← 전연주 포트폴리오</a>
-  <span class="nav-meta">AI 경진대회 · Project 05</span>
+  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">데이터 분석 포트폴리오</a>
+  <span class="nav-meta"></span>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-wrap">
     <div class="hero-tags fade-in">
-      <span class="tag tag-teal">TOP 7%</span>
-      <span class="tag tag-muted">AI 경진대회</span>
-      <span class="tag tag-muted">CatBoost · LGBM · XGBoost</span>
+      <span class="tag tag-blue">좌표 예측</span>
+      <span class="tag tag-muted">CatBoost</span>
+      <span class="tag tag-muted">LightGBM</span>
+      <span class="tag tag-muted">XGBoost</span>
       <span class="tag tag-muted">PyTorch CNN</span>
       <span class="tag tag-muted">Pseudo Labeling</span>
+      <span class="tag tag-green">경진대회 상위 7%</span>
     </div>
     <h1 class="hero-title fade-in">K리그 경기 내<br><span>최종 패스 좌표</span> 예측 AI</h1>
-    <p class="hero-desc fade-in">K리그 실제 경기 데이터로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측. 4개 모델 앙상블과 Pseudo Labeling 전략으로 <strong>Dacon 경진대회 상위 7%</strong>를 달성했습니다.</p>
-    <div class="hero-btns fade-in">
-      <button class="btn btn-primary">Dacon 대회 페이지 ↗</button>
-      <button class="btn btn-outline">GitHub ↗</button>
-    </div>
+    <p class="hero-desc fade-in">K리그 실제 경기 데이터로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측. 4개 모델 앙상블과 Pseudo Labeling 전략으로 <strong>Dacon 경진대회 상위 7%</strong> 달성.</p>
     <div class="kpi-grid fade-in">
       <div class="kpi-card"><div class="kpi-label">최종 순위</div><div class="kpi-val" style="color:var(--teal)">TOP 7%</div><div class="kpi-sub">Dacon K리그-서울시립대 경진대회</div></div>
       <div class="kpi-card"><div class="kpi-label">앙상블 OOF MAE</div><div class="kpi-val">13.05m</div><div class="kpi-sub">단일 최고 13.15m → 0.10m 개선</div></div>
@@ -257,7 +257,7 @@ tr:hover td{background:var(--surface2);}
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">프로젝트 개요</span></div>
     <h2 class="sec-title">무엇을, 어떻게 접근했는가</h2>
-    <p class="sec-desc">단순 좌표 예측이 아닌, 경기 흐름의 시계열 패턴과 전술적 맥락을 피처로 인코딩하는 것이 핵심 과제였습니다.</p>
+    <p class="sec-desc">단순 좌표 예측이 아닌, 경기 흐름의 시계열 패턴과 전술적 맥락을 피처로 인코딩하는 것이 핵심 과제.</p>
 
     <div class="process-flow fade-in">
       <div class="process-step" style="border-top-color:var(--muted)"><div class="ps-num">01</div><div class="ps-title">데이터 정렬</div><div class="ps-desc">game_id → episode → time</div></div>
@@ -303,7 +303,7 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">데이터 전처리</span></div>
     <h2 class="sec-title">분석 인프라 구축</h2>
-    <p class="sec-desc">K리그 실제 경기 이벤트 로그를 시계열 구조로 정렬하고, 모델이 학습하기 좋은 형태로 전처리했습니다.</p>
+    <p class="sec-desc">K리그 실제 경기 이벤트 로그를 시계열 구조로 정렬하고, 모델이 학습하기 좋은 형태로 전처리.</p>
 
     <div class="data-stats fade-in">
       <div class="stat-card"><div class="kpi-label">학습 에피소드</div><div class="stat-num" style="color:var(--teal)">15,428<span class="stat-unit">개</span></div></div>
@@ -322,7 +322,7 @@ GroupKFold + Multi-Seed</div></div>
         <span class="tag tag-teal" id="tab-tag">STEP 01</span>
         <div style="font-size:1.05rem;font-weight:600;color:var(--text);margin:14px 0 10px" id="tab-title">시계열 정렬</div>
         <div style="font-size:.875rem;color:var(--muted);line-height:1.8;white-space:pre-line" id="tab-desc">game_id → episode → time 순으로 정렬하여 경기 흐름을 올바르게 반영.
-같은 에피소드 내 이벤트 순서가 피처 생성의 기반이 됩니다.</div>
+같은 에피소드 내 이벤트 순서가 피처 생성의 기반.</div>
       </div>
     </div>
   </div></div>
@@ -333,7 +333,7 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">EDA</span></div>
     <h2 class="sec-title">데이터가 보여준 패턴</h2>
-    <p class="sec-desc">패스 도착지 분포와 모델 오차 분석에서 전략 방향을 결정하는 핵심 인사이트를 발견했습니다.</p>
+    <p class="sec-desc">패스 도착지 분포와 모델 오차 분석에서 전략 방향을 결정하는 핵심 인사이트 발견.</p>
 
     <div class="eda-grid fade-in">
       <div class="eda-card">
@@ -371,7 +371,7 @@ GroupKFold + Multi-Seed</div></div>
 
     <div class="notice fade-in" style="background:var(--amber-bg);border-color:var(--amber-dim)">
       <div style="font-size:.78rem;font-weight:600;color:var(--amber);margin-bottom:6px">★ 중앙 회귀 현상 발견</div>
-      <div style="font-size:.875rem;color:var(--text);line-height:1.7">y좌표가 극단적으로 낮은(5 미만) 케이스에서 실제 1.68m → 예측 11.56m. 약 <strong>10m 과대추정</strong>. 모델이 극단값을 평균 쪽으로 끌어당기는 패턴이 확인됐습니다.</div>
+      <div style="font-size:.875rem;color:var(--text);line-height:1.7">y좌표가 극단적으로 낮은(5 미만) 케이스에서 실제 1.68m → 예측 11.56m. 약 <strong>10m 과대추정</strong>. 모델이 극단값을 평균 쪽으로 끌어당기는 패턴 확인.</div>
     </div>
 
     <div class="two-col fade-in">
@@ -400,11 +400,11 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">피처 엔지니어링</span></div>
     <h2 class="sec-title">어떤 피처가 핵심이었는가</h2>
-    <p class="sec-desc">도메인 지식(전술·포지션·흐름)을 수치로 표현하는 것이 목표였습니다. 선수 포지션 정보가 없어도 통계로 근사할 수 있었습니다.</p>
+    <p class="sec-desc">도메인 지식(전술·포지션·흐름)을 수치로 표현하는 것이 목표. 선수 포지션 정보가 없어도 통계로 근사 가능.</p>
 
     <div class="idea-box fade-in">
       <div class="idea-label">★ 핵심 설계 — Residual 예측</div>
-      <div class="idea-body"><strong>end_x 직접 예측</strong> → 0~105m 전체 커버 필요, 분산 큼<br><strong>Residual(end_x − start_x) 예측</strong> → 분포가 0 근방에 집중, 학습 안정성 향상. EDA에서 발견한 중앙 회귀 현상의 해결책이기도 합니다.</div>
+      <div class="idea-body"><strong>end_x 직접 예측</strong> → 0~105m 전체 커버 필요, 분산 큼<br><strong>Residual(end_x − start_x) 예측</strong> → 분포가 0 근방에 집중, 학습 안정성 향상. EDA에서 발견한 중앙 회귀 현상의 해결책.</div>
     </div>
 
     <div class="feat-grid fade-in">
@@ -453,7 +453,7 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">모델링</span></div>
     <h2 class="sec-title">4개 모델 학습 전략</h2>
-    <p class="sec-desc">각 모델의 귀납 편향이 다를수록 앙상블 효과가 커집니다. 트리 계열 3개 + 딥러닝 1개로 다양성을 확보했습니다.</p>
+    <p class="sec-desc">각 모델의 귀납 편향이 다를수록 앙상블 효과 증가. 트리 계열 3개 + 딥러닝 1개로 다양성 확보.</p>
 
     <div class="perf-grid fade-in">
       <div class="perf-card" style="border-top-color:var(--red)">
@@ -505,13 +505,13 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">앙상블 전략</span></div>
     <h2 class="sec-title">성능을 끌어올린 3가지 전략</h2>
-    <p class="sec-desc">단순히 모델을 합치는 것이 아닌, 각 전략이 왜 필요한지 명확한 이유가 있었습니다.</p>
+    <p class="sec-desc">단순히 모델을 합치는 것이 아닌, 각 전략이 왜 필요한지 명확한 이유 존재.</p>
 
     <div class="ens-grid fade-in">
       <div class="ens-card">
         <div style="font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:4px">Multi-Seed 앙상블</div>
         <div style="font-size:.78rem;color:var(--muted);margin-bottom:14px">Seeds [42, 2024, 777] 3개로 학습 후 평균</div>
-        <div style="padding:12px 14px;background:var(--teal-bg);border:1px solid var(--teal-dim);border-radius:6px;font-size:.815rem;color:var(--text);line-height:1.7">트리 기반 모델의 <strong>랜덤성에서 오는 분산</strong>을 줄이는 가장 쉽고 효과적인 방법. 같은 하이퍼파라미터로 시드만 바꿔도 OOF MAE가 개선됩니다.</div>
+        <div style="padding:12px 14px;background:var(--teal-bg);border:1px solid var(--teal-dim);border-radius:6px;font-size:.815rem;color:var(--text);line-height:1.7">트리 기반 모델의 <strong>랜덤성에서 오는 분산</strong>을 줄이는 가장 쉽고 효과적인 방법. 같은 하이퍼파라미터로 시드만 바꿔도 OOF MAE 개선.</div>
       </div>
       <div class="ens-card">
         <div style="font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:4px">Pseudo Labeling</div>
@@ -545,17 +545,6 @@ GroupKFold + Multi-Seed</div></div>
         </div>
       </div>
     </div>
-
-    <!-- RESULT -->
-    <div style="margin-top:32px">
-      <div style="background:var(--teal);border-radius:8px;padding:28px 32px;color:#fff;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-        <div>
-          <div style="font-size:.78rem;opacity:.7;margin-bottom:6px;letter-spacing:.08em;text-transform:uppercase">최종 결과</div>
-          <div style="font-size:3rem;font-weight:700;letter-spacing:-.04em;line-height:1">TOP 7%</div>
-        </div>
-        <div style="font-size:.875rem;opacity:.8;line-height:1.8;text-align:right">Dacon K리그-서울시립대<br>공개 AI 경진대회<br>앙상블 MAE 13.05m</div>
-      </div>
-    </div>
   </div></div>
 </section>
 
@@ -564,22 +553,21 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">회고</span></div>
     <h2 class="sec-title">솔직한 평가</h2>
-    <p class="sec-desc" style="margin-bottom:28px">잘 된 것만 보여주는 포트폴리오는 신뢰하기 어렵습니다.</p>
     <div class="retro-grid fade-in">
       <div>
         <div class="retro-col-title" style="color:var(--green)"><div class="retro-dot" style="background:var(--green)"></div>잘 된 점</div>
         <div class="retro-cards">
-          <div class="retro-card"><div class="retro-title">검증 설계가 전부다</div><div class="retro-desc">GroupKFold 없이는 OOF가 낙관적 → 앙상블 가중치 최적화 전체가 틀어진다는 것을 직접 경험했습니다.</div></div>
-          <div class="retro-card"><div class="retro-title">모델 수보다 다양성</div><div class="retro-desc">4모델 전체 = LGBM+CatBoost 2모델. 모델 수를 늘리는 것보다 각 모델의 귀납 편향 다양성이 앙상블 효과를 결정합니다.</div></div>
-          <div class="retro-card"><div class="retro-title">도메인 지식이 피처를 만든다</div><div class="retro-desc">player_spread, player_mean_x — 선수 포지션 데이터가 없어도 통계로 근사 가능. 도메인 이해가 피처 품질을 결정했습니다.</div></div>
+          <div class="retro-card"><div class="retro-title">검증 설계가 전부다</div><div class="retro-desc">GroupKFold 없이는 OOF가 낙관적 → 앙상블 가중치 최적화 전체가 틀어진다는 것을 직접 경험.</div></div>
+          <div class="retro-card"><div class="retro-title">모델 수보다 다양성</div><div class="retro-desc">4모델 전체 = LGBM+CatBoost 2모델. 모델 수를 늘리는 것보다 각 모델의 귀납 편향 다양성이 앙상블 효과를 결정.</div></div>
+          <div class="retro-card"><div class="retro-title">도메인 지식이 피처를 만든다</div><div class="retro-desc">player_spread, player_mean_x — 선수 포지션 데이터가 없어도 통계로 근사 가능. 도메인 이해가 피처 품질을 결정.</div></div>
         </div>
       </div>
       <div>
         <div class="retro-col-title" style="color:var(--amber)"><div class="retro-dot" style="background:var(--amber)"></div>보완할 점</div>
         <div class="retro-cards">
-          <div class="retro-card"><div class="retro-title">중앙 회귀 현상 미해결</div><div class="retro-desc">y&lt;5 케이스의 10m 과대추정을 발견했지만 별도 처리를 하지 못했습니다.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">극단값 케이스 별도 모델 또는 후처리 로직 추가</span></div></div>
-          <div class="retro-card"><div class="retro-title">CNN 성능이 트리에 못 미침</div><div class="retro-desc">ResidualBlock + SE + AttentionPooling을 적용했지만 MAE 14.45m으로 트리 계열에 뒤졌습니다.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">Transformer 기반 시계열 모델(TSMixer 등) 시도</span></div></div>
-          <div class="retro-card"><div class="retro-title">Pseudo Label 노이즈</div><div class="retro-desc">CatBoost 1차 예측을 pseudo label로 사용해 초기 오차가 누적될 가능성이 있습니다.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">신뢰도 높은 예측(MAE 낮은 케이스)만 선별 사용</span></div></div>
+          <div class="retro-card"><div class="retro-title">중앙 회귀 현상 미해결</div><div class="retro-desc">y&lt;5 케이스의 10m 과대추정을 발견했지만 별도 처리 미완.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">극단값 케이스 별도 모델 또는 후처리 로직 추가</span></div></div>
+          <div class="retro-card"><div class="retro-title">CNN 성능이 트리에 못 미침</div><div class="retro-desc">ResidualBlock + SE + AttentionPooling을 적용했지만 MAE 14.45m으로 트리 계열에 뒤짐.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">Transformer 기반 시계열 모델(TSMixer 등) 시도</span></div></div>
+          <div class="retro-card"><div class="retro-title">Pseudo Label 노이즈</div><div class="retro-desc">CatBoost 1차 예측을 pseudo label로 사용해 초기 오차가 누적될 가능성 존재.</div><div class="retro-next"><span class="retro-next-label">→ 개선</span><span class="retro-next-text">신뢰도 높은 예측(MAE 낮은 케이스)만 선별 사용</span></div></div>
         </div>
       </div>
     </div>
@@ -587,20 +575,22 @@ GroupKFold + Multi-Seed</div></div>
 </section>
 
 <footer>
-  <div class="footer-left">K리그 패스 좌표 예측 AI · 전연주</div>
+  <div class="footer-left">
+    <div class="footer-title">데이터 분석 포트폴리오</div>
+    <div class="footer-sub">K리그 경기 내 최종 패스 좌표 예측</div>
+  </div>
   <div class="footer-links">
-    <button class="footer-btn primary">Dacon 대회 페이지 ↗</button>
-    <button class="footer-btn">GitHub ↗</button>
+    <a class="footer-btn primary" href="./portfolio_case_detective.html">다음 프로젝트 →</a>
   </div>
 </footer>
 
 <script>
 // 데이터 탭
 const tabData = [
-  {tag:'tag-teal',label:'STEP 01',title:'시계열 정렬',desc:'game_id → episode → time 순으로 정렬하여 경기 흐름을 올바르게 반영.\n같은 에피소드 내 이벤트 순서가 피처 생성의 기반이 됩니다.'},
+  {tag:'tag-teal',label:'STEP 01',title:'시계열 정렬',desc:'game_id → episode → time 순으로 정렬하여 경기 흐름을 올바르게 반영.\n같은 에피소드 내 이벤트 순서가 피처 생성의 기반.'},
   {tag:'tag-blue',label:'STEP 02',title:'결측치 처리',desc:'그룹 내 첫 이벤트 위치 차이(Gap) 결측 → 0으로 대체.\nLag 피처에서 에피소드 경계 이전 값 참조 방지.'},
-  {tag:'tag-amber',label:'STEP 03',title:'Residual 변환',desc:'예측 대상을 end_x → (end_x - start_x)로 변환.\n분포가 0 근방으로 집중되어 모델 학습이 안정화됩니다.'},
-  {tag:'tag-green',label:'STEP 04',title:'GroupKFold 분리',desc:'game_id 기준 5-Fold 분리. 같은 경기의 이벤트가\n학습·검증에 동시 포함되는 데이터 누출을 방지합니다.'},
+  {tag:'tag-amber',label:'STEP 03',title:'Residual 변환',desc:'예측 대상을 end_x → (end_x - start_x)로 변환.\n분포가 0 근방으로 집중되어 모델 학습 안정화.'},
+  {tag:'tag-green',label:'STEP 04',title:'GroupKFold 분리',desc:'game_id 기준 5-Fold 분리. 같은 경기의 이벤트가\n학습·검증에 동시 포함되는 데이터 누출 방지.'},
 ];
 function switchTab(i, btn) {
   document.querySelectorAll('#data-tabs .tab-btn').forEach((b,j) => {
