@@ -299,16 +299,15 @@ const Hero = () => (
         fontSize: 17, color: C.muted, lineHeight: 1.7,
         marginBottom: 44, maxWidth: 600,
       }}>
-        매출 <strong style={{ color: C.text }}>28% 하락, ROAS 17% 급감</strong>. 광고 예산의 30%가 잘못된 타겟에 낭비 중.
-        리뷰 데이터 형태소 분석으로 실제 구매자 페르소나를 재정의하고,
-        추가 예산 없이 ROAS 23% 반등 시뮬레이션 도출.
+        매출 <strong style={{ color: C.text }}>28% 하락, ROAS 17% 급감</strong>. 광고 예산의 30%가 잘못된 타겟에 낭비 중.<br />
+        리뷰 데이터 형태소 분석으로 실제 구매자 페르소나를 재정의하고, 추가 예산 없이 ROAS 23% 반등 시뮬레이션 도출.
       </p>
 
       <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
         {[
           { label: "매출 하락폭 (YoY)", val: "–28%", sub: "2023 → 2024 전년 대비", color: C.red },
           { label: "낭비 예산 규모", val: "~497만원/월", sub: "전체 예산의 30% 미스매칭", color: C.amber },
-          { label: "CTR 성과 격차", val: "5.2×", sub: "저효율 대비 고효율 구간", color: C.accent },
+          { label: "CTR 성과 격차", val: "5.2배", sub: "저효율 대비 고효율 구간", color: C.accent },
           { label: "ROAS 반등 전망", val: "+23%", sub: "추가 예산 없이 재배치만으로", color: C.green },
         ].map(({ label, val, sub, color }) => (
           <Card key={label} style={{ padding: "20px 24px" }}>
@@ -522,9 +521,8 @@ const InefficiencySection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         예산의 30%가 낭비되고 있었다
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-        오픈 타겟 방식의 구조적 문제 — 연령·성별을 특정하지 않고 집행한 광고가
-        실제로는 <strong style={{ color: C.text }}>미스매칭 구간에 집중 노출</strong>.
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 1000 }}>
+        오픈 타겟 방식의 구조적 문제 — 연령·성별을 특정하지 않고 집행한 광고가 실제로는 <strong style={{ color: C.text }}>미스매칭 구간에 집중 노출</strong>.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 20, marginBottom: 20 }}>
@@ -568,7 +566,7 @@ const InefficiencySection = () => (
             },
             {
               label: "성과 격차",
-              val: "CTR 5.2×",
+              val: "CTR 5.2배",
               sub: "저효율 구간 대비\n고효율 구간 증대 확인",
               color: C.accent, bg: C.accentBg, dim: C.accentDim,
             },
@@ -727,7 +725,7 @@ const PersonaSection = () => {
                     <div style={{ fontSize: 11, color: C.muted }}>남편, 아내</div>
                     <div style={{ fontSize: 10, color: C.faint }}>결혼기념일</div>
                   </div>
-                  <Tag color={C.accent}>2× 높음</Tag>
+                  <Tag color={C.accent}>2배 높음</Tag>
                 </div>
 
                 <div style={{ fontSize: 20, color: C.borderDark, fontWeight: 300 }}>&gt;</div>
@@ -845,9 +843,8 @@ const SegmentSection = () => {
         <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
           기존 등급제를 넘어선 새로운 분류
         </h2>
-        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-          비회원 74%, 실버 이상 1.5% 미만. 등급으로는 아무것도 보이지 않음.
-          재주문 기간이라는 새로운 기준으로 세분화.
+        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 1000 }}>
+          비회원 74%, 실버 이상 1.5% 미만. 등급으로는 아무것도 보이지 않음. 재주문 기간이라는 새로운 기준으로 세분화.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
@@ -1075,9 +1072,6 @@ const RetroSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         솔직한 평가
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
-      </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         {/* 좋았던 점 */}
@@ -1160,6 +1154,16 @@ const Footer = () => (
         <div style={{ fontSize: 13, color: C.muted }}>쥬얼리 브랜드 R사 — 타겟 리포지셔닝 및 광고 예산 최적화</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
+        <a href="./portfolio_case_instacart.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: "transparent", color: C.muted,
+          border: `1px solid ${C.border}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "all 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+        >← 이전 프로젝트</a>
         <a href="./portfolio_case_kleague.html" style={{
           padding: "8px 16px", borderRadius: 7, fontSize: 12,
           background: C.accent, color: "#fff",

@@ -242,9 +242,9 @@ const Hero = () => {
           fontSize: 17, color: C.muted, lineHeight: 1.7,
           marginBottom: 48, maxWidth: 580,
         }}>
-          HTML/CSS/JavaScript만으로 구현한 인터랙티브 웹 추리게임.
-          GPT API 기반 AI 용의자와 실제 대화하며 단서를 수집하고 최종 추리를 완성하는 몰입형 탐정 경험.
-          <strong style={{ color: C.text, fontWeight: 600 }}> 전 과정을 AI 협업(Vibe Coding) 방식으로 진행한 실험 프로젝트.</strong>
+          HTML/CSS/JavaScript만으로 구현한 인터랙티브 웹 추리게임.<br />
+          GPT API 기반 AI 용의자와 실제 대화하며 단서를 수집하고 최종 추리를 완성하는 몰입형 탐정 경험.<br />
+          <strong style={{ color: C.text, fontWeight: 600 }}>전 과정을 AI 협업(Vibe Coding) 방식으로 진행한 실험 프로젝트.</strong>
         </p>
 
         {/* KPI 4개 */}
@@ -764,10 +764,6 @@ const TechSection = () => {
         <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
           어떻게 구현했는가
         </h2>
-        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          프레임워크 없이 Vanilla JS만으로 구현한 기술적 결정들. 각 선택에는 이유 존재.
-        </p>
-
         {/* 기술 스택 */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 32 }}>
           {[
@@ -937,10 +933,6 @@ const LimitsSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         솔직한 평가
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
-      </p>
-
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
         {[
           {

@@ -64,8 +64,8 @@ section{border-bottom:1px solid var(--border);}
 .tag-green{background:var(--green-bg);color:var(--green);border-color:var(--green-dim);}
 .tag-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-dim);}
 .tag-amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-dim);}
-.hero-title{font-size:clamp(2.1rem,3.6vw,2.78rem);font-weight:700;line-height:1.18;letter-spacing:-.018em;margin-bottom:16px;}
-.hero-title span{color:var(--teal);}
+.hero-title{font-size:clamp(2.35rem,4.4vw,3rem);font-weight:500;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px;}
+.hero-title span{color:var(--blue);}
 .hero-desc{font-size:.96rem;color:var(--sub);line-height:1.82;max-width:650px;margin-bottom:32px;}
 .btn{padding:9px 18px;border-radius:6px;font-size:.82rem;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;}
 .btn-primary{background:var(--blue);color:#fff;border:none;}
@@ -196,6 +196,7 @@ footer{padding:40px 6vw;border-top:1px solid var(--border);display:flex;justify-
 
 .fade-in{opacity:0;transform:translateY(-14px);transition:opacity .56s ease,transform .56s ease;transition-delay:var(--reveal-delay,0ms);}
 .fade-in.visible{opacity:1;transform:translateY(0);}
+section:not(.hero) .fade-in{opacity:1;transform:none;transition:none;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;}
 .card-p{padding:24px;}
 .rule{height:1px;background:var(--border);margin:20px 0;}
@@ -400,7 +401,7 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">피처 엔지니어링</span></div>
     <h2 class="sec-title">어떤 피처가 핵심이었는가</h2>
-    <p class="sec-desc">도메인 지식(전술·포지션·흐름)을 수치로 표현하는 것이 목표. 선수 포지션 정보가 없어도 통계로 근사 가능.</p>
+    <p class="sec-desc" style="max-width:1000px">도메인 지식(전술·포지션·흐름)을 수치로 표현하는 것이 목표. 선수 포지션 정보가 없어도 통계로 근사 가능.</p>
 
     <div class="idea-box fade-in">
       <div class="idea-label">★ 핵심 설계 — Residual 예측</div>
@@ -505,8 +506,6 @@ GroupKFold + Multi-Seed</div></div>
   <div class="wrap"><div class="sec">
     <div class="sec-label"><div class="sec-label-bar"></div><span class="sec-label-text">앙상블 전략</span></div>
     <h2 class="sec-title">성능을 끌어올린 3가지 전략</h2>
-    <p class="sec-desc">단순히 모델을 합치는 것이 아닌, 각 전략이 왜 필요한지 명확한 이유 존재.</p>
-
     <div class="ens-grid fade-in">
       <div class="ens-card">
         <div style="font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:4px">Multi-Seed 앙상블</div>
@@ -580,6 +579,7 @@ GroupKFold + Multi-Seed</div></div>
     <div class="footer-sub">K리그 경기 내 최종 패스 좌표 예측</div>
   </div>
   <div class="footer-links">
+    <a class="footer-btn" href="./portfolio_case_jewelry.html">← 이전 프로젝트</a>
     <a class="footer-btn primary" href="./portfolio_case_detective.html">다음 프로젝트 →</a>
   </div>
 </footer>
@@ -609,7 +609,7 @@ function switchTab(i, btn) {
 }
 
 // 클릭 진입 시 위에서 아래로 순차 등장
-const revealItems = Array.from(document.querySelectorAll('.fade-in'));
+const revealItems = Array.from(document.querySelectorAll('.hero .fade-in'));
 const setRevealDelay = (el, index) => {
   el.style.setProperty('--reveal-delay', `${Math.min(index * 90, 540)}ms`);
 };

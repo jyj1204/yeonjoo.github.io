@@ -297,7 +297,7 @@ const Hero = () => (
         fontSize: 17, color: C.muted, lineHeight: 1.7,
         marginBottom: 28, maxWidth: 600,
       }}>
-        300만 건 이상의 실제 주문 로그에서 <strong style={{ color: C.text }}>고객 생애주기 신호</strong>를 포착하고,
+        300만 건 이상의 실제 주문 로그에서 <strong style={{ color: C.text }}>고객 생애주기 신호</strong>를 포착하고,<br />
         누구에게 · 언제 · 무엇을 추천할지 데이터 기반 마케팅 전략으로 설계.
       </p>
 
@@ -306,7 +306,7 @@ const Hero = () => (
           { label: "총 주문 수", val: "300만+", sub: "Kaggle 공개 prior 주문 기록", color: C.accent },
           { label: "고객 수", val: "20만+", sub: "생애주기 3단계로 세분화", color: C.text },
           { label: "분석 상품 수", val: "4만+", sub: "부서 · 카테고리 통합", color: C.text },
-          { label: "팀 구성", val: "4명", sub: "시그넘팀 — 데이터 분석가", color: C.green },
+          { label: "팀 구성", val: "4명", sub: "데이터 분석가", color: C.green },
         ].map(({ label, val, sub, color }) => (
           <Card key={label} style={{ padding: "20px 24px" }}>
             <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 500 }}>{label}</div>
@@ -327,8 +327,8 @@ const OverviewSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         왜 이 분석인가
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 600 }}>
-        이커머스 시장의 고객 유지 경쟁이 심화될수록, 방대한 로그 속 유의미한 신호를 포착하는 능력이 핵심.
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 760 }}>
+        이커머스 시장의 고객 유지 경쟁이 심화될수록, 방대한 로그 속 유의미한 신호를 포착하는 능력이 핵심.<br />
         단순 판매량이 아닌 <strong style={{ color: C.text }}>고객 행동 변곡점</strong>에서 전략 도출.
       </p>
 
@@ -561,9 +561,8 @@ const WhoSection = () => {
         <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
           고객 생애주기 기반 등급 정의
         </h2>
-        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-          재주문 횟수 기반 통계적 변곡점(10회)에서 고객 단계가 나뉨.
-          단순 주문 횟수가 아닌 <strong style={{ color: C.text }}>재주문 확률 안정성</strong>이 세분화 기준.
+      <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 1000 }}>
+          재주문 횟수 기반 통계적 변곡점(10회)에서 고객 단계가 나뉨. 단순 주문 횟수가 아닌 <strong style={{ color: C.text }}>재주문 확률 안정성</strong>이 세분화 기준.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
@@ -993,9 +992,6 @@ const RetroSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         솔직한 평가
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
-      </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
         {/* 좋았던 점 */}
@@ -1057,6 +1053,16 @@ const Footer = () => (
         <div style={{ fontSize: 13, color: C.muted }}>Instacart 구매 로그 기반 개인화 마케팅 전략</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
+        <a href="./portfolio_case_warehouse.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: "transparent", color: C.muted,
+          border: `1px solid ${C.border}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "all 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+        >← 이전 프로젝트</a>
         <a href="./portfolio_case_jewelry.html" style={{
           padding: "8px 16px", borderRadius: 7, fontSize: 12,
           background: C.accent, color: "#fff",

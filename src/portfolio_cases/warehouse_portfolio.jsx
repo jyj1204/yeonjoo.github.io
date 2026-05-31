@@ -288,18 +288,17 @@ const Hero = () => (
 
       <p className="fu fu3" style={{
         fontSize: 17, color: C.muted, lineHeight: 1.7,
-        marginBottom: 48, maxWidth: 640,
+        marginBottom: 48, maxWidth: 1060,
       }}>
-        250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고,
-        중요하지 않다고 본 변수가 핵심.
-        <strong style={{ color: C.text, fontWeight: 600 }}> 분석 과정에서 결론이 세 번 바뀜. 그 인사이트로 경진대회 상위 15% 달성.</strong>
+        250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고, 중요하지 않다고 본 변수가 핵심.<br />
+        <strong style={{ color: C.text, fontWeight: 600 }}>분석 과정에서 결론이 세 번 바뀜. 그 인사이트로 경진대회 상위 15% 달성.</strong>
       </p>
 
       {/* KPI 4개 */}
       <div className="fu fu4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
         {[
           { label: "분석 창고 수", val: "250개", sub: "4개 레이아웃 유형", color: C.text },
-          { label: "지연 최대 차이", val: "6.6×", sub: "idle 최저 vs 최고", color: C.accent },
+          { label: "지연 격차", val: "30.8분", sub: "idle 최저 36.3분 vs 최고 5.5분", color: C.accent },
           { label: "결론 수정 횟수", val: "3회", sub: "가설 → 검증 → 수정", color: C.text },
           { label: "경진대회 성적", val: "상위 15%", sub: "예측 모델 MAE 최적화", color: C.green },
         ].map(({ label, val, sub, color }) => (
@@ -336,7 +335,6 @@ const StoryFlow = () => {
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 560 }}>
           각 단계는 이전 결론을 의심하고 검증하는 방향으로 연결.
-          분석이 깊어질수록 결론은 더 정확해짐.
         </p>
 
         <div style={{ position: "relative" }}>
@@ -397,7 +395,7 @@ const StoryFlow = () => {
 /* ─── FINDINGS ───────────────────────────────── */
 const Findings = () => {
   const items = [
-    { icon: "⚡", title: "idle 비율이 1차 방어선", val: "6.6×", sub: "최저 36.3분 vs 최고 5.5분. 30% 아래로 떨어지면 즉각 고착. 배터리 소모→충전 대기→idle 감소 연쇄.", color: C.accent },
+    { icon: "⚡", title: "idle 비율이 1차 방어선", val: "30.8분", sub: "최저 36.3분 vs 최고 5.5분. 30% 아래로 떨어지면 즉각 고착. 배터리 소모→충전 대기→idle 감소 연쇄.", color: C.accent },
     { icon: "🔍", title: "숨은 병목 — pack_utilization", val: "r=0.105 → 1위", sub: "EDA 상관계수로는 '관계 없음'. 비선형 U자형: 저가동=처리 부족, 고가동=후처리 병목. 반례 분석과 수렴.", color: C.amber },
     { icon: "🧪", title: "PSM 인과 검증", val: "p=0.783", sub: "hub_spoke +3.69분(p=0.007) → 운영 조건 통제 후 -0.55분(p=0.783). 레이아웃 효과 소멸. 운영 개선이 우선.", color: C.green },
     { icon: "⏱", title: "위기는 누적된다", val: "6스냅샷 전", sub: "경보 규칙 실패 원인. 위기 6스냅샷 전부터 이미 신호가 쌓임. 단일 시점 탐지보다 누적 감지가 필요.", color: C.purple },
@@ -434,7 +432,7 @@ const SystemFlow = () => (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
       {/* 트리거 */}
       <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 500, color: C.muted }}>
-        주문 증가 <Mono color={C.faint} size={11}>(order_inflow 2.47×↑)</Mono>
+        주문 증가 <Mono color={C.faint} size={11}>(order_inflow 증가)</Mono>
       </div>
       <div style={{ display: "flex", gap: 80, alignItems: "flex-start", marginTop: 0 }}>
         {/* 경로 A */}
@@ -442,7 +440,7 @@ const SystemFlow = () => (
           <div style={{ width: 1, height: 20, background: C.border }} />
           <div style={{ fontSize: 11, color: C.red, fontWeight: 600, marginBottom: 4 }}>경로 A</div>
           <div style={{ background: C.redBg, border: `1px solid ${C.redDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 500, color: C.red, textAlign: "center" }}>
-            혼잡 증가<br /><Mono color={C.red} size={11}>blocked_path 15.8×↑</Mono>
+            혼잡 증가<br /><Mono color={C.red} size={11}>blocked_path 증가</Mono>
           </div>
           <div style={{ width: 1, height: 12, background: C.redDim }} />
           <div style={{ background: C.redBg, border: `1px solid ${C.redDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, color: C.red, textAlign: "center" }}>
@@ -455,11 +453,11 @@ const SystemFlow = () => (
           <div style={{ width: 1, height: 20, background: C.border }} />
           <div style={{ fontSize: 11, color: C.amber, fontWeight: 600, marginBottom: 4 }}>경로 B</div>
           <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, fontWeight: 500, color: C.amber, textAlign: "center" }}>
-            배터리 소모<br /><Mono color={C.amber} size={11}>저배터리 58×↑</Mono>
+            배터리 소모<br /><Mono color={C.amber} size={11}>저배터리 증가</Mono>
           </div>
           <div style={{ width: 1, height: 12, background: C.amberDim }} />
           <div style={{ background: C.amberBg, border: `1px solid ${C.amberDim}`, borderRadius: 8, padding: "10px 18px", fontSize: 12, color: C.amber, textAlign: "center" }}>
-            충전 대기 급증<br /><Mono color={C.amber} size={11}>charging_ratio 31×↑</Mono>
+            충전 대기 급증<br /><Mono color={C.amber} size={11}>charging_ratio 증가</Mono>
           </div>
           <div style={{ width: 1, height: 12, background: C.amberDim }} />
         </div>
@@ -477,7 +475,7 @@ const SystemFlow = () => (
         padding: "12px 32px", textAlign: "center",
       }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.accent }}>⚠ idle 비율 급감</div>
-        <div style={{ fontSize: 12, color: C.accent }}><Mono color={C.accent} size={11}>최저 36.3분 vs 최고 5.5분 (6.6배)</Mono></div>
+        <div style={{ fontSize: 12, color: C.accent }}><Mono color={C.accent} size={11}>최저 36.3분 vs 최고 5.5분 (30.8분 차이)</Mono></div>
       </div>
       <div style={{ width: 1, height: 12, background: C.border }} />
       {/* pack 병목 */}
@@ -514,7 +512,7 @@ const VizSection = () => {
       <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
         <div style={{ background: C.accentBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
           <div style={{ fontSize: 11, color: C.accent, fontWeight: 600, marginBottom: 2 }}>핵심 발견</div>
-          <div style={{ fontSize: 13, color: C.text }}>최저 <strong>36.3분</strong> vs 최고 <strong style={{ color: C.green }}>5.5분</strong> — 6.6배 차이. 30%가 임계점.</div>
+          <div style={{ fontSize: 13, color: C.text }}>최저 <strong>36.3분</strong> vs 최고 <strong style={{ color: C.green }}>5.5분</strong> — 30.8분 차이. 30%가 임계점.</div>
         </div>
         <div style={{ background: C.redBg, borderRadius: 8, padding: "10px 16px", flex: 1 }}>
           <div style={{ fontSize: 11, color: C.red, fontWeight: 600, marginBottom: 2 }}>실행 연결</div>
@@ -719,11 +717,6 @@ const MethodSection = () => {
         <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
           왜 이 방법을 선택했는가
         </h2>
-        <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          각 방법은 기법을 써보려고 선택한 것이 아님.
-          그 방법이 아니었다면 잘못된 결론에 도달했을 가능성.
-        </p>
-
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {methods.map(({ q, bad, good }, i) => (
             <Card key={i} style={{ overflow: "hidden" }}>
@@ -770,11 +763,7 @@ const ParadoxSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         왜 일부 창고는 일반 패턴을 따르지 않았는가
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6, maxWidth: 560 }}>
-        좋은 분석은 안 맞는 사례를 봄. 예외가 시스템 구조를 더 깊이 이해하게 해줌.
-      </p>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20, marginTop: 32 }}>
         {[
           {
             title: "반례 유형 1 — idle 높아도 지연이 큰 창고 (20개)",
@@ -828,7 +817,6 @@ const ParadoxSection = () => (
         </div>
         <div style={{ fontSize: 14, color: C.text, lineHeight: 1.6 }}>
           U자형 분석(모델 발견)과 반례 분석(예외 탐색)이 독립적인 방법으로 같은 결론에 도달.
-          서로 다른 접근이 같은 답을 가리킬 때 분석 신뢰도 상승.
         </div>
       </Card>
     </div>
@@ -1229,10 +1217,6 @@ const LimitsSection = () => (
       <h2 style={{ fontFamily: "'Lora', serif", fontSize: 32, fontWeight: 500, marginBottom: 8, color: C.text }}>
         솔직한 한계 진단
       </h2>
-      <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        좋은 분석은 성공만 보여주지 않음. 한계를 명시할수록 신뢰도 상승.
-      </p>
-
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {[
           { title: "경보 규칙 Precision ~0.12 상한", desc: "단일 시점 변수만으로는 위기 예측이 구조적으로 어려움. 단일 변수 상위 10% 구간도 위기율 11% 수준이 이론적 상한.", next: "LSTM/GRU로 스냅샷 시퀀스 학습 → 위기 누적 패턴 포착", color: C.red },
