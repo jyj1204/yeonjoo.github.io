@@ -118,24 +118,7 @@ const Nav = () => {
         <div style={{ fontFamily: "'Lora', serif", fontSize: 15, fontWeight: 500, color: C.text }}>
           개발 포트폴리오
         </div>
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { label: "개요", href: "#overview" },
-            { label: "AI 설계", href: "#ai" },
-            { label: "시나리오", href: "#scenario" },
-            { label: "기술 구현", href: "#tech" },
-            { label: "Vibe Coding", href: "#vibe" },
-            { label: "한계와 성과", href: "#limits" },
-          ].map(({ label, href }) => (
-            <a key={label} href={href} style={{
-              fontSize: 13, color: C.muted, padding: "6px 12px", borderRadius: 6,
-              transition: "background 0.15s, color 0.15s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.color = C.text; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.muted; }}
-            >{label}</a>
-          ))}
-        </div>
+        <div />
       </div>
     </nav>
   );
@@ -257,33 +240,12 @@ const Hero = () => {
 
         <p className="fu fu3" style={{
           fontSize: 17, color: C.muted, lineHeight: 1.7,
-          marginBottom: 28, maxWidth: 580,
+          marginBottom: 48, maxWidth: 580,
         }}>
           HTML/CSS/JavaScript만으로 구현한 인터랙티브 웹 추리게임.
           GPT API 기반 AI 용의자와 실제 대화하며 단서를 수집하고 최종 추리를 완성하는 몰입형 탐정 경험.
           <strong style={{ color: C.text, fontWeight: 600 }}> 전 과정을 AI 협업(Vibe Coding) 방식으로 진행한 실험 프로젝트.</strong>
         </p>
-
-        <div className="fu fu4" style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 48 }}>
-          {[
-            { label: "게임 데모 ↗", primary: true },
-            { label: "GitHub ↗" },
-            { label: "캡스톤 포스터 PDF ↓" },
-            { label: "발표 PPT ↓" },
-          ].map(({ label, primary }) => (
-            <button key={label} style={{
-              padding: "9px 18px", borderRadius: 7, cursor: "pointer",
-              fontSize: 13, fontWeight: 500,
-              background: primary ? C.accent : C.surface,
-              color: primary ? "#fff" : C.text,
-              border: primary ? "none" : `1px solid ${C.border}`,
-              transition: "all 0.15s", fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-            >{label}</button>
-          ))}
-        </div>
 
         {/* KPI 4개 */}
         <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
@@ -314,13 +276,20 @@ const OverviewSection = () => (
         무엇을 만들었는가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 560 }}>
-        단순한 Q&A 챗봇이 아닌, 게임 맥락을 이해하고 거짓말하는 AI 용의자를 구현하는 것이 핵심 과제였습니다.
+        단순한 Q&A 챗봇이 아닌, 게임 맥락을 이해하고 거짓말하는 AI 용의자 구현이 핵심 과제.
       </p>
 
       {/* 게임 플로우 */}
       <div style={{ marginBottom: 40 }}>
         <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 16 }}>게임 전체 흐름</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 0, overflowX: "auto", paddingBottom: 8 }}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(104px, 1fr) 28px minmax(104px, 1fr) 28px minmax(104px, 1fr) 28px minmax(104px, 1fr) 28px minmax(104px, 1fr) 28px minmax(104px, 1fr)",
+          alignItems: "stretch",
+          gap: 8,
+          overflowX: "auto",
+          paddingBottom: 8,
+        }}>
           {[
             { step: "01", label: "인트로", desc: "사건 브리핑\n배경 음악 시작", color: C.muted },
             { step: "02", label: "현장 탐색", desc: "장소 클릭\n단서 수집", color: C.accent },
@@ -328,25 +297,24 @@ const OverviewSection = () => (
             { step: "04", label: "추가 단서", desc: "심문 중 키워드\n→ 자동 단서 추가", color: C.amber },
             { step: "05", label: "최종 추리", desc: "범인 지목 +\n근거 텍스트 입력", color: C.red },
             { step: "06", label: "GPT 채점", desc: "논리·단서·정확도\nS/A/B/C 등급", color: C.green },
-          ].map(({ step, label, desc, color }, i, arr) => (
-            <div key={step} style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
-              <div style={{
+          ].flatMap(({ step, label, desc, color }, i, arr) => [
+              <div key={`${step}-card`} data-flow-card="true" style={{
                 background: C.surface, border: `1px solid ${color}40`,
                 borderRadius: 10, padding: "14px 18px", textAlign: "center",
-                borderTop: `3px solid ${color}`, minWidth: 110,
+                borderTop: `3px solid ${color}`, minWidth: 104, minHeight: 110,
+                height: "100%", display: "flex", flexDirection: "column", justifyContent: "center",
               }}>
                 <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: C.faint, marginBottom: 4 }}>{step}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>{label}</div>
                 <div style={{ fontSize: 11, color: C.muted, whiteSpace: "pre-line", lineHeight: 1.5 }}>{desc}</div>
-              </div>
-              {i < arr.length - 1 && (
-                <div style={{ display: "flex", alignItems: "center", padding: "0 8px" }}>
+              </div>,
+              i < arr.length - 1 ? (
+                <div key={`${step}-arrow`} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <div style={{ width: 24, height: 1, background: C.border }} />
                   <div style={{ width: 0, height: 0, borderTop: "5px solid transparent", borderBottom: "5px solid transparent", borderLeft: `6px solid ${C.borderDark}` }} />
                 </div>
-              )}
-            </div>
-          ))}
+              ) : null,
+          ]).filter(Boolean)}
         </div>
       </div>
 
@@ -400,12 +368,12 @@ const AISection = () => {
   const promptStructure = [
     {
       title: "역할 정의 레이어",
-      code: `당신은 [용의자 이름]입니다.
+      code: `역할: [용의자 이름]
 직업: [직업]
 사건 당일 알리바이: [알리바이 상세]
 실제 행동: [숨기는 진실]
 성격: [성격 특성]`,
-      desc: "용의자의 신원과 기본 설정을 주입. 각 용의자마다 개별 파일로 관리하여 4인의 AI가 완전히 다른 페르소나를 가집니다.",
+      desc: "용의자의 신원과 기본 설정 주입. 각 용의자마다 개별 파일로 관리하여 4인의 AI가 다른 페르소나를 가짐.",
       color: C.accent,
     },
     {
@@ -417,7 +385,7 @@ ${"{clues.map(c => `- ${c.name}: ${c.content}`).join('\\n')}"}
 자연스럽게 화제를 돌리세요.
 단서를 직접 언급하지 않는 한
 모르는 척 하세요.`,
-      desc: "플레이어의 단서 수집 상태를 실시간으로 프롬프트에 반영. 단서를 많이 모을수록 AI가 더 긴장합니다.",
+      desc: "플레이어의 단서 수집 상태를 실시간으로 프롬프트에 반영. 단서를 많이 모을수록 AI 긴장도 상승.",
       color: C.purple,
     },
     {
@@ -428,7 +396,7 @@ ${"{clues.map(c => `- ${c.name}: ${c.content}`).join('\\n')}"}
 - 단서 직접 언급 시 당황한 반응
 - 거짓 알리바이를 일관되게 유지
 - 플레이어가 압박하면 화제 전환`,
-      desc: "AI가 게임 규칙을 지키도록 강제하는 제약 레이어. 이 레이어 없이는 GPT가 쉽게 자백하거나 힌트를 줍니다.",
+      desc: "AI가 게임 규칙을 지키도록 강제하는 제약 레이어. 이 레이어 없이는 GPT가 쉽게 자백하거나 힌트를 줌.",
       color: C.red,
     },
     {
@@ -443,7 +411,7 @@ ${"{clues.map(c => `- ${c.name}: ${c.content}`).join('\\n')}"}
 - 범인 특정 정확도 (30점)
 
 등급(S/A/B/C)과 구체적 피드백 제공`,
-      desc: "게임 후반부에 별도로 호출하는 채점 전용 프롬프트. 같은 GPT API지만 완전히 다른 역할을 수행합니다.",
+      desc: "게임 후반부에 별도로 호출하는 채점 전용 프롬프트. 같은 GPT API지만 완전히 다른 역할 수행.",
       color: C.green,
     },
   ];
@@ -456,8 +424,8 @@ ${"{clues.map(c => `- ${c.name}: ${c.content}`).join('\\n')}"}
           어떻게 AI를 거짓말하게 만들었는가
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 600 }}>
-          GPT API의 시스템 프롬프트를 4개 레이어로 구분해 설계했습니다.
-          각 레이어는 독립적으로 관리되며 런타임에 조합됩니다.
+          GPT API의 시스템 프롬프트를 4개 레이어로 구분해 설계.
+          각 레이어는 독립적으로 관리되고 런타임에 조합.
         </p>
 
         {/* 프롬프트 구조 탭 */}
@@ -496,35 +464,38 @@ ${"{clues.map(c => `- ${c.name}: ${c.content}`).join('\\n')}"}
           <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 20 }}>
             단서 수집 → AI 반응 실시간 연동 흐름
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 0, flexWrap: "wrap", rowGap: 12 }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(88px, 1fr) 20px minmax(88px, 1fr) 20px minmax(88px, 1fr) 20px minmax(88px, 1fr) 20px minmax(88px, 1fr) 20px minmax(88px, 1fr)",
+            alignItems: "stretch",
+            gap: 8,
+            overflowX: "auto",
+            paddingBottom: 2,
+          }}>
             {[
               { label: "장소 클릭", sub: "현장 탐색", color: C.accent },
-              null,
               { label: "단서 획득", sub: "clues[] 배열 업데이트", color: C.accent },
-              null,
               { label: "심문 입력", sub: "플레이어 질문", color: C.purple },
-              null,
               { label: "프롬프트 재조합", sub: "단서 목록 자동 주입", color: C.amber },
-              null,
               { label: "GPT 호출", sub: "맥락 인식 답변", color: C.red },
-              null,
               { label: "용의자 반응", sub: "당황·회피·거짓말", color: C.red },
-            ].map((item, i) =>
-              item === null ? (
-                <div key={i} style={{ display: "flex", alignItems: "center" }}>
-                  <div style={{ width: 16, height: 1, background: C.border }} />
-                  <div style={{ width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: `5px solid ${C.borderDark}` }} />
-                </div>
-              ) : (
-                <div key={i} style={{
+            ].flatMap((item, i, arr) => [
+                <div key={`${item.label}-card`} data-ai-flow-card="true" style={{
                   background: item.color + "10", border: `1px solid ${item.color}30`,
-                  borderRadius: 8, padding: "10px 14px", textAlign: "center", minWidth: 100,
+                  borderRadius: 8, padding: "12px 10px", textAlign: "center", minWidth: 88,
+                  minHeight: 58, height: "100%", display: "flex", flexDirection: "column",
+                  justifyContent: "center",
                 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: item.color }}>{item.label}</div>
                   <div style={{ fontSize: 10, color: C.faint, marginTop: 3 }}>{item.sub}</div>
+                </div>,
+                i < arr.length - 1 ? (
+                <div key={`${item.label}-arrow`} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: 16, height: 1, background: C.border }} />
+                  <div style={{ width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: `5px solid ${C.borderDark}` }} />
                 </div>
-              )
-            )}
+                ) : null,
+            ]).filter(Boolean)}
           </div>
         </Card>
 
@@ -636,8 +607,8 @@ const ScenarioSection = () => {
           두 개의 독립 사건
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-          각 시나리오는 독립적인 타임라인과 단서 수집 동선을 가집니다.
-          같은 엔진 위에서 전혀 다른 경험을 제공합니다.
+          각 시나리오는 독립적인 타임라인과 단서 수집 동선을 가짐.
+          같은 엔진 위에서 전혀 다른 경험 제공.
         </p>
 
         {/* 탭 */}
@@ -758,28 +729,28 @@ const TechSection = () => {
   const techDetails = [
     {
       q: "switchScene() 커스텀 엔진은 어떻게 동작하는가?",
-      why: "React나 Vue 없이 순수 JS로 SPA 같은 씬 전환을 구현해야 했습니다. 라이브러리 없이 게임 흐름을 제어하려면 자체 엔진이 필요했습니다.",
+      why: "React나 Vue 없이 순수 JS로 SPA 같은 씬 전환 구현 필요. 라이브러리 없이 게임 흐름을 제어하려면 자체 엔진이 필요.",
       how: "HTML의 모든 씬(.screen)을 display:none으로 감추고, 활성화할 씬만 보여주는 방식. 전환 시 opacity 0→1 CSS transition으로 비동기 페이드 효과 구현. 씬 전환 시 단서 추가, BGM 변경, 타이머 시작이 함께 실행되도록 Promise 체인으로 중앙화.",
       code: `async function switchScene(nextId, options = {}) {\n  await fadeOut(currentScene);\n  currentScene.style.display = 'none';\n  \n  if (options.addClue) addClue(options.clue);\n  if (options.changeBGM) playBGM(options.bgm);\n  if (options.startTimer) startTimer();\n  \n  nextScene.style.display = 'flex';\n  await fadeIn(nextScene);\n  currentScene = nextScene;\n}`,
       color: C.accent,
     },
     {
       q: "단서 상태를 어떻게 관리했는가?",
-      why: "React 같은 상태관리 없이 게임 내 단서 수집 상태를 추적하고, 이를 GPT 프롬프트에 실시간 반영해야 했습니다.",
-      how: "JS Object를 전역 상태로 사용. 단서 수집 시 배열에 push하고, 심문 창 열릴 때마다 해당 배열을 읽어 시스템 프롬프트를 재조합. 수집된 단서는 UI 단서 패널에도 즉시 반영됩니다.",
+      why: "React 같은 상태관리 없이 게임 내 단서 수집 상태 추적과 GPT 프롬프트 실시간 반영이 필요.",
+      how: "JS Object를 전역 상태로 사용. 단서 수집 시 배열에 push하고, 심문 창 열릴 때마다 해당 배열을 읽어 시스템 프롬프트를 재조합. 수집된 단서는 UI 단서 패널에도 즉시 반영.",
       code: `const gameState = {\n  collectedClues: [],\n  suspectHistory: {},  // 용의자별 대화 기록\n  currentSuspect: null,\n};\n\nfunction buildSystemPrompt(suspect) {\n  const clueContext = gameState.collectedClues\n    .map(c => \`- \${c.name}: \${c.content}\`)\n    .join('\\n');\n  return SUSPECT_PROMPTS[suspect] + '\\n\\n수집된 단서:\\n' + clueContext;\n}`,
       color: C.purple,
     },
     {
       q: "GPT API 대화 맥락을 어떻게 유지했는가?",
-      why: "GPT API는 상태가 없습니다(stateless). 이전 대화를 기억하게 하려면 매 요청마다 전체 대화 기록을 함께 보내야 했습니다.",
+      why: "GPT API는 상태가 없는 stateless 구조. 이전 대화를 기억하게 하려면 매 요청마다 전체 대화 기록 전달 필요.",
       how: "용의자별로 messages 배열을 유지. 새 질문이 들어오면 시스템 프롬프트(단서 포함) + 이전 대화 전체 + 새 질문을 messages 배열로 조합해 API 호출. 대화가 길어지면 오래된 기록을 trimming하여 토큰 한계 관리.",
       code: `async function askSuspect(suspectId, userMessage) {\n  const systemPrompt = buildSystemPrompt(suspectId);\n  const history = gameState.suspectHistory[suspectId] || [];\n  \n  const messages = [\n    { role: 'system', content: systemPrompt },\n    ...history,\n    { role: 'user', content: userMessage },\n  ];\n  \n  const res = await callGPT(messages);\n  history.push({ role: 'user', content: userMessage });\n  history.push({ role: 'assistant', content: res });\n  gameState.suspectHistory[suspectId] = history;\n  return res;\n}`,
       color: C.green,
     },
     {
       q: "Web Audio API로 몰입감을 어떻게 높였는가?",
-      why: "단순 <audio> 태그로는 씬 전환과 BGM 변경의 동기화, 페이드 인/아웃 효과를 구현하기 어려웠습니다.",
+      why: "단순 <audio> 태그로는 씬 전환과 BGM 변경의 동기화, 페이드 인/아웃 효과 구현이 어려움.",
       how: "AudioContext와 GainNode를 사용해 볼륨 페이드 인/아웃 구현. 씬마다 다른 BGM이 자동 교체되며, 타이핑 효과음은 Web Audio API의 버퍼를 사용해 빠른 연속 재생 처리. 효과음 오버랩 방지를 위한 타임스탬프 관리도 추가.",
       code: `function switchBGM(src) {\n  const gain = audioCtx.createGain();\n  gain.connect(audioCtx.destination);\n  \n  // 현재 BGM 페이드 아웃\n  currentGain.gain.linearRampToValueAtTime(\n    0, audioCtx.currentTime + 1.5\n  );\n  \n  // 새 BGM 로드 + 페이드 인\n  const source = audioCtx.createBufferSource();\n  source.buffer = await loadAudio(src);\n  source.connect(gain);\n  gain.gain.setValueAtTime(0, audioCtx.currentTime + 1.5);\n  gain.gain.linearRampToValueAtTime(0.7, audioCtx.currentTime + 3);\n  source.start(audioCtx.currentTime + 1.5);\n  currentGain = gain;\n}`,
       color: C.amber,
@@ -794,7 +765,7 @@ const TechSection = () => {
           어떻게 구현했는가
         </h2>
         <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 560 }}>
-          프레임워크 없이 Vanilla JS만으로 구현한 기술적 결정들. 각 선택에는 이유가 있습니다.
+          프레임워크 없이 Vanilla JS만으로 구현한 기술적 결정들. 각 선택에는 이유 존재.
         </p>
 
         {/* 기술 스택 */}
@@ -871,8 +842,8 @@ const VibeCodingSection = () => (
         AI와 함께 AI를 만든 과정
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 40, lineHeight: 1.6, maxWidth: 600 }}>
-        ChatGPT·Claude를 활용해 코드 설계·구현·디버깅 전 과정을 진행했습니다.
-        Vibe Coding은 단순히 코드를 생성하는 게 아니라, AI와의 대화를 통해 설계를 함께 발전시키는 방식입니다.
+        ChatGPT·Claude를 활용해 코드 설계·구현·디버깅 전 과정 진행.
+        Vibe Coding은 단순 코드 생성이 아니라, AI와의 대화를 통해 설계를 함께 발전시키는 방식.
       </p>
 
       {/* 실제 협업 사례 */}
@@ -939,9 +910,9 @@ const VibeCodingSection = () => (
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
           {[
-            { title: "AI는 구현보다 설계에 강하다", desc: "'이런 기능 만들어줘'보다 '이런 문제를 어떻게 설계해야 할까?'를 물었을 때 더 좋은 결과가 나왔습니다.", icon: "🧠", color: C.accent },
-            { title: "맥락 제공이 핵심이다", desc: "코드만 붙여넣는 것보다 '이 프로젝트는 ~이고, 현재 ~문제가 있어'처럼 배경을 설명했을 때 훨씬 정확한 도움을 받았습니다.", icon: "📝", color: C.purple },
-            { title: "AI가 틀릴 때를 알아야 한다", desc: "생성된 코드를 무조건 신뢰하지 않고, 동작 원리를 이해하면서 적용해야 합니다. 이해 없는 Vibe Coding은 복잡성만 키웁니다.", icon: "⚠️", color: C.amber },
+            { title: "AI는 구현보다 설계에 강하다", desc: "'이런 기능 만들어줘'보다 '이런 문제를 어떻게 설계해야 할까?'를 물었을 때 더 좋은 결과 도출.", icon: "🧠", color: C.accent },
+            { title: "맥락 제공이 핵심이다", desc: "코드만 붙여넣는 것보다 '이 프로젝트는 ~이고, 현재 ~문제가 있어'처럼 배경을 설명했을 때 훨씬 정확한 도움 확보.", icon: "📝", color: C.purple },
+            { title: "AI가 틀릴 때를 알아야 한다", desc: "생성된 코드를 무조건 신뢰하지 않고, 동작 원리를 이해하면서 적용해야 함. 이해 없는 Vibe Coding은 복잡성만 키움.", icon: "⚠️", color: C.amber },
           ].map(({ title, desc, icon, color }) => (
             <div key={title} style={{
               background: C.bg, borderRadius: 8, padding: "16px",
@@ -967,32 +938,32 @@ const LimitsSection = () => (
         솔직한 평가
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 32, lineHeight: 1.6 }}>
-        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어렵습니다.
+        잘 된 것만 보여주는 포트폴리오는 신뢰하기 어려움.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
         {[
           {
             title: "GPT API 응답 지연 (1~3초)",
-            desc: "심문 중 AI 응답을 기다리는 시간이 몰입을 끊습니다. 특히 모바일 환경에서 더 두드러졌습니다.",
+            desc: "심문 중 AI 응답 대기 시간이 몰입을 끊음. 특히 모바일 환경에서 더 두드러짐.",
             next: "스트리밍 응답(SSE) 적용으로 타이핑 효과처럼 실시간 출력하면 체감 속도 개선 가능",
             color: C.red,
           },
           {
             title: "API 키 클라이언트 노출 문제",
-            desc: "현재 구조는 OpenAI API 키가 config.js에 평문으로 존재합니다. 실서비스라면 심각한 보안 문제입니다.",
+            desc: "현재 구조는 OpenAI API 키가 config.js에 평문으로 존재. 실서비스라면 심각한 보안 문제.",
             next: "Node.js 백엔드 프록시 서버 추가 → API 키를 서버에서만 관리하도록 구조 변경 필요",
             color: C.red,
           },
           {
             title: "토큰 비용 제한 없음",
-            desc: "대화가 길어질수록 GPT API 호출 비용이 선형으로 증가합니다. 프로덕션 서비스라면 비용 폭증 가능성이 있습니다.",
+            desc: "대화가 길어질수록 GPT API 호출 비용이 선형으로 증가. 프로덕션 서비스라면 비용 폭증 가능성 존재.",
             next: "대화 히스토리 요약(summarization) 기법으로 오래된 기록을 압축하여 토큰 절감",
             color: C.amber,
           },
           {
             title: "AI 답변 일관성 한계",
-            desc: "같은 질문에 항상 동일한 반응을 보장하지 못합니다. GPT의 확률적 특성상 가끔 시나리오에서 벗어난 답변이 나옵니다.",
+            desc: "같은 질문에 항상 동일한 반응을 보장하기 어려움. GPT의 확률적 특성상 가끔 시나리오에서 벗어난 답변 발생.",
             next: "temperature 조정 + Few-shot 예시 추가로 일관성 향상 가능. 완전 해결은 어려움.",
             color: C.amber,
           },
@@ -1043,20 +1014,16 @@ const Footer = () => (
         </div>
         <div style={{ fontSize: 13, color: C.muted }}>AI 탐정게임 개발 — HTML/CSS/JS + GPT API</div>
       </div>
-      <div style={{ display: "flex", gap: 8 }}>
-        {["게임 데모 ↗", "GitHub ↗", "캡스톤 포스터 PDF", "발표 PPT"].map(t => (
-          <button key={t} style={{
-            padding: "7px 14px", borderRadius: 6, fontSize: 12,
-            background: "transparent", color: C.muted,
-            border: `1px solid ${C.border}`, cursor: "pointer",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            transition: "all 0.15s",
-          }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
-          >{t}</button>
-        ))}
-      </div>
+      <a href="./portfolio_case_kleague.html" style={{
+        padding: "8px 16px", borderRadius: 6, fontSize: 12,
+        background: C.surface, color: C.muted,
+        border: `1px solid ${C.border}`, cursor: "pointer",
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontWeight: 600, transition: "all 0.15s",
+      }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+      >← 이전 프로젝트</a>
     </div>
   </footer>
 );
