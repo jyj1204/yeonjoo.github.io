@@ -10,18 +10,19 @@
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
 :root {
-  --bg:#f2f3f6; --surface:#fff; --surface2:#e9ebef; --border:#d9dee8; --border-dark:#c3c9d4;
+  --bg:#f4f5f7; --surface:#fff; --surface2:#f9fafb; --border:#e5e7eb; --border-dark:#d1d5db;
   --text:#111827; --sub:#374151; --muted:#6b7280; --faint:#9ca3af;
   --blue:#2563eb; --blue-bg:#eff6ff; --blue-dim:#bfdbfe;
-  --green:#059669; --green-bg:#ecfdf5; --green-dim:#a7f3d0;
+  --green:#10b981; --green-bg:#ecfdf5; --green-dim:#a7f3d0;
   --red:#dc2626; --red-bg:#fef2f2; --red-dim:#fecaca;
   --amber:#d97706; --amber-bg:#fffbeb; --amber-dim:#fde68a;
   --teal:var(--blue); --teal-bg:var(--blue-bg); --teal-dim:var(--blue-dim);
-  --tag-bg:#efefec;
+  --tag-bg:#f4f5f7;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:"Pretendard","Noto Sans KR","Outfit","Segoe UI","Apple SD Gothic Neo",Arial,sans-serif;font-weight:400;line-height:1.7;font-size:15px;word-break:keep-all;overflow-wrap:break-word;}
+html,body{background:var(--bg);}
+body{color:var(--text);font-family:"Pretendard","Noto Sans KR","Outfit","Segoe UI","Apple SD Gothic Neo",Arial,sans-serif;font-weight:400;line-height:1.7;font-size:15px;word-break:keep-all;overflow-wrap:break-word;}
 p,div,span,a,button{word-break:keep-all;}
 a{color:inherit;text-decoration:none;}
 code{font-family:"IBM Plex Mono","SF Mono","Fira Code",monospace;font-size:.82em;background:var(--tag-bg);padding:1px 5px;border-radius:3px;}
@@ -30,12 +31,12 @@ code{font-family:"IBM Plex Mono","SF Mono","Fira Code",monospace;font-size:.82em
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border-dark);border-radius:999px;}
 
-nav{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(242,243,246,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:100;}
-.nav-back{font-size:.82rem;color:var(--muted);transition:color .2s;}
+nav{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(244,245,247,.94);backdrop-filter:blur(12px);border-bottom:0!important;box-shadow:none!important;display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:100;}
+.nav-back{font-family:"Pretendard","Noto Sans KR","Outfit",sans-serif;font-size:15px;font-weight:500;color:var(--text);transition:color .2s;}
 .nav-back:hover{color:var(--text);}
 .nav-meta{font-size:.78rem;color:var(--muted);}
 
-.toc-bar{position:sticky;top:56px;z-index:80;background:rgba(242,243,246,.95);border-bottom:1px solid var(--border);padding:0;overflow-x:auto;scrollbar-width:none;}
+.toc-bar{position:sticky;top:56px;z-index:80;background:rgba(244,245,247,.96);border-bottom:1px solid var(--border);padding:0;overflow-x:auto;scrollbar-width:none;}
 .toc-bar::-webkit-scrollbar{display:none;}
 .toc-inner{display:flex;width:min(1100px, calc(100vw - 80px));max-width:none;margin:0 auto;}
 .toc-item{font-size:.78rem;color:var(--muted);text-decoration:none;padding:14px 18px;white-space:nowrap;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
@@ -43,28 +44,28 @@ nav{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(242,243,246,
 .toc-item.active{color:var(--text);font-weight:600;border-color:var(--text);}
 
 .wrap{width:min(1100px, calc(100vw - 80px));max-width:none;margin:0 auto;padding:0;}
-section{border-bottom:1px solid var(--border);}
+section{background:var(--bg);border-bottom:1px solid var(--border);}
 .sec{padding:64px 0;}
-.sec-alt{background:var(--surface2);}
+.sec-alt{background:var(--bg);}
 
 /* section label — instacart 스타일 */
 .sec-label{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .sec-label-bar{width:3px;height:14px;background:var(--teal);border-radius:2px;}
 .sec-label-text{font-size:.72rem;font-weight:600;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;}
-.sec-title{font-size:1.68rem;font-weight:700;letter-spacing:-.015em;margin-bottom:8px;line-height:1.24;}
+.sec-title{font-family:"Pretendard","Noto Sans KR","Outfit",sans-serif;font-size:32px;font-weight:500;letter-spacing:-.02em;margin-bottom:8px;line-height:1.25;}
 .sec-desc{font-size:.9rem;color:var(--muted);max-width:580px;line-height:1.7;margin-bottom:36px;}
 
 /* HERO */
 .hero{padding:100px 0 64px;border-bottom:1px solid var(--border);}
 .hero-wrap{width:min(1100px, calc(100vw - 80px));max-width:none;margin:0 auto;}
 .hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
-.tag{font-size:.72rem;font-weight:500;padding:3px 10px;border-radius:4px;border:1px solid transparent;white-space:nowrap;}
-.tag-teal{background:var(--teal-bg);color:var(--teal);border-color:var(--teal-dim);}
-.tag-muted{background:var(--tag-bg);color:var(--muted);border-color:var(--border);}
-.tag-green{background:var(--green-bg);color:var(--green);border-color:var(--green-dim);}
-.tag-blue{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-dim);}
-.tag-amber{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-dim);}
-.hero-title{font-size:clamp(2.35rem,4.4vw,3rem);font-weight:500;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px;}
+.tag{font-family:"Pretendard","Noto Sans KR","Outfit",sans-serif;font-size:11px;font-weight:500;line-height:1.55;padding:3px 8px;border-radius:4px;border:1px solid transparent;white-space:nowrap;}
+.tag-teal{background:var(--teal-bg);color:var(--teal);border-color:rgba(37,99,235,.16);}
+.tag-muted{background:var(--tag-bg);color:var(--muted);border-color:rgba(107,114,128,.18);}
+.tag-green{background:var(--green-bg);color:var(--green);border-color:rgba(16,185,129,.20);}
+.tag-blue{background:var(--blue-bg);color:var(--blue);border-color:rgba(37,99,235,.16);}
+.tag-amber{background:var(--amber-bg);color:var(--amber);border-color:rgba(217,119,6,.20);}
+.hero-title{font-family:"Pretendard","Noto Sans KR","Outfit",sans-serif;font-size:clamp(2.35rem,4.4vw,3rem);font-weight:500;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px;}
 .hero-title span{color:var(--blue);}
 .hero-desc{font-size:.96rem;color:var(--sub);line-height:1.82;max-width:650px;margin-bottom:32px;}
 .btn{padding:9px 18px;border-radius:6px;font-size:.82rem;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;}
@@ -185,12 +186,12 @@ section{border-bottom:1px solid var(--border);}
 .notice{border-radius:8px;padding:12px 16px;border:1px solid;margin-bottom:16px;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 
-footer{padding:40px 6vw;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:24px;}
+footer{background:var(--bg);padding:40px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:24px;}
 .footer-left{display:flex;flex-direction:column;gap:6px;}
-.footer-title{font-size:.9rem;color:var(--text);font-weight:600;}
-.footer-sub{font-size:.82rem;color:var(--muted);}
+.footer-title{font-family:"Pretendard","Noto Sans KR","Outfit",sans-serif;font-size:16px;color:var(--text);font-weight:600;}
+.footer-sub{font-size:13px;color:var(--muted);}
 .footer-links{display:flex;gap:8px;}
-.footer-btn{padding:9px 18px;border-radius:6px;font-size:.82rem;font-weight:600;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;}
+.footer-btn{height:38px;padding:0 16px;border-radius:7px;font-size:12px;line-height:1.2;font-weight:600;background:transparent;color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;}
 .footer-btn:hover{border-color:var(--border-dark);color:var(--text);}
 .footer-btn.primary{background:var(--blue);color:#fff;border:none;}
 
