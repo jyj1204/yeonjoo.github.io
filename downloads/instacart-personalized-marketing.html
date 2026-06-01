@@ -120,19 +120,48 @@
       @page { margin: 12mm 10mm; }
     </style>
   <style>
-    .download-export-note {
+    .download-export-actions {
       position: fixed;
-      right: 16px;
-      bottom: 14px;
+      right: 18px;
+      bottom: 18px;
       z-index: 999999;
-      padding: 7px 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      max-width: min(420px, calc(100vw - 32px));
+      padding: 10px;
       border: 1px solid #d7dde8;
-      border-radius: 8px;
-      background: rgba(255,255,255,.9);
-      color: #667085;
-      font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      box-shadow: 0 8px 20px rgba(15,23,42,.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 14px 34px rgba(15,23,42,.16);
+      backdrop-filter: blur(10px);
     }
+    .download-export-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid #d7dde8;
+      border-radius: 9px;
+      background: #fff;
+      color: #111827;
+      text-decoration: none;
+      font: 700 12px/1 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      white-space: nowrap;
+    }
+    .download-export-actions a:first-child {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+    }
+    .download-export-actions a:hover {
+      transform: translateY(-1px);
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+    .download-export-actions a:first-child:hover { color: #fff; }
     .fu,.fu1,.fu2,.fu3,.fu4,.fu5,.fade-in {
       opacity: 1 !important;
       transform: none !important;
@@ -140,14 +169,14 @@
       transition: none !important;
     }
     @media print {
-      .download-export-note { display: none !important; }
+      .download-export-actions { display: none !important; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       nav, .toc-bar, .case-section-tabs { position: static !important; top: auto !important; }
     }
   </style>
 </head>
 <body>
-  <div class="download-export-note">Static HTML export</div>
+  <div class="download-export-actions" aria-label="download actions"><a href="./instacart-personalized-marketing.html" download>HTML 다운로드</a><a href="./instacart-personalized-marketing.pdf" download>PDF 다운로드</a><a href="./index.html">목록 보기</a></div>
   <div id="root"><div style="background: rgb(244, 245, 247); min-height: 100vh;"><style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
