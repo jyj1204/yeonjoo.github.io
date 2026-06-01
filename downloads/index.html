@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project HTML PDF Downloads</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap');
+    :root { color-scheme: light; --bg:#f3f5f8; --surface:#fff; --line:#dfe5ee; --text:#071325; --muted:#667085; --blue:#2563eb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    main { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0; }
+    header { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 28px; }
+    .eyebrow { font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--blue); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+    h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1; margin: 0; letter-spacing: -0.02em; }
+    header p { max-width: 420px; margin: 0; color: var(--muted); line-height: 1.7; font-size: 15px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; min-height: 230px; display: flex; flex-direction: column; box-shadow: 0 14px 36px rgba(15,23,42,.04); }
+    .topline { display: flex; justify-content: space-between; color: var(--blue); font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin-bottom: 32px; }
+    h2 { font-size: 22px; line-height: 1.3; margin: 0 0 12px; letter-spacing: -0.01em; }
+    .card p { color: var(--muted); line-height: 1.65; margin: 0; }
+    .actions { display: flex; gap: 10px; margin-top: auto; padding-top: 26px; flex-wrap: wrap; }
+    a { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--line); border-radius: 9px; color: var(--text); text-decoration: none; font-weight: 700; font-size: 13px; background: #fff; }
+    a:hover { border-color: var(--blue); color: var(--blue); }
+    @media (max-width: 760px) { main { width: min(100% - 28px, 560px); padding: 42px 0; } header { display: block; } header p { margin-top: 16px; } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <div class="eyebrow">Downloadable Portfolio Cases</div>
+        <h1>Project<br>HTML / PDF</h1>
+      </div>
+      <p>Each portfolio case is exported as a standalone HTML file and a PDF file for sharing or submission.</p>
+    </header>
+    <section class="grid">
+
+      <article class="card">
+        <div class="topline"><span>01</span><span>Project Export</span></div>
+        <h2>DACON 스마트 창고 출고 지연 예측</h2>
+        <p>250개 창고, 25만 건 데이터. 레이아웃이 문제라고 생각했는데 운영이었고, 중요하지 않다고 본 변수가 핵심. 분석 과정에서 결론이 세 번 바뀜. 그 인사이트로 경진대회 상위 15% 달성.</p>
+        <div class="actions">
+          <a href="./dacon-smart-warehouse-delay.html" download>HTML</a>
+          <a href="./dacon-smart-warehouse-delay.pdf" download>PDF</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="topline"><span>02</span><span>Project Export</span></div>
+        <h2>Instacart 구매 로그 기반 개인화 마케팅 전략</h2>
+        <p>300만 건 이상의 실제 주문 로그에서 고객 생애주기 신호를 포착하고, 누구에게 · 언제 · 무엇을 추천할지 데이터 기반 마케팅 전략으로 설계.</p>
+        <div class="actions">
+          <a href="./instacart-personalized-marketing.html" download>HTML</a>
+          <a href="./instacart-personalized-marketing.pdf" download>PDF</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="topline"><span>03</span><span>Project Export</span></div>
+        <h2>쥬얼리 브랜드 R사, 타겟 리포지셔닝과 광고 예산 최적화</h2>
+        <p>매출 28% 하락, ROAS 17% 급감. 광고 예산의 30%가 잘못된 타겟에 낭비 중. 리뷰 데이터 형태소 분석으로 실제 구매자 페르소나를 재정의하고, 추가 예산 없이 ROAS 23% 반등 시뮬레이션 도출.</p>
+        <div class="actions">
+          <a href="./jewelry-target-repositioning.html" download>HTML</a>
+          <a href="./jewelry-target-repositioning.pdf" download>PDF</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="topline"><span>04</span><span>Project Export</span></div>
+        <h2>K리그 경기 내 최종 패스 좌표 예측 AI</h2>
+        <p>K리그 실제 경기 데이터로 플레이 시퀀스의 마지막 패스 도달 좌표를 예측. 4개 모델 앙상블과 Pseudo Labeling 전략으로 Dacon 경진대회 상위 7% 달성.</p>
+        <div class="actions">
+          <a href="./dacon-kleague-pass-coordinate.html" download>HTML</a>
+          <a href="./dacon-kleague-pass-coordinate.pdf" download>PDF</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="topline"><span>05</span><span>Project Export</span></div>
+        <h2>AI 탐정게임 용의자가 거짓말한다</h2>
+        <p>HTML/CSS/JavaScript만으로 구현한 인터랙티브 웹 추리게임. GPT API 기반 AI 용의자와 실제 대화하며 단서를 수집하고 최종 추리를 완성하는 몰입형 탐정 경험. 전 과정을 AI 협업(Vibe Coding) 방식으로 진행한 실험 프로젝트.</p>
+        <div class="actions">
+          <a href="./ai-detective-game.html" download>HTML</a>
+          <a href="./ai-detective-game.pdf" download>PDF</a>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
