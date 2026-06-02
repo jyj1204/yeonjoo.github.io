@@ -291,7 +291,7 @@ const Hero = () => (
         lineHeight: 1.15, letterSpacing: "-0.02em", color: C.text,
         marginBottom: 16, maxWidth: 720,
       }}>
-        쥬얼리 브랜드 R사,<br />
+        주얼리 브랜드 R사,<br />
         <span style={{ color: C.accent }}>타겟 리포지셔닝</span>과 광고 예산 최적화
       </h1>
 
@@ -1113,7 +1113,7 @@ const RetroSection = () => (
             {[
               {
                 title: "시각적 요소 분석의 부재",
-                desc: "고효율 광고 소재들이 공통적으로 가진 시각적 특징까지는 수치화하지 못함. 쥬얼리 산업 특성상 이미지가 구매 결정에 큰 영향을 미치는 만큼, 이미지 인식 등을 활용한 분석 필요.",
+                desc: "고효율 광고 소재들이 공통적으로 가진 시각적 특징까지는 수치화하지 못함. 주얼리 산업 특성상 이미지가 구매 결정에 큰 영향을 미치는 만큼, 이미지 인식 등을 활용한 분석 필요.",
                 next: "Computer Vision으로 광고 소재 시각 특성 분석",
               },
               {
@@ -1151,7 +1151,7 @@ const Footer = () => (
         <div style={{ fontFamily: "'Lora', serif", fontSize: 16, color: C.text, marginBottom: 4 }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ fontSize: 13, color: C.muted }}>쥬얼리 브랜드 R사 — 타겟 리포지셔닝 및 광고 예산 최적화</div>
+        <div style={{ fontSize: 13, color: C.muted }}>주얼리 브랜드 R사 — 타겟 리포지셔닝 및 광고 예산 최적화</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
         <a href="./portfolio_case_instacart.html" style={{
