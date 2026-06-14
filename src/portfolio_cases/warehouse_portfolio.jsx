@@ -1252,6 +1252,16 @@ const Footer = () => (
         <div style={{ fontSize: 13, color: C.muted }}>스마트 창고 출고 지연 예측</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
+        <a href="./portfolio_case_retailrocket.html" style={{
+          padding: "8px 16px", borderRadius: 7, fontSize: 12,
+          background: "transparent", color: C.muted,
+          border: `1px solid ${C.border}`, cursor: "pointer",
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontWeight: 600, transition: "all 0.15s",
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = C.borderDark; e.currentTarget.style.color = C.text; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.muted; }}
+        >← 이전 프로젝트</a>
         <a href="./portfolio_case_instacart.html" style={{
           padding: "8px 16px", borderRadius: 7, fontSize: 12,
           background: C.accent, color: "#fff",

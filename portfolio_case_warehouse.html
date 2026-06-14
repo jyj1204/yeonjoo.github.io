@@ -138,5 +138,46 @@
 <body>
   <div id="root"></div>
   <script type="module" src="./assets/warehouse_portfolio.bundle.js?v=case-copy-nav-20260531"></script>
+  <script>
+    (() => {
+      const addPreviousProjectLink = () => {
+        const footer = document.querySelector("footer");
+        if (!footer || footer.querySelector('a[href="./portfolio_case_retailrocket.html"]')) return;
+        const links = footer.querySelector("div > div:last-child");
+        if (!links) return;
+
+        const previous = document.createElement("a");
+        previous.href = "./portfolio_case_retailrocket.html";
+        previous.textContent = "← 이전 프로젝트";
+        previous.style.cssText = [
+          "padding:8px 16px",
+          "border-radius:7px",
+          "font-size:12px",
+          "background:transparent",
+          "color:#6b7280",
+          "border:1px solid #d9dee8",
+          "cursor:pointer",
+          "font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif",
+          "font-weight:600",
+          "text-decoration:none",
+          "transition:all 0.15s"
+        ].join(";");
+        previous.addEventListener("mouseenter", () => {
+          previous.style.borderColor = "#d1d5db";
+          previous.style.color = "#111827";
+        });
+        previous.addEventListener("mouseleave", () => {
+          previous.style.borderColor = "#d9dee8";
+          previous.style.color = "#6b7280";
+        });
+        links.prepend(previous);
+      };
+
+      const observer = new MutationObserver(addPreviousProjectLink);
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+      window.addEventListener("load", addPreviousProjectLink);
+      addPreviousProjectLink();
+    })();
+  </script>
 </body>
 </html>

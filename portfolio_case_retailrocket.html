@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RetailRocket 이커머스 로그 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface-2: #f7f8fa;
+    --border: #e2e5ea;
+    --text-primary: #1a1d23;
+    --text-secondary: #5a6070;
+    --text-muted: #9099a8;
+    --accent: #2563eb;
+    --accent-light: #eff4ff;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  .nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(255,255,255,0.92); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border); padding:0 40px; height:56px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-back { font-family:var(--mono); font-size:12px; color:var(--text-secondary); text-decoration:none; letter-spacing:0.05em; display:flex; align-items:center; gap:6px; }
+  .nav-back:hover { color:var(--accent); }
+  .nav-label { font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
+
+  .hero { margin-top:56px; padding:64px 40px 48px; max-width:900px; margin-left:auto; margin-right:auto; }
+  .case-label { font-family:var(--mono); font-size:11px; color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .case-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .hero h1 { font-size:clamp(24px,4vw,36px); font-weight:700; line-height:1.3; letter-spacing:-0.02em; margin-bottom:20px; }
+  .hero-desc { font-size:16px; color:var(--text-secondary); max-width:640px; line-height:1.7; margin-bottom:32px; }
+  .tag-row { display:flex; flex-wrap:wrap; gap:8px; }
+  .tag { font-family:var(--mono); font-size:11px; letter-spacing:0.05em; background:var(--surface); border:1px solid var(--border); color:var(--text-secondary); padding:5px 12px; border-radius:4px; }
+  .tag.accent { background:var(--accent-light); border-color:#bdd4ff; color:var(--accent); }
+
+  .stat-strip { max-width:900px; margin:0 auto 40px; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .stat-item { background:var(--surface); padding:24px 20px; text-align:center; }
+  .stat-num { font-family:var(--mono); font-size:26px; font-weight:500; color:var(--text-primary); letter-spacing:-0.02em; display:block; margin-bottom:6px; }
+  .stat-num span { color:var(--accent); font-size:14px; font-weight:400; }
+  .stat-desc { font-size:12px; color:var(--text-muted); line-height:1.4; }
+
+  .tab-nav { max-width:900px; margin:0 auto 32px; padding:0 40px; display:flex; gap:0; border-bottom:2px solid var(--border); overflow-x:auto; }
+  .tab-btn { font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); background:none; border:none; padding:12px 18px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap; transition:color 0.2s; }
+  .tab-btn:hover { color:var(--text-secondary); }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+
+  .content { max-width:900px; margin:0 auto; padding:0 40px 80px; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .section-title { font-family:var(--mono); font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+  .section-heading { font-size:20px; font-weight:700; letter-spacing:-0.02em; margin-bottom:20px; color:var(--text-primary); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:28px; margin-bottom:16px; }
+  .card-title { font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .card-title .num { font-family:var(--mono); font-size:11px; color:var(--accent); background:var(--accent-light); padding:2px 8px; border-radius:3px; }
+  .card p { font-size:14px; color:var(--text-secondary); line-height:1.7; }
+  .card ul { margin:8px 0 0 0; padding-left:0; list-style:none; }
+  .card ul li { font-size:14px; color:var(--text-secondary); line-height:1.8; padding-left:16px; position:relative; }
+  .card ul li::before { content:'·'; position:absolute; left:0; color:var(--accent); font-weight:700; }
+
+  .step-flow { display:grid; grid-template-columns:repeat(5,1fr); gap:0; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:32px; }
+  .step-item { background:var(--surface); padding:20px 16px; text-align:center; position:relative; }
+  .step-item:not(:last-child)::after { content:'→'; position:absolute; right:-8px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--text-muted); z-index:1; }
+  .step-num { font-family:var(--mono); font-size:10px; color:var(--accent); letter-spacing:0.1em; display:block; margin-bottom:8px; }
+  .step-title { font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
+  .step-sub { font-size:11px; color:var(--text-muted); line-height:1.4; }
+  .step-tag { font-family:var(--mono); font-size:10px; color:var(--text-muted); margin-top:8px; }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px; }
+
+  .highlight-box { background:var(--accent-light); border:1px solid #bdd4ff; border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:16px 20px; margin:16px 0; }
+  .highlight-box p { font-size:14px; color:var(--text-primary); line-height:1.7; }
+
+  .data-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px; }
+  .data-table th { font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:10px 14px; border-bottom:2px solid var(--border); background:var(--surface-2); }
+  .data-table td { padding:12px 14px; border-bottom:1px solid var(--border); color:var(--text-secondary); }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table td:first-child { color:var(--text-primary); font-weight:500; }
+  .badge { font-family:var(--mono); font-size:11px; padding:3px 10px; border-radius:4px; background:var(--accent-light); color:var(--accent); }
+  .badge.red { background:#fff0f0; color:#e53e3e; }
+  .badge.green { background:#f0fff4; color:#38a169; }
+  .badge.orange { background:#fffaf0; color:#dd6b20; }
+  .badge.gray { background:var(--surface-2); color:var(--text-muted); }
+
+  /* Funnel viz */
+  .funnel-visual { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:28px; margin-bottom:16px; }
+  .funnel-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .funnel-label { font-size:13px; color:var(--text-secondary); width:160px; flex-shrink:0; }
+  .funnel-bar-wrap { flex:1; background:var(--surface-2); border-radius:3px; height:24px; overflow:hidden; }
+  .funnel-bar { height:100%; background:var(--accent); border-radius:3px; display:flex; align-items:center; padding-left:10px; transition:width 0.6s ease; }
+  .funnel-bar.muted { background:#a3b8e8; }
+  .funnel-bar span { font-family:var(--mono); font-size:11px; color:white; white-space:nowrap; }
+  .funnel-num { font-family:var(--mono); font-size:13px; color:var(--text-secondary); width:60px; text-align:right; }
+
+  /* Breakdown bars */
+  .breakdown-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .breakdown-label { font-size:12px; color:var(--text-secondary); width:140px; flex-shrink:0; text-align:right; }
+  .breakdown-bar-wrap { flex:1; background:var(--surface-2); border-radius:3px; height:22px; overflow:hidden; }
+  .breakdown-bar { height:100%; background:var(--accent); border-radius:3px; display:flex; align-items:center; padding-left:8px; }
+  .breakdown-bar span { font-family:var(--mono); font-size:11px; color:white; white-space:nowrap; }
+  .breakdown-bar.light { background:#94a8e0; }
+
+  /* Conclusion grid */
+  .concl-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:32px; }
+  .concl-item { background:var(--surface); padding:24px 20px; }
+  .concl-from { font-size:13px; color:var(--text-muted); margin-bottom:8px; font-weight:400; }
+  .concl-arrow { font-family:var(--mono); font-size:11px; color:var(--accent); margin:6px 0; }
+  .concl-to { font-size:14px; color:var(--text-primary); font-weight:600; }
+
+  .footer { border-top:1px solid var(--border); padding:24px 40px; max-width:900px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+  .footer-label { font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
+
+  @media (max-width:640px) {
+    .hero,.stat-strip,.tab-nav,.content { padding-left:20px; padding-right:20px; }
+    .stat-strip { grid-template-columns:repeat(2,1fr); }
+    .step-flow { grid-template-columns:1fr; }
+    .grid-2,.grid-3,.concl-grid { grid-template-columns:1fr; }
+    .funnel-label,.breakdown-label { width:96px; font-size:11px; }
+  }
+
+  /* Portfolio theme alignment */
+  @keyframes caseFadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  *, *::before, *::after { font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif !important; letter-spacing:0 !important; }
+  html, body { background:#f2f3f6 !important; color:#111827; word-break:keep-all; overflow-wrap:break-word; }
+  .nav { background:rgba(242,243,246,.94) !important; border-bottom:1px solid #d9dee8 !important; box-shadow:none; }
+  .nav-back { font-size:15px; font-weight:600; color:#111827; letter-spacing:0; font-family:'Pretendard','Noto Sans KR',sans-serif !important; }
+  .nav-label { color:#6b7280; }
+  .hero { max-width:1100px; padding:72px 40px 48px; }
+  .hero > * { animation:caseFadeUp .65s ease both; }
+  .hero > *:nth-child(1){animation-delay:.04s}.hero > *:nth-child(2){animation-delay:.12s}.hero > *:nth-child(3){animation-delay:.2s}.hero > *:nth-child(4){animation-delay:.28s}
+  .case-label { color:#2563eb; }
+  .hero h1 { font-size:clamp(38px,5vw,56px); font-weight:500; line-height:1.15; letter-spacing:-.02em; }
+  .hero-desc { max-width:780px; color:#4b5563; }
+  .tag { border-radius:4px; background:#f4f5f7; border-color:rgba(107,114,128,.18); }
+  .tag.accent { background:#eff6ff; border-color:#bfdbfe; color:#2563eb; }
+  .stat-strip { max-width:1100px; padding:0 40px; gap:14px; background:transparent; border:0; border-radius:0; overflow:visible; animation:caseFadeUp .65s .34s ease both; }
+  .stat-item { text-align:left; border:1px solid #e5e7eb; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.04); background:#fff; }
+  .stat-num { font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-weight:700; color:#111827; }
+  .stat-num span { color:#2563eb; }
+  .tab-nav { position:sticky; top:56px; z-index:80; max-width:none; margin:0; padding:0 40px; justify-content:center; background:rgba(242,243,246,.96); border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; backdrop-filter:blur(10px); animation:caseFadeUp .65s .42s ease both; }
+  .tab-btn { height:56px; font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-size:13px; text-transform:none; letter-spacing:0; }
+  .tab-btn.active { color:#111827; border-bottom-color:#111827; font-weight:700; }
+  .content { max-width:1100px; padding:64px 40px 80px; }
+  .section-title { color:#2563eb; border-bottom-color:#d9dee8; }
+  .section-heading { font-size:32px; font-weight:500; line-height:1.25; color:#111827; }
+  .card, .funnel-visual, .concl-item { border-color:#e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+  .footer { max-width:none; padding:40px; background:#f2f3f6; border-top:1px solid #d9dee8; }
+  .footer-btn { height:38px; padding:0 16px; border-radius:7px; font-size:12px; font-weight:600; border:1px solid #d9dee8; background:#fff; color:#6b7280; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+  .footer-btn.primary { background:#2563eb; border-color:#2563eb; color:#fff; }
+  @media(max-width:700px){ .hero,.stat-strip,.tab-nav,.content,.footer{padding-left:24px;padding-right:24px}.stat-strip{grid-template-columns:1fr}.hero h1{font-size:34px}.tab-nav{justify-content:flex-start;overflow-x:auto}.grid-2,.grid-3,.concl-grid{grid-template-columns:1fr} }
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">데이터 분석 포트폴리오</a>
+  <span class="nav-label">Project 01 / E-commerce Analytics</span>
+</nav>
+
+<header class="hero">
+  <div class="case-label">Data Analysis Case Study &nbsp;·&nbsp; Project 01</div>
+  <h1>RetailRocket<br>이커머스 로그 분석</h1>
+  <p class="hero-desc">
+    낮은 전환율의 원인을 진단하고, 데이터 품질 문제를 먼저 검증한 뒤
+    추천 모델 비교와 A/B 테스트 설계로 연결한 프로젝트입니다.
+    퍼널 분석 → 상품 품질 진단 → 비정상 사용자 탐지 → 추천 모델링 → 실험 설계 순으로 진행했습니다.
+  </p>
+  <div class="tag-row">
+    <span class="tag accent">Python</span>
+    <span class="tag accent">Funnel Analysis</span>
+    <span class="tag accent">Recommendation</span>
+    <span class="tag accent">A/B Testing</span>
+    <span class="tag">데이터 품질 진단</span>
+    <span class="tag">비정상 트래픽 탐지</span>
+    <span class="tag">실험 설계</span>
+  </div>
+</header>
+
+<div class="stat-strip">
+  <div class="stat-item">
+    <span class="stat-num">0.84<span>%</span></span>
+    <div class="stat-desc">view → transaction 전환율</div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">903<span>개</span></span>
+    <div class="stat-desc">고조회 무전환 상품</div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">78.7<span>%</span></span>
+    <div class="stat-desc">무전환 상품 중 판매 불가능 비중</div>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5<span>개</span></span>
+    <div class="stat-desc">비교한 추천 모델</div>
+  </div>
+</div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(event,'story')">Story</button>
+  <button class="tab-btn" onclick="switchTab(event,'funnel')">Funnel</button>
+  <button class="tab-btn" onclick="switchTab(event,'hypothesis')">Hypothesis</button>
+  <button class="tab-btn" onclick="switchTab(event,'model')">Model</button>
+  <button class="tab-btn" onclick="switchTab(event,'abtest')">A/B Test</button>
+  <button class="tab-btn" onclick="switchTab(event,'conclusion')">Conclusion</button>
+</nav>
+
+<main class="content">
+
+  <!-- STORY -->
+  <section class="tab-panel active" id="story">
+    <div class="section-title">분석 스토리</div>
+    <div class="section-heading">모델보다 먼저, 데이터 품질을 진단했습니다</div>
+
+    <div class="step-flow">
+      <div class="step-item">
+        <span class="step-num">01</span>
+        <div class="step-title">EDA & Funnel</div>
+        <div class="step-sub">전체 이벤트 구조 파악</div>
+        <div class="step-tag">view 96.67%</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">02</span>
+        <div class="step-title">문제 정의</div>
+        <div class="step-sub">고조회 무전환 상품 탐색</div>
+        <div class="step-tag">903개</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">03</span>
+        <div class="step-title">가설 1 검증</div>
+        <div class="step-sub">상품 자체의 문제인가</div>
+        <div class="step-tag">가용성 78.7%</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">04</span>
+        <div class="step-title">가설 2 검증</div>
+        <div class="step-sub">비정상 트래픽 문제인가</div>
+        <div class="step-tag">strict/medium/loose</div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">05</span>
+        <div class="step-title">모델 & 실험</div>
+        <div class="step-sub">추천 비교 + A/B 설계</div>
+        <div class="step-tag">1-pager</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">배경</span>왜 데이터 품질부터 봤는가</div>
+      <p>
+        RetailRocket 실제 이커머스 로그 데이터(view, addtocart, transaction)를 분석해
+        낮은 전환율의 원인을 진단하고 추천 모델 및 실험 설계로 연결하는 것이 목표였습니다.
+        사이트명·상품명·브랜드·가격은 익명화되어 있어 로그, 상품 가용성, 카테고리 정보를 중심으로 분석했습니다.
+        <br><br>
+        단순히 추천 모델을 먼저 만드는 대신, 데이터 품질을 진단하고 비정상 트래픽이 퍼널 지표에 어떤 영향을 주는지
+        먼저 확인한 뒤 모델 비교와 실험 설계를 진행했습니다.
+      </p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>파일</th><th>내용</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>events.csv</td><td>사용자 행동 로그: view, addtocart, transaction</td></tr>
+          <tr><td>item_properties.csv</td><td>상품 속성 정보: categoryid, available 등</td></tr>
+          <tr><td>category_tree.csv</td><td>카테고리 계층 정보</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>핵심 질문:</strong> 전환율이 낮은 이유는 추천 모델의 문제인가, 아니면 그 이전 단계
+        — 상품 가용성과 트래픽 품질 — 의 문제인가?
+      </p>
+    </div>
+  </section>
+
+  <!-- FUNNEL -->
+  <section class="tab-panel" id="funnel">
+    <div class="section-title">EDA & Funnel Analysis</div>
+    <div class="section-heading">조회는 많지만, 구매로 이어지지 않습니다</div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">이벤트 구조</span>전체 이벤트 비율</div>
+      <p>전체 이벤트 중 <strong>view가 96.67%</strong>로 대부분을 차지했고, <strong>addtocart는 2.52%</strong>, <strong>transaction은 0.81%</strong>였습니다.</p>
+    </div>
+
+    <div class="funnel-visual">
+      <div class="section-title" style="margin-bottom:20px;">전체 이벤트 비율</div>
+      <div class="funnel-row">
+        <div class="funnel-label">view</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%"><span>96.67%</span></div></div>
+        <div class="funnel-num">96.67%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">addtocart</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar muted" style="width:3%"><span>2.52%</span></div></div>
+        <div class="funnel-num">2.52%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">transaction</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar muted" style="width:1%"><span>0.81%</span></div></div>
+        <div class="funnel-num">0.81%</div>
+      </div>
+    </div>
+
+    <div class="funnel-visual">
+      <div class="section-title" style="margin-bottom:20px;">기본 퍼널 전환율</div>
+      <div class="funnel-row">
+        <div class="funnel-label">view → addtocart</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:8%"><span>2.60%</span></div></div>
+        <div class="funnel-num">2.60%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">view → transaction</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:3%"><span>0.84%</span></div></div>
+        <div class="funnel-num">0.84%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="funnel-label">addtocart → transaction</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%"><span>32.39%</span></div></div>
+        <div class="funnel-num">32.39%</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>해석:</strong> addtocart → transaction은 32.39%로 상대적으로 양호한 반면,
+        view 단계에서의 이탈이 압도적으로 큽니다. 문제는 "장바구니 이후"가 아니라
+        "조회 이후 장바구니로 가지 못하는 구간"에 있을 가능성이 큽니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- HYPOTHESIS -->
+  <section class="tab-panel" id="hypothesis">
+    <div class="section-title">문제 정의 & 가설 검증</div>
+    <div class="section-heading">조회는 충분한데, 왜 전환이 없을까</div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">문제 정의</span>고조회 무전환 상품 탐색</div>
+      <p>
+        상품별 조회 수 분포에서 중앙값은 3회, 95분위수는 46회, 99분위수는 138회였습니다.
+        따라서 <strong>view ≥ 100</strong>을 전환 기회가 충분히 있었던 상품 후보를 찾는 기준으로 사용했습니다.
+      </p>
+      <div class="highlight-box" style="margin-top:12px;">
+        <p><strong>view ≥ 100, addtocart = 0, transaction = 0 → 903개 상품</strong></p>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">가설 1: 상품 자체의 문제</div>
+    <div class="card">
+      <div class="card-title"><span class="num">검증</span>판매 가능 상태(available)와 메타데이터 확인</div>
+      <p>
+        903개 상품 중 <strong>711개(78.7%)는 판매 불가능</strong> 상태였고, <strong>120개(13.3%)는 item_properties에 존재하지 않는</strong> 상품이었습니다.
+        판매 가능 상태였던 상품은 72개(8.0%)였습니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:16px;">고조회 무전환 상품 원인 분해 (903개)</div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">판매 불가능</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:100%"><span>711개 · 78.7%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">상품 메타데이터 없음</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:17%"><span>120개 · 13.3%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">현재 데이터로 설명 어려움</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:6%"><span>45개 · 5.0%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">판매 가능 + 저전환 카테고리</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:3%"><span>19개 · 2.1%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">판매 가능 + 반복 조회 의심</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:1%"><span>8개 · 0.9%</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">추가 분석</span>판매 가능 72개 상품의 추가 분해</div>
+      <ul>
+        <li>views_per_viewer ≥ 5인 반복 조회 의심 상품은 8개</li>
+        <li>반복 조회 의심 제외 64개 중 19개(29.7%)는 장바구니·구매 전환율 기준 하위 25% 카테고리에 속함</li>
+        <li>결론적으로 약 5%만 현재 데이터로 원인을 특정하기 어려움</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>가설 1 결론:</strong> 고조회 무전환 상품의 대부분은 상품 가용성 또는 메타데이터 품질 문제로 설명됩니다.
+      </p>
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">가설 2: 비정상 트래픽 문제</div>
+    <div class="card">
+      <div class="card-title"><span class="num">검증</span>view를 과도하게 발생시키는 사용자가 있는가</div>
+      <p>
+        사용자별 total_events 분포에서 중앙값은 1, 95분위수는 5, 99분위수는 13이었습니다.
+        이를 바탕으로 비정상 후보 기준을 strict / medium / loose 세 단계로 정의했습니다.
+      </p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>기준</th><th>조건</th><th>의미</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>strict</td>
+            <td>total_events ≥ 100, transaction = 0, cart_event_ratio ≤ 0.01</td>
+            <td>극단적 고활동, 구매 없음, 장바구니 거의 없음</td>
+          </tr>
+          <tr>
+            <td>medium</td>
+            <td>total_events ≥ 50, transaction = 0, cart_event_ratio ≤ 0.02</td>
+            <td>상위 약 0.1% 고활동, 구매 없음, 장바구니 매우 낮음</td>
+          </tr>
+          <tr>
+            <td>loose</td>
+            <td>total_events ≥ 20, transaction = 0, cart_event_ratio ≤ 0.05</td>
+            <td>상위 약 0.5% 고활동, 구매 없음, 장바구니 낮음</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:16px;">비정상 후보 기준별 전체 데이터 영향</div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">loose · view_pct</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:100%"><span>~6.5%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">loose · event_pct</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:95%"><span>~6.3%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">medium · view_pct</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:40%"><span>~2.6%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">strict · view_pct</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:23%"><span>~1.5%</span></div></div>
+      </div>
+      <div class="breakdown-row">
+        <div class="breakdown-label">loose · user_pct</div>
+        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:6%"><span>~0.5%</span></div></div>
+      </div>
+      <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">user_pct는 매우 작지만 view_pct·event_pct는 상대적으로 크게 나타남 — 적은 사용자가 view 분모를 크게 부풀림</p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>데이터</th><th>view → cart</th><th>view → transaction</th><th>cart → transaction</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>original</td><td>2.60%</td><td>0.84%</td><td>32.39%</td></tr>
+          <tr><td>clean_strict</td><td>2.64%</td><td>0.86%</td><td>32.41%</td></tr>
+          <tr><td>clean_medium</td><td>2.67%</td><td>0.87%</td><td>32.44%</td></tr>
+          <tr><td>clean_loose</td><td>2.75%</td><td>0.90%</td><td>32.74%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>가설 2 결론:</strong> 비정상 후보를 제거하면 모든 기준에서 view 기반 전환율이 상승했습니다.
+        transaction 수는 유지되고 cart → transaction 전환율도 크게 변하지 않았습니다.
+        즉 비정상 후보 사용자는 주로 상단 퍼널의 view 분모를 부풀리는 방식으로 전환율을 낮추고 있었습니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section class="tab-panel" id="model">
+    <div class="section-title">Recommendation Model</div>
+    <div class="section-heading">추천 모델 성능 비교</div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">평가 방식</span>시간 기준 train/test 분리</div>
+      <p>
+        평가는 시간 기준으로 train/test를 나누었고, test 기간의 addtocart 또는 transaction 상품을 정답으로 정의했습니다.
+      </p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>모델</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>popularity_baseline</td><td>train에서 addtocart, transaction이 많은 상품 추천</td></tr>
+          <tr><td>clean_medium_popularity</td><td>medium 기준 비정상 사용자를 제거한 train으로 popularity 추천</td></tr>
+          <tr><td>available_only_popularity</td><td>판매 가능 상품만 후보로 사용한 popularity 추천</td></tr>
+          <tr><td>category_based</td><td>사용자 대표 관심 카테고리 내 인기 상품 추천</td></tr>
+          <tr><td>item_item_cooccurrence</td><td>사용자 positive item과 함께 등장한 상품 추천</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">K=10</span>최고 성능 모델</div>
+      <p>
+        K=10 기준으로 <strong>available_only_popularity</strong>가 가장 좋은 성능을 보였습니다.
+        판매 불가능 상품을 추천 후보에서 제외하는 것만으로도
+        <strong>Hit Rate@10, Recall@10, Precision@10</strong>이 모두 개선되었습니다.
+      </p>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>모델</th><th>Hit Rate</th><th>Recall</th><th>Precision</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>popularity_baseline</td><td>~0.046</td><td>~0.024</td><td>~0.005</td></tr>
+          <tr><td>clean_medium_popularity</td><td>~0.044</td><td>~0.022</td><td>~0.005</td></tr>
+          <tr><td><strong>available_only_popularity</strong></td><td><strong>~0.051</strong></td><td><strong>~0.028</strong></td><td><strong>~0.006</strong></td></tr>
+          <tr><td>category_based</td><td>~0.044</td><td>~0.025</td><td>~0.004</td></tr>
+          <tr><td>item_item_cooccurrence</td><td>~0.036</td><td>~0.018</td><td>~0.004</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--text-muted);padding:0 14px 14px;">※ 보고서 Figure 6 그래프 기준 근사값</p>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>K별 비교:</strong> K=5와 K=10에서는 available_only_popularity가 가장 안정적이었고,
+        K=20에서는 category_based가 Hit Rate와 Recall에서 가장 높았습니다.
+        상단 추천 슬롯에서는 판매 가능 인기 상품 추천이 강한 기준선이고,
+        넓은 추천 영역에서는 카테고리 기반 추천이 더 많은 정답을 포함할 수 있음을 의미합니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- A/B TEST -->
+  <section class="tab-panel" id="abtest">
+    <div class="section-title">A/B 테스트 1-pager</div>
+    <div class="section-heading">추천 영역 개인화 로직 개선 실험</div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <tbody>
+          <tr><td>실험명</td><td>추천 영역 개인화 로직 개선 A/B 테스트</td></tr>
+          <tr><td>실험 목적</td><td>전체 인기 상품 추천 대비 사용자 관심 카테고리 기반 추천이 장바구니 전환율을 높이는지 검증</td></tr>
+          <tr><td>Target User</td><td>이커머스 사이트에서 상품을 조회한 방문자 중 추천 영역에 노출된 사용자</td></tr>
+          <tr><td>Observation</td><td>view 96.67% vs addtocart 2.52%, transaction 0.81%. 고조회 무전환 903개 중 78.7%는 판매 불가능</td></tr>
+          <tr><td>Problem</td><td>추천 영역에 판매 불가능 상품이나 관심과 맞지 않는 상품 노출 시 클릭·전환 저하 가능성</td></tr>
+          <tr><td>Hypothesis</td><td>판매 가능 상품 + 관심 카테고리 기반 추천이 기존 인기 상품 추천보다 장바구니 전환율을 높일 것</td></tr>
+          <tr><td>Randomization Unit</td><td>visitorid</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="num">A · Control</span>Available-only Popularity</div>
+        <p>판매 가능 상품 기준 전체 인기 상품 추천. train 기간에 addtocart, transaction이 많았던 상품을 추천합니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="num">B · Treatment</span>Category-based Recommendation</div>
+        <p>판매 가능 상품 기준 사용자 관심 카테고리 기반 추천. 사용자의 과거 행동으로 대표 관심 카테고리를 찾고, 해당 카테고리 내 판매 가능 인기 상품을 추천합니다.</p>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="data-table">
+        <thead>
+          <tr><th>구분</th><th>지표</th><th>정의</th><th>목적</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge green">Primary</span></td>
+            <td>Recommendation Add-to-Cart Rate</td>
+            <td>추천 상품 장바구니 추가 UV / 추천 영역 노출 UV</td>
+            <td>추천 영역이 실제 장바구니 행동을 늘렸는지 확인</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Secondary</span></td>
+            <td>Recommendation CTR</td>
+            <td>추천 상품 클릭 UV / 추천 영역 노출 UV</td>
+            <td>추천 상품에 대한 관심도 확인</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Secondary</span></td>
+            <td>Purchase Conversion Rate</td>
+            <td>구매 완료 UV / 추천 영역 노출 UV</td>
+            <td>최종 구매 전환 효과 확인</td>
+          </tr>
+          <tr>
+            <td><span class="badge">Secondary</span></td>
+            <td>Revenue per Visitor</td>
+            <td>추천 영역 노출 사용자당 매출</td>
+            <td>매출 기여도 확인</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">Guardrail</span></td>
+            <td>Unavailable Item Exposure Rate</td>
+            <td>판매 불가능 상품 노출 수 / 전체 추천 노출 수</td>
+            <td>추천 품질 및 운영 리스크 방지</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">Guardrail</span></td>
+            <td>Abnormal Traffic Share</td>
+            <td>비정상 후보 사용자 비중</td>
+            <td>실험군 간 트래픽 품질 차이 감시</td>
+          </tr>
+          <tr>
+            <td><span class="badge orange">Guardrail</span></td>
+            <td>Cart-to-Transaction Rate</td>
+            <td>구매 수 / 장바구니 추가 수</td>
+            <td>장바구니 이후 구매 흐름 악화 여부 확인</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="num">Exclusion Rule</span>사전 정의된 제외 규칙</div>
+        <p>
+          실험 전 정의한 view-heavy 비정상 사용자 규칙 적용.<br><br>
+          <strong>Main Abnormal Rule:</strong><br>
+          total_events ≥ 50, transaction = 0, cart_event_ratio ≤ 0.02 (medium 기준)
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="num">Stop Rule</span>중단·롤백 기준</div>
+        <p>
+          구매 전환율 또는 cart-to-transaction rate가 대조군 대비 유의미하게 하락하거나,
+          available=0 상품 노출이 발생하면 <strong>중단 또는 롤백</strong>합니다.
+        </p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        <strong>실험 설계의 핵심:</strong> 이번 실험은 UI 디자인 변경이 아니라 추천 로직 변경 실험입니다.
+        A그룹은 안정적인 baseline(판매 가능 상품 기반 인기 추천), B그룹은 관심 카테고리를 반영한 개인화 추천입니다.
+        available=0 상품 제외와 비정상 사용자 제외는 결과를 본 뒤가 아니라
+        <strong>실험 전에 사전 정의</strong>해야 결과 해석에 편향이 생기지 않습니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="num">Expected Impact</span>오프라인 평가 기반 기대 효과</div>
+      <p>
+        오프라인 평가에서 available_only_popularity는 기존 popularity 대비
+        Hit Rate@10, Recall@10, Precision@10이 모두 개선되었습니다.
+        B그룹의 카테고리 기반 추천도 같은 가용성 필터를 적용한 상태에서
+        개인화 효과를 추가로 검증하는 구조입니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- CONCLUSION -->
+  <section class="tab-panel" id="conclusion">
+    <div class="section-title">최종 결론</div>
+    <div class="section-heading">모델 이전에, 데이터 품질이 먼저였습니다</div>
+
+    <div class="concl-grid">
+      <div class="concl-item">
+        <div class="concl-from">처음 가정</div>
+        <div class="concl-arrow">↓</div>
+        <div class="concl-to">추천 모델이 약해서 전환율이 낮다</div>
+      </div>
+      <div class="concl-item">
+        <div class="concl-from">가설 1 검증</div>
+        <div class="concl-arrow">↓</div>
+        <div class="concl-to">고조회 무전환의 78.7%는 판매 불가능</div>
+      </div>
+      <div class="concl-item">
+        <div class="concl-from">가설 2 검증</div>
+        <div class="concl-arrow">↓</div>
+        <div class="concl-to">비정상 사용자가 view 분모를 왜곡</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">이 분석에서 배운 것</div>
+      <p>
+        낮은 전환율은 단순히 추천 모델 문제만은 아니었습니다.
+        고조회 무전환 상품의 대부분은 판매 불가능 상태이거나 상품 메타데이터가 누락된 경우였습니다.
+        <br><br>
+        view-heavy 비정상 사용자는 전체 사용자 수로는 적지만, view 기반 퍼널 지표를 왜곡할 수 있었습니다.
+        추천 모델에서는 복잡한 개인화보다 판매 가능 상품 필터를 적용한 popularity 모델이 가장 안정적인 성능을 보였습니다.
+        <br><br>
+        따라서 이커머스 추천 시스템이나 A/B 테스트를 설계할 때는 모델 개선 이전에
+        <strong>상품 가용성 관리와 비정상 트래픽 제거 같은 데이터 품질 관리가 먼저 필요</strong>합니다.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="footer-label">데이터 분석 포트폴리오</span>
+  <a class="footer-btn primary" href="./portfolio_case_warehouse.html">다음 프로젝트 →</a>
+</footer>
+
+<script>
+  function switchTab(e, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+</script>
+</body>
+</html>
