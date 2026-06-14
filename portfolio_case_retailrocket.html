@@ -143,22 +143,28 @@
   @keyframes caseFadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
   *, *::before, *::after { font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif !important; letter-spacing:0 !important; }
   html, body { background:#f2f3f6 !important; color:#111827; word-break:keep-all; overflow-wrap:break-word; }
-  .nav { background:rgba(242,243,246,.94) !important; border-bottom:1px solid #d9dee8 !important; box-shadow:none; }
+  * { scrollbar-width: thin; scrollbar-color: #d1d5db transparent; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  .nav { background:rgba(242,243,246,.94) !important; border-bottom:0 !important; box-shadow:none; animation:caseFadeUp .65s ease both; }
   .nav-back { font-size:15px; font-weight:600; color:#111827; letter-spacing:0; font-family:'Pretendard','Noto Sans KR',sans-serif !important; }
-  .nav-label { color:#6b7280; }
+  .nav-label { display:none !important; }
   .hero { max-width:1100px; padding:72px 40px 48px; }
   .hero > * { animation:caseFadeUp .65s ease both; }
   .hero > *:nth-child(1){animation-delay:.04s}.hero > *:nth-child(2){animation-delay:.12s}.hero > *:nth-child(3){animation-delay:.2s}.hero > *:nth-child(4){animation-delay:.28s}
-  .case-label { color:#2563eb; }
+  .case-label { display:none !important; }
   .hero h1 { font-size:clamp(38px,5vw,56px); font-weight:500; line-height:1.15; letter-spacing:-.02em; }
   .hero-desc { max-width:780px; color:#4b5563; }
+  .hero .tag-row { margin-bottom:20px; }
   .tag { border-radius:4px; background:#f4f5f7; border-color:rgba(107,114,128,.18); }
   .tag.accent { background:#eff6ff; border-color:#bfdbfe; color:#2563eb; }
   .stat-strip { max-width:1100px; padding:0 40px; gap:14px; background:transparent; border:0; border-radius:0; overflow:visible; animation:caseFadeUp .65s .34s ease both; }
   .stat-item { text-align:left; border:1px solid #e5e7eb; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.04); background:#fff; }
   .stat-num { font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-weight:700; color:#111827; }
   .stat-num span { color:#2563eb; }
-  .tab-nav { position:sticky; top:56px; z-index:80; max-width:none; margin:0; padding:0 40px; justify-content:center; background:rgba(242,243,246,.96); border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; backdrop-filter:blur(10px); animation:caseFadeUp .65s .42s ease both; }
+  .tab-nav { position:sticky; top:56px; z-index:80; max-width:none; margin:0; padding:0 40px; justify-content:center; background:rgba(242,243,246,.96); border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; backdrop-filter:blur(10px); animation:caseFadeUp .65s .42s ease both; scrollbar-width:none; }
+  .tab-nav::-webkit-scrollbar { display:none; }
   .tab-btn { height:56px; font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-size:13px; text-transform:none; letter-spacing:0; }
   .tab-btn.active { color:#111827; border-bottom-color:#111827; font-weight:700; }
   .content { max-width:1100px; padding:64px 40px 80px; }
@@ -176,26 +182,24 @@
 
 <nav class="nav">
   <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">데이터 분석 포트폴리오</a>
-  <span class="nav-label">Project 01 / E-commerce Analytics</span>
 </nav>
 
 <header class="hero">
-  <div class="case-label">Data Analysis Case Study &nbsp;·&nbsp; Project 01</div>
+  <div class="tag-row">
+    <span class="tag accent">파이썬</span>
+    <span class="tag accent">퍼널 분석</span>
+    <span class="tag accent">추천 모델링</span>
+    <span class="tag accent">A/B 테스트</span>
+    <span class="tag">데이터 품질 진단</span>
+    <span class="tag">비정상 트래픽 탐지</span>
+    <span class="tag">실험 설계</span>
+  </div>
   <h1>RetailRocket<br>이커머스 로그 분석</h1>
   <p class="hero-desc">
     낮은 전환율의 원인을 진단하고, 데이터 품질 문제를 먼저 검증한 뒤
     추천 모델 비교와 A/B 테스트 설계로 연결한 프로젝트입니다.
     퍼널 분석 → 상품 품질 진단 → 비정상 사용자 탐지 → 추천 모델링 → 실험 설계 순으로 진행했습니다.
   </p>
-  <div class="tag-row">
-    <span class="tag accent">Python</span>
-    <span class="tag accent">Funnel Analysis</span>
-    <span class="tag accent">Recommendation</span>
-    <span class="tag accent">A/B Testing</span>
-    <span class="tag">데이터 품질 진단</span>
-    <span class="tag">비정상 트래픽 탐지</span>
-    <span class="tag">실험 설계</span>
-  </div>
 </header>
 
 <div class="stat-strip">
@@ -218,12 +222,12 @@
 </div>
 
 <nav class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab(event,'story')">Story</button>
-  <button class="tab-btn" onclick="switchTab(event,'funnel')">Funnel</button>
-  <button class="tab-btn" onclick="switchTab(event,'hypothesis')">Hypothesis</button>
-  <button class="tab-btn" onclick="switchTab(event,'model')">Model</button>
-  <button class="tab-btn" onclick="switchTab(event,'abtest')">A/B Test</button>
-  <button class="tab-btn" onclick="switchTab(event,'conclusion')">Conclusion</button>
+  <button class="tab-btn active" onclick="switchTab(event,'story')">분석 스토리</button>
+  <button class="tab-btn" onclick="switchTab(event,'funnel')">퍼널 분석</button>
+  <button class="tab-btn" onclick="switchTab(event,'hypothesis')">가설 검증</button>
+  <button class="tab-btn" onclick="switchTab(event,'model')">모델링</button>
+  <button class="tab-btn" onclick="switchTab(event,'abtest')">A/B 테스트</button>
+  <button class="tab-btn" onclick="switchTab(event,'conclusion')">결론</button>
 </nav>
 
 <main class="content">
