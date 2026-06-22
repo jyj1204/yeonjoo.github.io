@@ -1,745 +1,938 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RetailRocket 이커머스 로그 분석</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
-<style>
-  :root {
-    --bg: #f0f2f5;
-    --surface: #ffffff;
-    --surface-2: #f7f8fa;
-    --border: #e2e5ea;
-    --text-primary: #1a1d23;
-    --text-secondary: #5a6070;
-    --text-muted: #9099a8;
-    --accent: #2563eb;
-    --accent-light: #eff4ff;
-    --mono: 'DM Mono', monospace;
-    --sans: 'Noto Sans KR', sans-serif;
-  }
+<!DOCTYPE html><html lang="ko"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailRocket 이커머스 로그 분석</title>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Lora:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #F4F5F7; color: #1A1A2E; font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.6; word-break: keep-all; overflow-wrap: break-word; }
+    p, div, span, a, button { word-break: keep-all; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #F4F5F7; }
+    ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+    a { color: inherit; text-decoration: none; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .fu { animation: fadeUp 0.5s ease forwards; }
+    .fu1 { animation-delay:0.05s; opacity:0; }
+    .fu2 { animation-delay:0.15s; opacity:0; }
+    .fu3 { animation-delay:0.25s; opacity:0; }
+    .fu4 { animation-delay:0.38s; opacity:0; }
+    section[id] { scroll-margin-top: 132px; }
+    .case-tab-link { display:inline-flex; align-items:center; height:56px; font-size:13px; font-weight:500; white-space:nowrap; border-bottom:2px solid transparent; color:#6B7280; transition:.15s; }
+    .case-tab-link.active { color:#1A1A2E; font-weight:700; border-bottom-color:#1A1A2E; }
+    .case-acc-btn { width:100%; padding:18px 24px; display:flex; justify-content:space-between; align-items:center; background:transparent; border:none; cursor:pointer; text-align:left; }
+    .case-acc-icon { width:24px; height:24px; border-radius:50%; background:#F4F5F7; color:#6B7280; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; transition:.2s; border:1px solid #E5E7EB; }
+    .case-acc-wrap.open .case-acc-icon { transform: rotate(45deg); background:#EFF6FF; color:#2563EB; border-color:#BFDBFE; }
+    .case-acc-body { max-height:0; overflow:hidden; transition: max-height 0.25s ease; }
+    .case-acc-wrap.open .case-acc-body { max-height: 600px; }
+    .case-acc-body-inner { padding: 0 24px 22px; font-size:13px; color:#6B7280; line-height:1.7; }
+    @media (max-width: 700px) {
+      body { overflow-x: clip; }
+      section, footer { padding-left: 24px !important; padding-right: 24px !important; }
+      h1 { font-size: 34px !important; }
+      h2 { font-size: 27px !important; }
+      .case-grid-5, .case-grid-4, .case-grid-3, .case-grid-2 { grid-template-columns: 1fr !important; }
+      table { min-width: 480px; }
+      table, pre { max-width: 100%; overflow-x: auto; }
+      footer > div { align-items: flex-start !important; flex-direction: column !important; gap: 16px; }
+    }
 
-  * { box-sizing:border-box; margin:0; padding:0; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text-primary);
-    line-height: 1.6;
-    font-size: 15px;
-  }
-
-  .nav {
-    position:fixed; top:0; left:0; right:0; z-index:100;
-    background:rgba(255,255,255,0.92); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--border); padding:0 40px; height:56px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .nav-back { font-family:var(--mono); font-size:12px; color:var(--text-secondary); text-decoration:none; letter-spacing:0.05em; display:flex; align-items:center; gap:6px; }
-  .nav-back:hover { color:var(--accent); }
-  .nav-label { font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
-
-  .hero { margin-top:56px; padding:64px 40px 48px; max-width:900px; margin-left:auto; margin-right:auto; }
-  .case-label { font-family:var(--mono); font-size:11px; color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
-  .case-label::after { content:''; flex:1; height:1px; background:var(--border); }
-  .hero h1 { font-size:clamp(24px,4vw,36px); font-weight:700; line-height:1.3; letter-spacing:-0.02em; margin-bottom:20px; }
-  .hero-desc { font-size:16px; color:var(--text-secondary); max-width:640px; line-height:1.7; margin-bottom:32px; }
-  .tag-row { display:flex; flex-wrap:wrap; gap:8px; }
-  .tag { font-family:var(--mono); font-size:11px; letter-spacing:0.05em; background:var(--surface); border:1px solid var(--border); color:var(--text-secondary); padding:5px 12px; border-radius:4px; }
-  .tag.accent { background:var(--accent-light); border-color:#bdd4ff; color:var(--accent); }
-
-  .stat-strip { max-width:900px; margin:0 auto 40px; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
-  .stat-item { background:var(--surface); padding:24px 20px; text-align:center; }
-  .stat-num { font-family:var(--mono); font-size:26px; font-weight:500; color:var(--text-primary); letter-spacing:-0.02em; display:block; margin-bottom:6px; }
-  .stat-num span { color:var(--accent); font-size:14px; font-weight:400; }
-  .stat-desc { font-size:12px; color:var(--text-muted); line-height:1.4; }
-
-  .tab-nav { max-width:900px; margin:0 auto 32px; padding:0 40px; display:flex; gap:0; border-bottom:2px solid var(--border); overflow-x:auto; }
-  .tab-btn { font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); background:none; border:none; padding:12px 18px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; white-space:nowrap; transition:color 0.2s; }
-  .tab-btn:hover { color:var(--text-secondary); }
-  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
-
-  .content { max-width:900px; margin:0 auto; padding:0 40px 80px; }
-  .tab-panel { display:none; }
-  .tab-panel.active { display:block; }
-
-  .section-title { font-family:var(--mono); font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
-  .section-heading { font-size:20px; font-weight:700; letter-spacing:-0.02em; margin-bottom:20px; color:var(--text-primary); }
-
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:28px; margin-bottom:16px; }
-  .card-title { font-size:14px; font-weight:600; color:var(--text-primary); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
-  .card-title .num { font-family:var(--mono); font-size:11px; color:var(--accent); background:var(--accent-light); padding:2px 8px; border-radius:3px; }
-  .card p { font-size:14px; color:var(--text-secondary); line-height:1.7; }
-  .card ul { margin:8px 0 0 0; padding-left:0; list-style:none; }
-  .card ul li { font-size:14px; color:var(--text-secondary); line-height:1.8; padding-left:16px; position:relative; }
-  .card ul li::before { content:'·'; position:absolute; left:0; color:var(--accent); font-weight:700; }
-
-  .step-flow { display:grid; grid-template-columns:repeat(5,1fr); gap:0; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:32px; }
-  .step-item { background:var(--surface); padding:20px 16px; text-align:center; position:relative; }
-  .step-item:not(:last-child)::after { content:'→'; position:absolute; right:-8px; top:50%; transform:translateY(-50%); font-size:12px; color:var(--text-muted); z-index:1; }
-  .step-num { font-family:var(--mono); font-size:10px; color:var(--accent); letter-spacing:0.1em; display:block; margin-bottom:8px; }
-  .step-title { font-size:12px; font-weight:600; color:var(--text-primary); margin-bottom:4px; }
-  .step-sub { font-size:11px; color:var(--text-muted); line-height:1.4; }
-  .step-tag { font-family:var(--mono); font-size:10px; color:var(--text-muted); margin-top:8px; }
-
-  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
-  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:16px; }
-
-  .highlight-box { background:var(--accent-light); border:1px solid #bdd4ff; border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:16px 20px; margin:16px 0; }
-  .highlight-box p { font-size:14px; color:var(--text-primary); line-height:1.7; }
-
-  .data-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px; }
-  .data-table th { font-family:var(--mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); text-align:left; padding:10px 14px; border-bottom:2px solid var(--border); background:var(--surface-2); }
-  .data-table td { padding:12px 14px; border-bottom:1px solid var(--border); color:var(--text-secondary); }
-  .data-table tr:last-child td { border-bottom:none; }
-  .data-table td:first-child { color:var(--text-primary); font-weight:500; }
-  .badge { font-family:var(--mono); font-size:11px; padding:3px 10px; border-radius:4px; background:var(--accent-light); color:var(--accent); }
-  .badge.red { background:#fff0f0; color:#e53e3e; }
-  .badge.green { background:#f0fff4; color:#38a169; }
-  .badge.orange { background:#fffaf0; color:#dd6b20; }
-  .badge.gray { background:var(--surface-2); color:var(--text-muted); }
-
-  /* Funnel viz */
-  .funnel-visual { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:28px; margin-bottom:16px; }
-  .funnel-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-  .funnel-label { font-size:13px; color:var(--text-secondary); width:160px; flex-shrink:0; }
-  .funnel-bar-wrap { flex:1; background:var(--surface-2); border-radius:3px; height:24px; overflow:hidden; }
-  .funnel-bar { height:100%; background:var(--accent); border-radius:3px; display:flex; align-items:center; padding-left:10px; transition:width 0.6s ease; }
-  .funnel-bar.muted { background:#a3b8e8; }
-  .funnel-bar span { font-family:var(--mono); font-size:11px; color:white; white-space:nowrap; }
-  .funnel-num { font-family:var(--mono); font-size:13px; color:var(--text-secondary); width:60px; text-align:right; }
-
-  /* Breakdown bars */
-  .breakdown-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-  .breakdown-label { font-size:12px; color:var(--text-secondary); width:140px; flex-shrink:0; text-align:right; }
-  .breakdown-bar-wrap { flex:1; background:var(--surface-2); border-radius:3px; height:22px; overflow:hidden; }
-  .breakdown-bar { height:100%; background:var(--accent); border-radius:3px; display:flex; align-items:center; padding-left:8px; }
-  .breakdown-bar span { font-family:var(--mono); font-size:11px; color:white; white-space:nowrap; }
-  .breakdown-bar.light { background:#94a8e0; }
-
-  /* Conclusion grid */
-  .concl-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:32px; }
-  .concl-item { background:var(--surface); padding:24px 20px; }
-  .concl-from { font-size:13px; color:var(--text-muted); margin-bottom:8px; font-weight:400; }
-  .concl-arrow { font-family:var(--mono); font-size:11px; color:var(--accent); margin:6px 0; }
-  .concl-to { font-size:14px; color:var(--text-primary); font-weight:600; }
-
-  .footer { border-top:1px solid var(--border); padding:24px 40px; max-width:900px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
-  .footer-label { font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
-
-  @media (max-width:640px) {
-    .hero,.stat-strip,.tab-nav,.content { padding-left:20px; padding-right:20px; }
-    .stat-strip { grid-template-columns:repeat(2,1fr); }
-    .step-flow { grid-template-columns:1fr; }
-    .grid-2,.grid-3,.concl-grid { grid-template-columns:1fr; }
-    .funnel-label,.breakdown-label { width:96px; font-size:11px; }
-  }
-
-  /* Portfolio theme alignment */
-  @keyframes caseFadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
-  *, *::before, *::after { font-family:'Pretendard','Noto Sans KR',-apple-system,BlinkMacSystemFont,sans-serif !important; letter-spacing:0 !important; }
-  html, body { background:#f2f3f6 !important; color:#111827; word-break:keep-all; overflow-wrap:break-word; }
-  * { scrollbar-width: thin; scrollbar-color: #d1d5db transparent; }
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-  .nav { background:rgba(242,243,246,.94) !important; border-bottom:0 !important; box-shadow:none; animation:caseFadeUp .65s ease both; }
-  .nav-back { font-size:15px; font-weight:600; color:#111827; letter-spacing:0; font-family:'Pretendard','Noto Sans KR',sans-serif !important; }
-  .nav-label { display:none !important; }
-  .hero { max-width:1100px; padding:72px 40px 48px; }
-  .hero > * { animation:caseFadeUp .65s ease both; }
-  .hero > *:nth-child(1){animation-delay:.04s}.hero > *:nth-child(2){animation-delay:.12s}.hero > *:nth-child(3){animation-delay:.2s}.hero > *:nth-child(4){animation-delay:.28s}
-  .case-label { display:none !important; }
-  .hero h1 { font-size:clamp(38px,5vw,56px); font-weight:500; line-height:1.15; letter-spacing:-.02em; }
-  .hero-desc { max-width:780px; color:#4b5563; }
-  .hero .tag-row { margin-bottom:20px; }
-  .tag { border-radius:4px; background:#f4f5f7; border-color:rgba(107,114,128,.18); }
-  .tag.accent { background:#eff6ff; border-color:#bfdbfe; color:#2563eb; }
-  .stat-strip { max-width:1100px; padding:0 40px; gap:14px; background:transparent; border:0; border-radius:0; overflow:visible; animation:caseFadeUp .65s .34s ease both; }
-  .stat-item { text-align:left; border:1px solid #e5e7eb; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.04); background:#fff; }
-  .stat-num { font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-weight:700; color:#111827; }
-  .stat-num span { color:#2563eb; }
-  .tab-nav { position:sticky; top:56px; z-index:80; max-width:none; margin:0; padding:0 40px; justify-content:center; background:rgba(242,243,246,.96); border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; backdrop-filter:blur(10px); animation:caseFadeUp .65s .42s ease both; scrollbar-width:none; }
-  .tab-nav::-webkit-scrollbar { display:none; }
-  .tab-btn { height:56px; font-family:'Pretendard','Noto Sans KR',sans-serif !important; font-size:13px; text-transform:none; letter-spacing:0; }
-  .tab-btn.active { color:#111827; border-bottom-color:#111827; font-weight:700; }
-  .content { max-width:1100px; padding:64px 40px 80px; }
-  .section-title { color:#2563eb; border-bottom-color:#d9dee8; }
-  .section-heading { font-size:32px; font-weight:500; line-height:1.25; color:#111827; }
-  .card, .funnel-visual, .concl-item { border-color:#e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.04); }
-  .footer { max-width:none; padding:40px; background:#f2f3f6; border-top:1px solid #d9dee8; }
-  .footer-btn { height:38px; padding:0 16px; border-radius:7px; font-size:12px; font-weight:600; border:1px solid #d9dee8; background:#fff; color:#6b7280; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
-  .footer-btn.primary { background:#2563eb; border-color:#2563eb; color:#fff; }
-  @media(max-width:700px){ .hero,.stat-strip,.tab-nav,.content,.footer{padding-left:24px;padding-right:24px}.stat-strip{grid-template-columns:1fr}.hero h1{font-size:34px}.tab-nav{justify-content:flex-start;overflow-x:auto}.grid-2,.grid-3,.concl-grid{grid-template-columns:1fr} }
-
-</style>
+    /* Portfolio detail theme alignment */
+    @keyframes caseFadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    *, *::before, *::after {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      letter-spacing: 0 !important;
+    }
+    html, body, #root, #root > div, main, section, footer {
+      background: #f2f3f6 !important;
+    }
+    body {
+      color: #111827 !important;
+      scrollbar-width: thin;
+      scrollbar-color: #d1d5db transparent;
+    }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    body > div > div > nav {
+      background: rgba(242, 243, 246, 0.94) !important;
+      border-bottom: 0 !important;
+      box-shadow: none !important;
+      animation: caseFadeUp 0.65s ease both;
+    }
+    body > div > div > nav > div {
+      max-width: 1100px !important;
+      justify-content: flex-start !important;
+    }
+    body > div > div > nav > div > div {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      color: #111827 !important;
+    }
+    body > div > div > nav a {
+      display: none !important;
+    }
+    main > section:first-child {
+      padding: 72px 40px 48px !important;
+    }
+    main > section:first-child > div {
+      max-width: 1100px !important;
+    }
+    main > section:first-child > div > * {
+      animation: caseFadeUp 0.65s ease both;
+    }
+    main > section:first-child > div > *:nth-child(1) { animation-delay: 0.04s; }
+    main > section:first-child > div > *:nth-child(2) { animation-delay: 0.12s; }
+    main > section:first-child > div > *:nth-child(3) { animation-delay: 0.20s; }
+    main > section:first-child h1 {
+      font-size: clamp(38px, 5vw, 56px) !important;
+      font-weight: 500 !important;
+      line-height: 1.15 !important;
+      color: #1f2233 !important;
+      max-width: 760px !important;
+    }
+    main > section:first-child p {
+      max-width: 900px !important;
+      color: #5f6878 !important;
+      font-size: 17px !important;
+      line-height: 1.75 !important;
+    }
+    .hero-stats {
+      margin-top: 0 !important;
+    }
+    .hero-stats > div {
+      border-radius: 10px !important;
+      border: 1px solid #e5e7eb !important;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+      min-height: 128px;
+    }
+    .hero-stats > div > div:nth-child(2) {
+      font-size: 36px !important;
+      font-weight: 500 !important;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+    .case-section-tabs {
+      position: sticky !important;
+      top: 56px !important;
+      z-index: 120 !important;
+      background: rgba(242, 243, 246, 0.96) !important;
+      border-top: 1px solid #e5e7eb !important;
+      border-bottom: 1px solid #e5e7eb !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+      animation: caseFadeUp 0.65s 0.42s ease both;
+    }
+    .case-section-tabs > div {
+      justify-content: flex-start !important;
+      gap: 24px !important;
+    }
+    .case-section-tabs > div::-webkit-scrollbar {
+      display: none;
+    }
+    .case-tab-link {
+      height: 56px !important;
+      font-size: 13px !important;
+      color: #6b7280 !important;
+      border-bottom-color: transparent !important;
+      text-decoration: none !important;
+    }
+    .case-tab-link.active {
+      color: #111827 !important;
+      font-weight: 700 !important;
+      border-bottom-color: #111827 !important;
+    }
+    section[id] {
+      scroll-margin-top: 132px;
+    }
+    section[id] > div {
+      max-width: 1100px !important;
+    }
+    section[id] h2 {
+      font-size: 32px !important;
+      font-weight: 500 !important;
+      line-height: 1.25 !important;
+      color: #111827 !important;
+    }
+    section[id] > div > div:first-child {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+    }
+    section[id] > div > div:first-child > div:first-child {
+      width: 3px !important;
+      height: 14px !important;
+      background: #2563eb !important;
+      border-radius: 2px !important;
+      flex: 0 0 auto !important;
+    }
+    footer {
+      background: #f2f3f6 !important;
+      border-top: 1px solid #d9dee8 !important;
+    }
+    footer > div {
+      max-width: 1100px !important;
+    }
+    footer > div > div:first-child > div:first-child {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: #111827 !important;
+    }
+    footer a {
+      height: 38px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-decoration: none !important;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+    @media (max-width: 700px) {
+      main > section:first-child,
+      .case-section-tabs,
+      section,
+      footer {
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+      }
+      .hero-stats {
+        grid-template-columns: 1fr !important;
+      }
+      main > section:first-child h1 {
+        font-size: 34px !important;
+      }
+      .case-section-tabs > div {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        overflow-x: auto !important;
+      }
+    }
+  </style>
 </head>
 <body>
+<div id="root"><div style="background:#F4F5F7; min-height:100vh;">
 
-<nav class="nav">
-  <a href="https://www.yeonjoo.cloud/#projects" class="nav-back">데이터 분석 포트폴리오</a>
+<nav style="position: sticky; top: 0px; z-index: 100; background: rgba(244,245,247,0.94); backdrop-filter: blur(10px); padding: 0px 40px;">
+  <div style="max-width: 1100px; margin: 0px auto; display: flex; align-items: center; justify-content: space-between; height: 56px;">
+    <div style="font-family: Lora, serif; font-size: 15px; font-weight: 500; color: rgb(26, 26, 46);">데이터 분석 포트폴리오</div>
+    <a href="https://www.yeonjoo.cloud/#projects" style="font-size:12px; color:#6B7280; font-weight:500;">← Portfolio</a>
+  </div>
 </nav>
 
-<header class="hero">
-  <div class="tag-row">
-    <span class="tag accent">파이썬</span>
-    <span class="tag accent">퍼널 분석</span>
-    <span class="tag accent">추천 모델링</span>
-    <span class="tag accent">A/B 테스트</span>
-    <span class="tag">데이터 품질 진단</span>
-    <span class="tag">비정상 트래픽 탐지</span>
-    <span class="tag">실험 설계</span>
-  </div>
-  <h1>RetailRocket<br>이커머스 로그 분석</h1>
-  <p class="hero-desc">
-    낮은 전환율의 원인을 진단하고, 데이터 품질 문제를 먼저 검증한 뒤
-    추천 모델 비교와 A/B 테스트 설계로 연결한 프로젝트입니다.
-    퍼널 분석 → 상품 품질 진단 → 비정상 사용자 탐지 → 추천 모델링 → 실험 설계 순으로 진행했습니다.
-  </p>
-</header>
+<main>
 
-<div class="stat-strip">
-  <div class="stat-item">
-    <span class="stat-num">0.84<span>%</span></span>
-    <div class="stat-desc">view → transaction 전환율</div>
+<section style="padding: 64px 40px 48px; border-bottom: 1px solid rgb(229, 231, 235);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div class="fu fu1" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+      <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgb(239, 246, 255); color: rgb(37, 99, 235); border: 1px solid rgba(37, 99, 235, 0.145); letter-spacing: 0.02em; white-space: nowrap;">이커머스 · 추천 분석</span>
+      <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgb(244, 245, 247); color: rgb(107, 114, 128); border: 1px solid rgba(107, 114, 128, 0.145); letter-spacing: 0.02em; white-space: nowrap;">Funnel Analysis</span>
+      <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgb(244, 245, 247); color: rgb(107, 114, 128); border: 1px solid rgba(107, 114, 128, 0.145); letter-spacing: 0.02em; white-space: nowrap;">데이터 품질 진단</span>
+      <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgb(244, 245, 247); color: rgb(107, 114, 128); border: 1px solid rgba(107, 114, 128, 0.145); letter-spacing: 0.02em; white-space: nowrap;">추천 알고리즘 비교</span>
+      <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgb(244, 245, 247); color: rgb(107, 114, 128); border: 1px solid rgba(107, 114, 128, 0.145); letter-spacing: 0.02em; white-space: nowrap;">A/B 테스트 설계</span>
+    </div>
+
+    <h1 class="fu fu2" style="font-family: Lora, serif; font-size: 48px; font-weight: 500; line-height: 1.15; letter-spacing: -0.02em; color: rgb(26, 26, 46); margin-bottom: 16px; max-width: 700px;">RetailRocket<br><span style="color: rgb(37, 99, 235);">이커머스 로그</span> 분석</h1>
+
+    <p class="fu fu3" style="font-size: 17px; color: rgb(107, 114, 128); line-height: 1.7; margin-bottom: 48px; max-width: 1060px;">
+      고객이 구매까지 가는 단계(퍼널)에서 다음 단계로 넘어가는 비율(전환율)이 왜 낮은지부터 진단.
+      모델을 먼저 만들지 않고, 데이터 자체에 문제가 있는지 먼저 확인.<br>
+      <strong style="color: rgb(26, 26, 46); font-weight: 600;">원인은 추천 알고리즘이 아니라, 팔 수 없는 상품과 이상하게 활동하는 사용자.</strong>
+    </p>
+
+    <div class="fu fu4 case-grid-4 hero-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 8px; font-weight: 500;">구매까지 가는 비율</div>
+        <div style="font-family: Lora, serif; font-size: 36px; color: rgb(26, 26, 46); letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px;">0.84%</div>
+        <div style="font-size: 12px; color: rgb(156, 163, 175);">조회한 사람 중 실제 구매까지 간 비율</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 8px; font-weight: 500;">조회는 많은데 안 팔린 상품</div>
+        <div style="font-family: Lora, serif; font-size: 36px; color: rgb(37, 99, 235); letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px;">903개</div>
+        <div style="font-size: 12px; color: rgb(156, 163, 175);">조회 100회 이상, 장바구니·구매 0건</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 8px; font-weight: 500;">진짜 원인 비율</div>
+        <div style="font-family: Lora, serif; font-size: 36px; color: rgb(239, 68, 68); letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px;">78.7%</div>
+        <div style="font-size: 12px; color: rgb(156, 163, 175);">애초에 '품절'이라 살 수 없던 상품</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 8px; font-weight: 500;">비교한 추천 알고리즘</div>
+        <div style="font-family: Lora, serif; font-size: 36px; color: rgb(16, 185, 129); letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px;">5개</div>
+        <div style="font-size: 12px; color: rgb(156, 163, 175);">단순 인기순부터 개인화 추천까지</div>
+      </div>
+    </div>
   </div>
-  <div class="stat-item">
-    <span class="stat-num">903<span>개</span></span>
-    <div class="stat-desc">고조회 무전환 상품</div>
-  </div>
-  <div class="stat-item">
-    <span class="stat-num">78.7<span>%</span></span>
-    <div class="stat-desc">무전환 상품 중 판매 불가능 비중</div>
-  </div>
-  <div class="stat-item">
-    <span class="stat-num">5<span>개</span></span>
-    <div class="stat-desc">비교한 추천 모델</div>
+</section>
+
+<div class="case-section-tabs" style="position: sticky; top: 56px; z-index: 120; background: rgba(244, 245, 247, 0.96); border-top: 1px solid rgb(229, 231, 235); border-bottom: 1px solid rgb(229, 231, 235); backdrop-filter: blur(10px); box-shadow: rgba(15, 23, 42, 0.04) 0px 8px 18px;">
+  <div style="max-width: 1100px; margin: 0px auto; padding: 0px 40px; display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none;">
+    <a href="#story" class="case-tab-link active">분석 스토리</a>
+    <a href="#funnel" class="case-tab-link">구매 단계 분석</a>
+    <a href="#cause" class="case-tab-link">원인 진단</a>
+    <a href="#model" class="case-tab-link">추천 알고리즘</a>
+    <a href="#abtest" class="case-tab-link">A/B 테스트 설계</a>
+    <a href="#conclusion" class="case-tab-link">결론</a>
   </div>
 </div>
 
-<nav class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab(event,'story')">분석 스토리</button>
-  <button class="tab-btn" onclick="switchTab(event,'funnel')">퍼널 분석</button>
-  <button class="tab-btn" onclick="switchTab(event,'hypothesis')">가설 검증</button>
-  <button class="tab-btn" onclick="switchTab(event,'model')">모델링</button>
-  <button class="tab-btn" onclick="switchTab(event,'abtest')">A/B 테스트</button>
-  <button class="tab-btn" onclick="switchTab(event,'conclusion')">결론</button>
-</nav>
+<section id="story" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">분석 스토리</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 8px; color: rgb(26, 26, 46);">모델을 만들기 전에, 데이터부터 의심</h2>
+    <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 40px; line-height: 1.6; max-width: 620px;">"추천을 더 잘 만들면 매출이 오를까?"라는 질문 전에, "혹시 데이터 자체에 문제가 있는 건 아닐까?"라는 질문을 먼저 던짐.</p>
 
-<main class="content">
+    <div style="position: relative;">
+      <div style="position: absolute; top: 20px; left: 5%; right: 5%; height: 1px; background: linear-gradient(to right, rgb(229, 231, 235), rgb(191, 219, 254), rgb(167, 243, 208), rgb(229, 231, 235)); z-index: 0;"></div>
+      <div class="case-grid-5" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; position: relative; z-index: 1;">
 
-  <!-- STORY -->
-  <section class="tab-panel active" id="story">
-    <div class="section-title">분석 스토리</div>
-    <div class="section-heading">모델보다 먼저, 데이터 품질을 진단했습니다</div>
+        <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 18px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(37, 99, 235, 0.082); border: 1px solid rgba(37, 99, 235, 0.19); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgb(37, 99, 235);">01</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 4px; font-weight: 500;">전체 흐름 보기</div>
+          <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px; line-height: 1.4;">구매까지 가는 비율이 너무 낮다</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.55; margin-bottom: 12px;">조회 96.67% vs 구매 0.81%. 구매까지 가는 비율(전환율)이 0.84%에 불과.</div>
+          <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgba(37, 99, 235, 0.082); color: rgb(37, 99, 235); border: 1px solid rgba(37, 99, 235, 0.145); letter-spacing: 0.02em; white-space: nowrap;">현황 파악</span>
+        </div>
 
-    <div class="step-flow">
-      <div class="step-item">
-        <span class="step-num">01</span>
-        <div class="step-title">EDA & Funnel</div>
-        <div class="step-sub">전체 이벤트 구조 파악</div>
-        <div class="step-tag">view 96.67%</div>
-      </div>
-      <div class="step-item">
-        <span class="step-num">02</span>
-        <div class="step-title">문제 정의</div>
-        <div class="step-sub">고조회 무전환 상품 탐색</div>
-        <div class="step-tag">903개</div>
-      </div>
-      <div class="step-item">
-        <span class="step-num">03</span>
-        <div class="step-title">가설 1 검증</div>
-        <div class="step-sub">상품 자체의 문제인가</div>
-        <div class="step-tag">가용성 78.7%</div>
-      </div>
-      <div class="step-item">
-        <span class="step-num">04</span>
-        <div class="step-title">가설 2 검증</div>
-        <div class="step-sub">비정상 트래픽 문제인가</div>
-        <div class="step-tag">strict/medium/loose</div>
-      </div>
-      <div class="step-item">
-        <span class="step-num">05</span>
-        <div class="step-title">모델 & 실험</div>
-        <div class="step-sub">추천 비교 + A/B 설계</div>
-        <div class="step-tag">1-pager</div>
+        <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 18px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(245, 158, 11, 0.082); border: 1px solid rgba(245, 158, 11, 0.19); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgb(245, 158, 11);">02</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 4px; font-weight: 500;">문제 좁히기</div>
+          <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px; line-height: 1.4;">조회는 많은데 안 팔린 상품 발견</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.55; margin-bottom: 12px;">조회 100회 이상인데 장바구니·구매가 0건인 상품 903개를 찾아냄.</div>
+          <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgba(245, 158, 11, 0.082); color: rgb(245, 158, 11); border: 1px solid rgba(245, 158, 11, 0.145); letter-spacing: 0.02em; white-space: nowrap;">문제 정의</span>
+        </div>
+
+        <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 18px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(239, 68, 68, 0.082); border: 1px solid rgba(239, 68, 68, 0.19); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgb(239, 68, 68);">03</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 4px; font-weight: 500;">가설 1</div>
+          <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px; line-height: 1.4;">상품 자체의 문제일까?</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.55; margin-bottom: 12px;">903개 중 78.7%는 이미 품절·판매 불가 상품. 처음부터 살 수 없는 상품이었음.</div>
+          <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.082); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.145); letter-spacing: 0.02em; white-space: nowrap;">원인 발견</span>
+        </div>
+
+        <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 18px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(124, 58, 237, 0.082); border: 1px solid rgba(124, 58, 237, 0.19); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgb(124, 58, 237);">04</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 4px; font-weight: 500;">가설 2</div>
+          <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px; line-height: 1.4;">이상한 사용자가 숫자를 왜곡할까?</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.55; margin-bottom: 12px;">조회만 과도하게 많이 하는 이상 사용자를 3단계 기준으로 정의하고 제거 효과를 확인.</div>
+          <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgba(124, 58, 237, 0.082); color: rgb(124, 58, 237); border: 1px solid rgba(124, 58, 237, 0.145); letter-spacing: 0.02em; white-space: nowrap;">검증</span>
+        </div>
+
+        <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 18px;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(16, 185, 129, 0.082); border: 1px solid rgba(16, 185, 129, 0.19); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgb(16, 185, 129);">05</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 4px; font-weight: 500;">모델 & 실험</div>
+          <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px; line-height: 1.4;">정리된 데이터로 추천을 비교</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.55; margin-bottom: 12px;">5개 추천 알고리즘을 비교하고, 실제 검증을 위한 A/B 테스트 계획서를 작성.</div>
+          <span style="font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.082); color: rgb(16, 185, 129); border: 1px solid rgba(16, 185, 129, 0.145); letter-spacing: 0.02em; white-space: nowrap;">결론 도출</span>
+        </div>
+
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title"><span class="num">배경</span>왜 데이터 품질부터 봤는가</div>
-      <p>
-        RetailRocket 실제 이커머스 로그 데이터(view, addtocart, transaction)를 분석해
-        낮은 전환율의 원인을 진단하고 추천 모델 및 실험 설계로 연결하는 것이 목표였습니다.
-        사이트명·상품명·브랜드·가격은 익명화되어 있어 로그, 상품 가용성, 카테고리 정보를 중심으로 분석했습니다.
+    <div class="case-grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow: hidden;">
+        <div style="border-left: 3px solid rgb(37, 99, 235); padding: 16px 18px 16px 14px;">
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">처음 생각</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.5; margin-bottom: 12px;">추천 알고리즘이 약해서 구매가 안 일어난다</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <div style="width: 16px; height: 1px; background: rgb(229, 231, 235);"></div>
+            <span style="font-size: 11px; color: rgb(37, 99, 235); font-weight: 600;">→ 확인해보니</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">실제로는</div>
+          <div style="font-size: 12px; color: rgb(26, 26, 46); font-weight: 500; line-height: 1.5;">애초에 살 수 없는 품절 상품이 추천되고 있었음</div>
+        </div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow: hidden;">
+        <div style="border-left: 3px solid rgb(245, 158, 11); padding: 16px 18px 16px 14px;">
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">처음 생각</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.5; margin-bottom: 12px;">사용자 행동 데이터는 깨끗할 것이다</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <div style="width: 16px; height: 1px; background: rgb(229, 231, 235);"></div>
+            <span style="font-size: 11px; color: rgb(245, 158, 11); font-weight: 600;">→ 확인해보니</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">실제로는</div>
+          <div style="font-size: 12px; color: rgb(26, 26, 46); font-weight: 500; line-height: 1.5;">소수의 이상 사용자가 '조회 수'라는 분모를 부풀리고 있었음</div>
+        </div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow: hidden;">
+        <div style="border-left: 3px solid rgb(16, 185, 129); padding: 16px 18px 16px 14px;">
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">기대했던 결과</div>
+          <div style="font-size: 12px; color: rgb(107, 114, 128); line-height: 1.5; margin-bottom: 12px;">정교한 개인화 추천이 가장 좋은 성능을 보일 것</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+            <div style="width: 16px; height: 1px; background: rgb(229, 231, 235);"></div>
+            <span style="font-size: 11px; color: rgb(16, 185, 129); font-weight: 600;">→ 확인해보니</span>
+          </div>
+          <div style="font-size: 11px; color: rgb(156, 163, 175); margin-bottom: 3px; font-weight: 500;">실제로는</div>
+          <div style="font-size: 12px; color: rgb(26, 26, 46); font-weight: 500; line-height: 1.5;">'품절 제외'만 한 단순 인기 추천이 가장 안정적이었음</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="funnel" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235); background: rgb(249, 250, 251);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">구매 단계 분석</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 8px; color: rgb(26, 26, 46);">조회는 많은데, 구매로 이어지지 않음</h2>
+    <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 36px; line-height: 1.6; max-width: 620px;">
+      고객이 사이트에서 행동하는 단계는 보기(view) → 장바구니 담기(addtocart) → 구매(transaction) 순서.
+      먼저 각 단계에서 사람들이 얼마나 빠져나가는지 확인.
+    </p>
+
+    <div class="case-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px;">
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 4px;">전체 행동 비율</div>
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 20px;">전체 행동(이벤트) 중 각 행동이 차지하는 비율</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">상품 보기 (view)</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#2563EB; font-weight:600;">96.67%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:100%; height:100%; background:#2563EB; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">장바구니 담기 (addtocart)</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#F59E0B; font-weight:600;">2.52%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:2.6%; height:100%; background:#F59E0B; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">구매 (transaction)</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#10B981; font-weight:600;">0.81%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:0.9%; height:100%; background:#10B981; border-radius:5px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px;">
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 4px;">다음 단계로 넘어가는 비율 (전환율)</div>
+        <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 20px;">이 단계까지 온 사람 중, 다음 단계로 실제로 넘어간 비율</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">보기 → 장바구니</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#2563EB; font-weight:600;">2.60%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:8%; height:100%; background:#2563EB; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">보기 → 구매</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#EF4444; font-weight:600;">0.84%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:3%; height:100%; background:#EF4444; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">장바구니 → 구매</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#10B981; font-weight:600;">32.39%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:100%; height:100%; background:#10B981; border-radius:5px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: rgb(239, 246, 255); border-radius: 12px; border: 1px solid rgb(191, 219, 254); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+      <div style="font-size: 13px; font-weight: 700; color: rgb(37, 99, 235); margin-bottom: 6px;">읽는 법</div>
+      <div style="font-size: 14px; color: rgb(26, 26, 46); line-height: 1.6;">
+        일단 장바구니에 담은 사람은 32.39%나 실제로 구매까지 감 (꽤 높은 비율).
+        반면 '보기'에서 '장바구니'로 넘어가는 비율은 2.60%에 그침.
+        즉, 문제는 "장바구니에 담은 후"가 아니라 "둘러보고 장바구니에 담기까지" 구간에 있을 가능성이 큼.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cause" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">원인 진단</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 8px; color: rgb(26, 26, 46);">조회는 충분한데, 왜 안 팔릴까</h2>
+    <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 36px; line-height: 1.6; max-width: 640px;">
+      상품별로 조회 수를 살펴보니, 보통은 3회 정도 보고 끝나지만 상위 1% 상품은 138회 이상 조회.
+      그래서 <strong>"100번 이상 봤는데 장바구니·구매 0건"</strong>인 상품 903개를 먼저 찾음.
+    </p>
+
+    <div style="margin-bottom: 40px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+        <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: rgba(239, 68, 68, 0.082); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.145);">가설 1</span>
+        <span style="font-size:15px; font-weight:600; color:#1A1A2E;">"이 상품들 자체에 문제가 있는 건 아닐까?"</span>
+      </div>
+
+      <div style="background: rgb(255, 255, 255); border-radius: 0px 0px 12px 12px; border-width: 3px 1px 1px; border-style: solid; border-color: rgb(239, 68, 68) rgb(229, 231, 235) rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px; margin-bottom:16px;">
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 16px;">조회만 많고 안 팔린 상품 903개를 뜯어보면</div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">이미 품절 상태였던 상품</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#EF4444; font-weight:600;">711개 · 78.7%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:100%; height:100%; background:#EF4444; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">상품 정보 자체가 등록 안 됨</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#F59E0B; font-weight:600;">120개 · 13.3%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:17%; height:100%; background:#F59E0B; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">현재 데이터로는 이유를 알기 어려움</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#9CA3AF; font-weight:600;">45개 · 5.0%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:6%; height:100%; background:#9CA3AF; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">판매 가능 + 인기 없는 카테고리 소속</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#9CA3AF; font-weight:600;">19개 · 2.1%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:3%; height:100%; background:#9CA3AF; border-radius:5px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+              <span style="color:#1A1A2E; font-weight:500;">판매 가능 + 같은 사람이 반복 조회</span>
+              <span style="font-family:'JetBrains Mono',monospace; color:#9CA3AF; font-weight:600;">8개 · 0.9%</span>
+            </div>
+            <div style="height:10px; background:#F4F5F7; border-radius:5px; overflow:hidden;"><div style="width:1%; height:100%; background:#9CA3AF; border-radius:5px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(239, 68, 68, 0.063); border-radius: 8px; padding: 14px 18px; border: 1px solid rgba(239, 68, 68, 0.19);">
+        <div style="font-size: 12px; color: rgb(239, 68, 68); font-weight: 600; margin-bottom: 4px;">가설 1 결론</div>
+        <div style="font-size: 14px; color: rgb(26, 26, 46); line-height: 1.6;">
+          "조회는 많은데 안 팔린다"는 문제의 대부분(92%)은 추천이나 마케팅의 문제가 아니라,
+          <strong>처음부터 살 수 없는 상품이거나 상품 정보가 누락</strong>되어 있던 단순한 데이터 문제.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+        <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 4px; background: rgba(124, 58, 237, 0.082); color: rgb(124, 58, 237); border: 1px solid rgba(124, 58, 237, 0.145);">가설 2</span>
+        <span style="font-size:15px; font-weight:600; color:#1A1A2E;">"이상하게 활동하는 사용자가 숫자를 왜곡하는 건 아닐까?"</span>
+      </div>
+
+      <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 20px; line-height: 1.7; max-width: 640px;">
+        보통 사람은 사이트에서 1번 정도 행동하고 떠남. 그런데 일부 사용자는 구매도 장바구니도 없이
+        '보기'만 수십~수백 번 반복. 이런 사용자가 전체 "조회 수"를 부풀려서, 전환율을 실제보다 낮아 보이게 만들 수 있음.
+      </p>
+
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow:hidden; margin-bottom:16px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <thead>
+            <tr style="background: rgb(244, 245, 247);">
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">기준 이름</th>
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">어떤 사람을 걸러내나</th>
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">의미</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">엄격 (strict)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">100번 이상 행동, 구매 0, 장바구니 거의 0</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">누가 봐도 이상한 극단적 사용자</td>
+            </tr>
+            <tr style="background: rgb(249, 250, 251);">
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">중간 (medium)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">50번 이상 행동, 구매 0, 장바구니 매우 적음</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">상위 약 0.1% 수준의 과도한 활동</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">느슨 (loose)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">20번 이상 행동, 구매 0, 장바구니 적음</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">상위 약 0.5% 수준의 활동</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow:hidden; margin-bottom:16px;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+          <thead>
+            <tr style="background: rgb(244, 245, 247);">
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">데이터</th>
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">보기 → 장바구니</th>
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">보기 → 구매</th>
+              <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">장바구니 → 구매</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">원본 데이터</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">2.60%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">0.84%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">32.39%</td>
+            </tr>
+            <tr style="background: rgb(249, 250, 251);">
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">이상 사용자 제거 (엄격)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">2.64%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">0.86%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">32.41%</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">이상 사용자 제거 (중간)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">2.67%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">0.87%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">32.44%</td>
+            </tr>
+            <tr style="background: rgb(249, 250, 251);">
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">이상 사용자 제거 (느슨)</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#10B981; font-weight:600;">2.75%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#10B981; font-weight:600;">0.90%</td>
+              <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">32.74%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background: rgba(124, 58, 237, 0.063); border-radius: 8px; padding: 14px 18px; border: 1px solid rgba(124, 58, 237, 0.19);">
+        <div style="font-size: 12px; color: rgb(124, 58, 237); font-weight: 600; margin-bottom: 4px;">가설 2 결론</div>
+        <div style="font-size: 14px; color: rgb(26, 26, 46); line-height: 1.6;">
+          이상 사용자를 제거하면 모든 전환율이 조금씩 올라감. 그런데 실제 구매 건수와 "장바구니 → 구매"
+          비율은 거의 그대로. 즉, 이상 사용자는 <strong>구매를 막은 게 아니라 '조회 수'라는 분모만 부풀려서
+          전체 전환율을 실제보다 낮게 보이게</strong> 만들고 있었음.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="model" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235); background: rgb(249, 250, 251);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">추천 알고리즘</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 8px; color: rgb(26, 26, 46);">정리된 데이터로 5가지 추천 방식 비교</h2>
+    <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 8px; line-height: 1.6; max-width: 640px;">
+      과거 데이터(train)로 추천 후보를 만들고, 이후 기간(test)에 실제로 장바구니에 담거나 구매한 상품이 추천 목록에
+      있었는지로 점수를 매김.
+    </p>
+
+    <div class="case-acc-wrap" style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow: hidden; margin: 20px 0 32px;">
+      <button class="case-acc-btn" onclick="this.parentElement.classList.toggle('open')">
+        <span style="font-size: 14px; font-weight: 600; color: rgb(26, 26, 46);">📐 Hit Rate · Recall · Precision, 이게 뭔가요? (클릭해서 보기)</span>
+        <span class="case-acc-icon">+</span>
+      </button>
+      <div class="case-acc-body">
+        <div class="case-acc-body-inner">
+          <strong style="color:#1A1A2E;">Hit Rate (적중률):</strong> 한 사람에게 상품을 N개 추천했을 때, 그 안에 그 사람이 실제로 담거나 구매한 상품이 <strong>"하나라도"</strong> 있었는지를 보는 비율. 쉽게 말해 "추천이 한 번이라도 맞았는가".
+          <br><br>
+          <strong style="color:#1A1A2E;">Recall (재현율):</strong> 그 사람이 실제로 담거나 구매한 상품들 중에서, 추천 목록에 <strong>"얼마나 많이"</strong> 포함되어 있었는지를 보는 비율. "맞춰야 할 정답 중 몇 개를 맞췄는가".
+          <br><br>
+          <strong style="color:#1A1A2E;">Precision (정밀도):</strong> 추천한 상품들 중에서 실제로 맞은 상품의 비율. "추천한 것 중 몇 개가 진짜 정답이었는가".
+          <br><br>
+          세 지표 모두 <strong>숫자가 높을수록 좋은 추천</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow:hidden; margin-bottom:24px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <thead>
+          <tr style="background: rgb(244, 245, 247);">
+            <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">추천 방식</th>
+            <th style="padding: 10px 14px; text-align: left; color: rgb(107, 114, 128); font-weight: 600; border-bottom: 1px solid rgb(229, 231, 235);">어떤 방식인가</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">전체 인기순 (기본)</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">과거에 장바구니·구매가 많았던 상품을 그대로 추천</td>
+          </tr>
+          <tr style="background: rgb(249, 250, 251);">
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">이상 사용자 제거 + 인기순</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">이상 사용자(중간 기준)를 뺀 데이터로 인기순 계산</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">⭐ 판매 가능 상품 + 인기순</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">품절 상품을 추천 후보에서 빼고, 살 수 있는 상품만 인기순으로 추천</td>
+          </tr>
+          <tr style="background: rgb(249, 250, 251);">
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">관심 카테고리 기반</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">그 사람이 자주 본 카테고리 안에서 인기 상품 추천</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:500;">함께 본 상품 기반</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280;">그 사람이 좋아한 상품과 자주 같이 등장한 상품 추천</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px; margin-bottom:24px;">
+      <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 4px;">상위 10개 추천 시 비교 결과</div>
+      <div style="font-size: 12px; color: rgb(107, 114, 128); margin-bottom: 20px;">막대가 길수록 더 좋은 결과</div>
+
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div>
+          <div style="font-size:12px; font-weight:600; color:#1A1A2E; margin-bottom:8px;">전체 인기순 (기본)</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Hit Rate</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:68%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.046</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Recall</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:43%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.024</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Precision</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:9%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.005</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px; font-weight:600; color:#1A1A2E; margin-bottom:8px;">이상 사용자 제거 + 인기순</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Hit Rate</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:65%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.044</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Recall</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:40%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.022</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Precision</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:9%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.005</span></div>
+          </div>
+        </div>
+
+        <div style="background:rgba(37,99,235,0.04); border:1px solid rgba(37,99,235,0.15); border-radius:8px; padding:14px;">
+          <div style="font-size:12px; font-weight:700; color:#2563EB; margin-bottom:8px;">⭐ 판매 가능 상품 + 인기순 (1위)</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#1A1A2E; width:80px;">Hit Rate</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:75%; height:100%; background:#2563EB; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#2563EB; font-weight:700; width:50px; text-align:right;">0.051</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#1A1A2E; width:80px;">Recall</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:50%; height:100%; background:#2563EB; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#2563EB; font-weight:700; width:50px; text-align:right;">0.028</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#1A1A2E; width:80px;">Precision</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:11%; height:100%; background:#2563EB; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#2563EB; font-weight:700; width:50px; text-align:right;">0.006</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px; font-weight:600; color:#1A1A2E; margin-bottom:8px;">관심 카테고리 기반</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Hit Rate</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:65%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.044</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Recall</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:46%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.025</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Precision</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:7%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.004</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px; font-weight:600; color:#1A1A2E; margin-bottom:8px;">함께 본 상품 기반</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Hit Rate</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:53%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.036</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Recall</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:32%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.018</span></div>
+            <div style="display:flex; align-items:center; gap:10px;"><span style="font-size:11px; color:#6B7280; width:80px;">Precision</span><div style="flex:1; height:8px; background:#F4F5F7; border-radius:4px;"><div style="width:7%; height:100%; background:#9CA3AF; border-radius:4px;"></div></div><span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#6B7280; width:50px; text-align:right;">0.004</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px; color:#9CA3AF; margin-top:16px;">※ 보고서 그래프 기준 근사값</div>
+    </div>
+
+    <div style="background: rgb(239, 246, 255); border-radius: 12px; border: 1px solid rgb(191, 219, 254); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+      <div style="font-size: 13px; font-weight: 700; color: rgb(37, 99, 235); margin-bottom: 6px;">상위 10개 추천에서는 '판매 가능 + 인기순'이 1위</div>
+      <div style="font-size: 14px; color: rgb(26, 26, 46); line-height: 1.6;">
+        복잡한 개인화 알고리즘이 아니라, <strong>"품절 상품을 추천 후보에서 빼는 것"</strong> 만으로 세 가지 지표가 모두 개선.
+        다만 추천을 20개까지 넓히면 관심 카테고리 기반 추천이 더 좋은 결과를 보임.
+        즉, 상위 노출 영역에는 판매 가능한 인기 상품을, 더 넓은 영역에는 개인 관심사 기반 추천을 쓰는 것이 합리적.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abtest" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">A/B 테스트 설계</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 8px; color: rgb(26, 26, 46);">추천 영역 개선, 실제로 효과가 있는지 검증하기</h2>
+    <p style="font-size: 14px; color: rgb(107, 114, 128); margin-bottom: 32px; line-height: 1.6; max-width: 640px;">
+      오프라인 분석 결과를 바로 적용하지 않고, 실제 사용자를 대상으로 비교 실험(A/B 테스트)을 설계.
+      실험 이름은 <strong>"추천 영역 개인화 로직 개선 실험"</strong>.
+    </p>
+
+    <div class="case-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 0px 0px 12px 12px; border-width: 3px 1px 1px; border-style: solid; border-color: rgb(107, 114, 128) rgb(229, 231, 235) rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px;">
+        <div style="font-size: 11px; font-weight: 700; color: rgb(107, 114, 128); margin-bottom: 8px; letter-spacing:0.05em; text-transform:uppercase;">A그룹 (기존 방식)</div>
+        <div style="font-size: 15px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 10px;">판매 가능한 상품 중 인기순 추천</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.6;">품절 상품은 제외하고, 최근 인기 있었던 상품을 모든 사람에게 동일하게 추천. 안정적인 기준선 역할.</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 0px 0px 12px 12px; border-width: 3px 1px 1px; border-style: solid; border-color: rgb(37, 99, 235) rgb(229, 231, 235) rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px;">
+        <div style="font-size: 11px; font-weight: 700; color: rgb(37, 99, 235); margin-bottom: 8px; letter-spacing:0.05em; text-transform:uppercase;">B그룹 (새 방식)</div>
+        <div style="font-size: 15px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 10px;">관심 카테고리 기반 추천</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.6;">품절 상품은 마찬가지로 제외하되, 그 사람이 평소 많이 본 카테고리 안에서 인기 상품을 추천.</div>
+      </div>
+    </div>
+
+    <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; overflow:hidden; margin-bottom:16px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <tbody>
+          <tr>
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:600; width:160px; color:#1A1A2E; vertical-align:top;">검증하려는 가설</td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280; line-height:1.6;">품절 제외 + 관심 카테고리 기반 추천(B)이, 기존 인기 추천(A)보다 "추천 상품을 장바구니에 담는 비율"을 더 높일 것이다</td>
+          </tr>
+          <tr style="background: rgb(249, 250, 251);">
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:600; color:#1A1A2E; vertical-align:top;">실험 대상</td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280; line-height:1.6;">사이트에서 상품을 둘러보다가 추천 영역을 본 방문자</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); font-weight:600; color:#1A1A2E; vertical-align:top;">그룹을 나누는 기준</td>
+            <td style="padding: 12px 16px; border-bottom: 1px solid rgb(229, 231, 235); color:#6B7280; line-height:1.6;">방문자 ID (visitorid) — 같은 사람은 항상 같은 그룹에 속함</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:600; color:#1A1A2E; margin-bottom:12px;">무엇을 측정할까요</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+
+        <div style="background: rgb(255, 255, 255); border-radius: 8px; border: 1px solid rgb(229, 231, 235); padding: 14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; background: rgba(16, 185, 129, 0.082); color: rgb(16, 185, 129); border: 1px solid rgba(16, 185, 129, 0.145); white-space:nowrap; flex-shrink:0; margin-top:1px;">핵심 지표</span>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#1A1A2E; margin-bottom:2px;">추천 상품 장바구니 담기 비율</div>
+            <div style="font-size:12px; color:#6B7280; line-height:1.5;">추천을 본 사람 중, 추천 상품을 장바구니에 담은 사람의 비율 — 이 실험에서 가장 중요하게 보는 숫자.</div>
+          </div>
+        </div>
+
+        <div style="background: rgb(255, 255, 255); border-radius: 8px; border: 1px solid rgb(229, 231, 235); padding: 14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; background: rgba(107, 114, 128, 0.082); color: rgb(107, 114, 128); border: 1px solid rgba(107, 114, 128, 0.145); white-space:nowrap; flex-shrink:0; margin-top:1px;">참고 지표</span>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#1A1A2E; margin-bottom:2px;">추천 클릭률 · 구매 전환율 · 1인당 매출</div>
+            <div style="font-size:12px; color:#6B7280; line-height:1.5;">추천 상품에 대한 관심도, 최종 구매로 이어졌는지, 매출에 기여했는지를 함께 확인.</div>
+          </div>
+        </div>
+
+        <div style="background: rgb(255, 255, 255); border-radius: 8px; border: 1px solid rgb(229, 231, 235); padding: 14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <span style="font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; background: rgba(245, 158, 11, 0.082); color: rgb(245, 158, 11); border: 1px solid rgba(245, 158, 11, 0.145); white-space:nowrap; flex-shrink:0; margin-top:1px;">안전 장치 지표</span>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:#1A1A2E; margin-bottom:2px;">품절 상품 노출률 · 이상 사용자 비율 · 장바구니→구매 전환율</div>
+            <div style="font-size:12px; color:#6B7280; line-height:1.5;">실험 때문에 의도치 않게 문제가 생기지 않는지 감시하는 지표. 이 지표들이 나빠지면 즉시 점검.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="case-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom:24px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 22px 24px;">
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 10px;">실험 전에 미리 정해둔 규칙</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.7;">
+          "이상 사용자 제거 (중간 기준)"을 실험 시작 전에 미리 적용.
+          결과를 보고 나서 기준을 정하면 분석이 왜곡될 수 있기 때문에, <strong style="color:#1A1A2E;">시작하기 전에 먼저 정해두는 것</strong>이 중요.
+        </div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 22px 24px;">
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 10px;">실험을 멈추는 기준</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.7;">
+          구매 전환율이나 "장바구니 → 구매" 비율이 기존보다 눈에 띄게 나빠지거나,
+          품절 상품이 추천에 노출되는 일이 생기면 <strong style="color:#1A1A2E;">실험을 즉시 중단하고 이전 방식으로 되돌림.</strong>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: rgb(239, 246, 255); border-radius: 12px; border: 1px solid rgb(191, 219, 254); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 20px 24px;">
+      <div style="font-size: 13px; font-weight: 700; color: rgb(37, 99, 235); margin-bottom: 6px;">이 실험에서 정말 중요한 것</div>
+      <div style="font-size: 14px; color: rgb(26, 26, 46); line-height: 1.6;">
+        이번 실험은 화면 디자인을 바꾸는 게 아니라 <strong>"무엇을 추천하는가"</strong>를 바꾸는 실험.
+        A그룹도 이미 품절 상품을 뺀 상태이기 때문에, 두 그룹의 차이는 순수하게
+        "전체 인기순"인지 "그 사람의 관심사 기반"인지에서만 발생.
+        앞서 본 오프라인 분석에서 '판매 가능 + 인기순'이 가장 좋은 기준선이었기 때문에, A그룹을 그 방식으로 설정.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="conclusion" style="padding: 64px 40px; border-bottom: 1px solid rgb(229, 231, 235); background: rgb(249, 250, 251);">
+  <div style="max-width: 1100px; margin: 0px auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+      <div style="width: 3px; height: 14px; background: rgb(37, 99, 235); border-radius: 2px;"></div>
+      <span style="font-size: 12px; font-weight: 600; color: rgb(37, 99, 235); letter-spacing: 0.08em; text-transform: uppercase;">결론</span>
+    </div>
+    <h2 style="font-family: Lora, serif; font-size: 32px; font-weight: 500; margin-bottom: 24px; color: rgb(26, 26, 46);">알고리즘보다 먼저, 데이터 청소가 필요</h2>
+
+    <div class="case-grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom:28px;">
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 22px 24px;">
+        <div style="font-size: 22px; margin-bottom: 12px;">🏷️</div>
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px;">상품 데이터 정리가 먼저</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.6;">조회는 많은데 안 팔린 상품의 92%는 품절이거나 정보 누락 때문. 추천을 바꾸기 전에 상품 정보 관리가 먼저.</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 22px 24px;">
+        <div style="font-size: 22px; margin-bottom: 12px;">👥</div>
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px;">이상 사용자는 적지만 영향은 크다</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.6;">전체 사용자 중 비율은 작아도, 조회 수를 부풀려서 전환율 같은 핵심 숫자를 왜곡할 수 있음.</div>
+      </div>
+      <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 22px 24px;">
+        <div style="font-size: 22px; margin-bottom: 12px;">🎯</div>
+        <div style="font-size: 13px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 8px;">단순한 게 이길 때도 있다</div>
+        <div style="font-size: 13px; color: rgb(107, 114, 128); line-height: 1.6;">복잡한 개인화보다, "품절 제외"라는 기본적인 필터 하나가 가장 효과적인 개선.</div>
+      </div>
+    </div>
+
+    <div style="background: rgb(255, 255, 255); border-radius: 12px; border: 1px solid rgb(229, 231, 235); box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 4px; padding: 24px;">
+      <div style="font-size: 14px; font-weight: 600; color: rgb(26, 26, 46); margin-bottom: 10px;">이 프로젝트에서 배운 것</div>
+      <div style="font-size: 14px; color: rgb(107, 114, 128); line-height: 1.8;">
+        처음에는 "추천 알고리즘을 더 똑똑하게 만들면 매출이 오를 것"이라고 생각.
+        하지만 데이터를 먼저 들여다보니, 문제는 알고리즘이 아니라 <strong style="color:#1A1A2E;">"팔 수 없는 상품을 추천하고 있었다"</strong>는
+        아주 단순한 사실.
         <br><br>
-        단순히 추천 모델을 먼저 만드는 대신, 데이터 품질을 진단하고 비정상 트래픽이 퍼널 지표에 어떤 영향을 주는지
-        먼저 확인한 뒤 모델 비교와 실험 설계를 진행했습니다.
-      </p>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>파일</th><th>내용</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>events.csv</td><td>사용자 행동 로그: view, addtocart, transaction</td></tr>
-          <tr><td>item_properties.csv</td><td>상품 속성 정보: categoryid, available 등</td></tr>
-          <tr><td>category_tree.csv</td><td>카테고리 계층 정보</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>핵심 질문:</strong> 전환율이 낮은 이유는 추천 모델의 문제인가, 아니면 그 이전 단계
-        — 상품 가용성과 트래픽 품질 — 의 문제인가?
-      </p>
-    </div>
-  </section>
-
-  <!-- FUNNEL -->
-  <section class="tab-panel" id="funnel">
-    <div class="section-title">EDA & Funnel Analysis</div>
-    <div class="section-heading">조회는 많지만, 구매로 이어지지 않습니다</div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">이벤트 구조</span>전체 이벤트 비율</div>
-      <p>전체 이벤트 중 <strong>view가 96.67%</strong>로 대부분을 차지했고, <strong>addtocart는 2.52%</strong>, <strong>transaction은 0.81%</strong>였습니다.</p>
-    </div>
-
-    <div class="funnel-visual">
-      <div class="section-title" style="margin-bottom:20px;">전체 이벤트 비율</div>
-      <div class="funnel-row">
-        <div class="funnel-label">view</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%"><span>96.67%</span></div></div>
-        <div class="funnel-num">96.67%</div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-label">addtocart</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar muted" style="width:3%"><span>2.52%</span></div></div>
-        <div class="funnel-num">2.52%</div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-label">transaction</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar muted" style="width:1%"><span>0.81%</span></div></div>
-        <div class="funnel-num">0.81%</div>
+        이커머스에서 추천 시스템이나 실험을 설계할 때는, 모델을 고도화하기 전에
+        <strong style="color:#1A1A2E;">상품 정보가 정확한지, 데이터에 이상한 신호가 섞여 있지 않은지</strong>를
+        먼저 점검하는 것이 훨씬 효율이 좋다는 것을 확인.
       </div>
     </div>
-
-    <div class="funnel-visual">
-      <div class="section-title" style="margin-bottom:20px;">기본 퍼널 전환율</div>
-      <div class="funnel-row">
-        <div class="funnel-label">view → addtocart</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:8%"><span>2.60%</span></div></div>
-        <div class="funnel-num">2.60%</div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-label">view → transaction</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:3%"><span>0.84%</span></div></div>
-        <div class="funnel-num">0.84%</div>
-      </div>
-      <div class="funnel-row">
-        <div class="funnel-label">addtocart → transaction</div>
-        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%"><span>32.39%</span></div></div>
-        <div class="funnel-num">32.39%</div>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>해석:</strong> addtocart → transaction은 32.39%로 상대적으로 양호한 반면,
-        view 단계에서의 이탈이 압도적으로 큽니다. 문제는 "장바구니 이후"가 아니라
-        "조회 이후 장바구니로 가지 못하는 구간"에 있을 가능성이 큽니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- HYPOTHESIS -->
-  <section class="tab-panel" id="hypothesis">
-    <div class="section-title">문제 정의 & 가설 검증</div>
-    <div class="section-heading">조회는 충분한데, 왜 전환이 없을까</div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">문제 정의</span>고조회 무전환 상품 탐색</div>
-      <p>
-        상품별 조회 수 분포에서 중앙값은 3회, 95분위수는 46회, 99분위수는 138회였습니다.
-        따라서 <strong>view ≥ 100</strong>을 전환 기회가 충분히 있었던 상품 후보를 찾는 기준으로 사용했습니다.
-      </p>
-      <div class="highlight-box" style="margin-top:12px;">
-        <p><strong>view ≥ 100, addtocart = 0, transaction = 0 → 903개 상품</strong></p>
-      </div>
-    </div>
-
-    <div class="section-title" style="margin-top:32px;">가설 1: 상품 자체의 문제</div>
-    <div class="card">
-      <div class="card-title"><span class="num">검증</span>판매 가능 상태(available)와 메타데이터 확인</div>
-      <p>
-        903개 상품 중 <strong>711개(78.7%)는 판매 불가능</strong> 상태였고, <strong>120개(13.3%)는 item_properties에 존재하지 않는</strong> 상품이었습니다.
-        판매 가능 상태였던 상품은 72개(8.0%)였습니다.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="section-title" style="margin-bottom:16px;">고조회 무전환 상품 원인 분해 (903개)</div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">판매 불가능</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:100%"><span>711개 · 78.7%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">상품 메타데이터 없음</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:17%"><span>120개 · 13.3%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">현재 데이터로 설명 어려움</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:6%"><span>45개 · 5.0%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">판매 가능 + 저전환 카테고리</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:3%"><span>19개 · 2.1%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">판매 가능 + 반복 조회 의심</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:1%"><span>8개 · 0.9%</span></div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">추가 분석</span>판매 가능 72개 상품의 추가 분해</div>
-      <ul>
-        <li>views_per_viewer ≥ 5인 반복 조회 의심 상품은 8개</li>
-        <li>반복 조회 의심 제외 64개 중 19개(29.7%)는 장바구니·구매 전환율 기준 하위 25% 카테고리에 속함</li>
-        <li>결론적으로 약 5%만 현재 데이터로 원인을 특정하기 어려움</li>
-      </ul>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>가설 1 결론:</strong> 고조회 무전환 상품의 대부분은 상품 가용성 또는 메타데이터 품질 문제로 설명됩니다.
-      </p>
-    </div>
-
-    <div class="section-title" style="margin-top:32px;">가설 2: 비정상 트래픽 문제</div>
-    <div class="card">
-      <div class="card-title"><span class="num">검증</span>view를 과도하게 발생시키는 사용자가 있는가</div>
-      <p>
-        사용자별 total_events 분포에서 중앙값은 1, 95분위수는 5, 99분위수는 13이었습니다.
-        이를 바탕으로 비정상 후보 기준을 strict / medium / loose 세 단계로 정의했습니다.
-      </p>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>기준</th><th>조건</th><th>의미</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>strict</td>
-            <td>total_events ≥ 100, transaction = 0, cart_event_ratio ≤ 0.01</td>
-            <td>극단적 고활동, 구매 없음, 장바구니 거의 없음</td>
-          </tr>
-          <tr>
-            <td>medium</td>
-            <td>total_events ≥ 50, transaction = 0, cart_event_ratio ≤ 0.02</td>
-            <td>상위 약 0.1% 고활동, 구매 없음, 장바구니 매우 낮음</td>
-          </tr>
-          <tr>
-            <td>loose</td>
-            <td>total_events ≥ 20, transaction = 0, cart_event_ratio ≤ 0.05</td>
-            <td>상위 약 0.5% 고활동, 구매 없음, 장바구니 낮음</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="section-title" style="margin-bottom:16px;">비정상 후보 기준별 전체 데이터 영향</div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">loose · view_pct</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar" style="width:100%"><span>~6.5%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">loose · event_pct</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:95%"><span>~6.3%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">medium · view_pct</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:40%"><span>~2.6%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">strict · view_pct</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:23%"><span>~1.5%</span></div></div>
-      </div>
-      <div class="breakdown-row">
-        <div class="breakdown-label">loose · user_pct</div>
-        <div class="breakdown-bar-wrap"><div class="breakdown-bar light" style="width:6%"><span>~0.5%</span></div></div>
-      </div>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">user_pct는 매우 작지만 view_pct·event_pct는 상대적으로 크게 나타남 — 적은 사용자가 view 분모를 크게 부풀림</p>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>데이터</th><th>view → cart</th><th>view → transaction</th><th>cart → transaction</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>original</td><td>2.60%</td><td>0.84%</td><td>32.39%</td></tr>
-          <tr><td>clean_strict</td><td>2.64%</td><td>0.86%</td><td>32.41%</td></tr>
-          <tr><td>clean_medium</td><td>2.67%</td><td>0.87%</td><td>32.44%</td></tr>
-          <tr><td>clean_loose</td><td>2.75%</td><td>0.90%</td><td>32.74%</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>가설 2 결론:</strong> 비정상 후보를 제거하면 모든 기준에서 view 기반 전환율이 상승했습니다.
-        transaction 수는 유지되고 cart → transaction 전환율도 크게 변하지 않았습니다.
-        즉 비정상 후보 사용자는 주로 상단 퍼널의 view 분모를 부풀리는 방식으로 전환율을 낮추고 있었습니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- MODEL -->
-  <section class="tab-panel" id="model">
-    <div class="section-title">Recommendation Model</div>
-    <div class="section-heading">추천 모델 성능 비교</div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">평가 방식</span>시간 기준 train/test 분리</div>
-      <p>
-        평가는 시간 기준으로 train/test를 나누었고, test 기간의 addtocart 또는 transaction 상품을 정답으로 정의했습니다.
-      </p>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>모델</th><th>설명</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>popularity_baseline</td><td>train에서 addtocart, transaction이 많은 상품 추천</td></tr>
-          <tr><td>clean_medium_popularity</td><td>medium 기준 비정상 사용자를 제거한 train으로 popularity 추천</td></tr>
-          <tr><td>available_only_popularity</td><td>판매 가능 상품만 후보로 사용한 popularity 추천</td></tr>
-          <tr><td>category_based</td><td>사용자 대표 관심 카테고리 내 인기 상품 추천</td></tr>
-          <tr><td>item_item_cooccurrence</td><td>사용자 positive item과 함께 등장한 상품 추천</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">K=10</span>최고 성능 모델</div>
-      <p>
-        K=10 기준으로 <strong>available_only_popularity</strong>가 가장 좋은 성능을 보였습니다.
-        판매 불가능 상품을 추천 후보에서 제외하는 것만으로도
-        <strong>Hit Rate@10, Recall@10, Precision@10</strong>이 모두 개선되었습니다.
-      </p>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>모델</th><th>Hit Rate</th><th>Recall</th><th>Precision</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>popularity_baseline</td><td>~0.046</td><td>~0.024</td><td>~0.005</td></tr>
-          <tr><td>clean_medium_popularity</td><td>~0.044</td><td>~0.022</td><td>~0.005</td></tr>
-          <tr><td><strong>available_only_popularity</strong></td><td><strong>~0.051</strong></td><td><strong>~0.028</strong></td><td><strong>~0.006</strong></td></tr>
-          <tr><td>category_based</td><td>~0.044</td><td>~0.025</td><td>~0.004</td></tr>
-          <tr><td>item_item_cooccurrence</td><td>~0.036</td><td>~0.018</td><td>~0.004</td></tr>
-        </tbody>
-      </table>
-      <p style="font-size:12px;color:var(--text-muted);padding:0 14px 14px;">※ 보고서 Figure 6 그래프 기준 근사값</p>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>K별 비교:</strong> K=5와 K=10에서는 available_only_popularity가 가장 안정적이었고,
-        K=20에서는 category_based가 Hit Rate와 Recall에서 가장 높았습니다.
-        상단 추천 슬롯에서는 판매 가능 인기 상품 추천이 강한 기준선이고,
-        넓은 추천 영역에서는 카테고리 기반 추천이 더 많은 정답을 포함할 수 있음을 의미합니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- A/B TEST -->
-  <section class="tab-panel" id="abtest">
-    <div class="section-title">A/B 테스트 1-pager</div>
-    <div class="section-heading">추천 영역 개인화 로직 개선 실험</div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <tbody>
-          <tr><td>실험명</td><td>추천 영역 개인화 로직 개선 A/B 테스트</td></tr>
-          <tr><td>실험 목적</td><td>전체 인기 상품 추천 대비 사용자 관심 카테고리 기반 추천이 장바구니 전환율을 높이는지 검증</td></tr>
-          <tr><td>Target User</td><td>이커머스 사이트에서 상품을 조회한 방문자 중 추천 영역에 노출된 사용자</td></tr>
-          <tr><td>Observation</td><td>view 96.67% vs addtocart 2.52%, transaction 0.81%. 고조회 무전환 903개 중 78.7%는 판매 불가능</td></tr>
-          <tr><td>Problem</td><td>추천 영역에 판매 불가능 상품이나 관심과 맞지 않는 상품 노출 시 클릭·전환 저하 가능성</td></tr>
-          <tr><td>Hypothesis</td><td>판매 가능 상품 + 관심 카테고리 기반 추천이 기존 인기 상품 추천보다 장바구니 전환율을 높일 것</td></tr>
-          <tr><td>Randomization Unit</td><td>visitorid</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="num">A · Control</span>Available-only Popularity</div>
-        <p>판매 가능 상품 기준 전체 인기 상품 추천. train 기간에 addtocart, transaction이 많았던 상품을 추천합니다.</p>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="num">B · Treatment</span>Category-based Recommendation</div>
-        <p>판매 가능 상품 기준 사용자 관심 카테고리 기반 추천. 사용자의 과거 행동으로 대표 관심 카테고리를 찾고, 해당 카테고리 내 판매 가능 인기 상품을 추천합니다.</p>
-      </div>
-    </div>
-
-    <div class="card" style="padding:0; overflow:hidden;">
-      <table class="data-table">
-        <thead>
-          <tr><th>구분</th><th>지표</th><th>정의</th><th>목적</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="badge green">Primary</span></td>
-            <td>Recommendation Add-to-Cart Rate</td>
-            <td>추천 상품 장바구니 추가 UV / 추천 영역 노출 UV</td>
-            <td>추천 영역이 실제 장바구니 행동을 늘렸는지 확인</td>
-          </tr>
-          <tr>
-            <td><span class="badge">Secondary</span></td>
-            <td>Recommendation CTR</td>
-            <td>추천 상품 클릭 UV / 추천 영역 노출 UV</td>
-            <td>추천 상품에 대한 관심도 확인</td>
-          </tr>
-          <tr>
-            <td><span class="badge">Secondary</span></td>
-            <td>Purchase Conversion Rate</td>
-            <td>구매 완료 UV / 추천 영역 노출 UV</td>
-            <td>최종 구매 전환 효과 확인</td>
-          </tr>
-          <tr>
-            <td><span class="badge">Secondary</span></td>
-            <td>Revenue per Visitor</td>
-            <td>추천 영역 노출 사용자당 매출</td>
-            <td>매출 기여도 확인</td>
-          </tr>
-          <tr>
-            <td><span class="badge orange">Guardrail</span></td>
-            <td>Unavailable Item Exposure Rate</td>
-            <td>판매 불가능 상품 노출 수 / 전체 추천 노출 수</td>
-            <td>추천 품질 및 운영 리스크 방지</td>
-          </tr>
-          <tr>
-            <td><span class="badge orange">Guardrail</span></td>
-            <td>Abnormal Traffic Share</td>
-            <td>비정상 후보 사용자 비중</td>
-            <td>실험군 간 트래픽 품질 차이 감시</td>
-          </tr>
-          <tr>
-            <td><span class="badge orange">Guardrail</span></td>
-            <td>Cart-to-Transaction Rate</td>
-            <td>구매 수 / 장바구니 추가 수</td>
-            <td>장바구니 이후 구매 흐름 악화 여부 확인</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="num">Exclusion Rule</span>사전 정의된 제외 규칙</div>
-        <p>
-          실험 전 정의한 view-heavy 비정상 사용자 규칙 적용.<br><br>
-          <strong>Main Abnormal Rule:</strong><br>
-          total_events ≥ 50, transaction = 0, cart_event_ratio ≤ 0.02 (medium 기준)
-        </p>
-      </div>
-      <div class="card">
-        <div class="card-title"><span class="num">Stop Rule</span>중단·롤백 기준</div>
-        <p>
-          구매 전환율 또는 cart-to-transaction rate가 대조군 대비 유의미하게 하락하거나,
-          available=0 상품 노출이 발생하면 <strong>중단 또는 롤백</strong>합니다.
-        </p>
-      </div>
-    </div>
-
-    <div class="highlight-box">
-      <p>
-        <strong>실험 설계의 핵심:</strong> 이번 실험은 UI 디자인 변경이 아니라 추천 로직 변경 실험입니다.
-        A그룹은 안정적인 baseline(판매 가능 상품 기반 인기 추천), B그룹은 관심 카테고리를 반영한 개인화 추천입니다.
-        available=0 상품 제외와 비정상 사용자 제외는 결과를 본 뒤가 아니라
-        <strong>실험 전에 사전 정의</strong>해야 결과 해석에 편향이 생기지 않습니다.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="num">Expected Impact</span>오프라인 평가 기반 기대 효과</div>
-      <p>
-        오프라인 평가에서 available_only_popularity는 기존 popularity 대비
-        Hit Rate@10, Recall@10, Precision@10이 모두 개선되었습니다.
-        B그룹의 카테고리 기반 추천도 같은 가용성 필터를 적용한 상태에서
-        개인화 효과를 추가로 검증하는 구조입니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- CONCLUSION -->
-  <section class="tab-panel" id="conclusion">
-    <div class="section-title">최종 결론</div>
-    <div class="section-heading">모델 이전에, 데이터 품질이 먼저였습니다</div>
-
-    <div class="concl-grid">
-      <div class="concl-item">
-        <div class="concl-from">처음 가정</div>
-        <div class="concl-arrow">↓</div>
-        <div class="concl-to">추천 모델이 약해서 전환율이 낮다</div>
-      </div>
-      <div class="concl-item">
-        <div class="concl-from">가설 1 검증</div>
-        <div class="concl-arrow">↓</div>
-        <div class="concl-to">고조회 무전환의 78.7%는 판매 불가능</div>
-      </div>
-      <div class="concl-item">
-        <div class="concl-from">가설 2 검증</div>
-        <div class="concl-arrow">↓</div>
-        <div class="concl-to">비정상 사용자가 view 분모를 왜곡</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">이 분석에서 배운 것</div>
-      <p>
-        낮은 전환율은 단순히 추천 모델 문제만은 아니었습니다.
-        고조회 무전환 상품의 대부분은 판매 불가능 상태이거나 상품 메타데이터가 누락된 경우였습니다.
-        <br><br>
-        view-heavy 비정상 사용자는 전체 사용자 수로는 적지만, view 기반 퍼널 지표를 왜곡할 수 있었습니다.
-        추천 모델에서는 복잡한 개인화보다 판매 가능 상품 필터를 적용한 popularity 모델이 가장 안정적인 성능을 보였습니다.
-        <br><br>
-        따라서 이커머스 추천 시스템이나 A/B 테스트를 설계할 때는 모델 개선 이전에
-        <strong>상품 가용성 관리와 비정상 트래픽 제거 같은 데이터 품질 관리가 먼저 필요</strong>합니다.
-      </p>
-    </div>
-  </section>
+  </div>
+</section>
 
 </main>
 
-<footer class="footer">
-  <span class="footer-label">데이터 분석 포트폴리오</span>
-  <a class="footer-btn primary" href="./portfolio_case_warehouse.html">다음 프로젝트 →</a>
+<footer style="padding: 40px; border-top: 1px solid rgb(229, 231, 235);">
+  <div style="max-width: 1100px; margin: 0px auto; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <div style="font-family: Lora, serif; font-size: 16px; color: rgb(26, 26, 46); margin-bottom: 4px;">데이터 분석 포트폴리오</div>
+      <div style="font-size: 13px; color: rgb(107, 114, 128);">RetailRocket 이커머스 로그 분석</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <a href="./portfolio_case_warehouse.html" style="padding: 8px 16px; border-radius: 7px; font-size: 12px; background: rgb(37, 99, 235); color: rgb(255, 255, 255); border: 1px solid rgb(37, 99, 235); cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600;">다음 프로젝트 →</a>
+    </div>
+  </div>
 </footer>
 
+</div></div>
+
 <script>
-  function switchTab(e, id) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    document.getElementById(id).classList.add('active');
+(function(){
+  var links = document.querySelectorAll('.case-tab-link');
+  var sections = [];
+  for (var i=0;i<links.length;i++){ sections.push(document.querySelector(links[i].getAttribute('href'))); }
+  function onScroll(){
+    var idx = 0;
+    var y = window.scrollY + 140;
+    for (var i=0;i<sections.length;i++){ if (sections[i] && sections[i].offsetTop <= y) idx = i; }
+    for (var i=0;i<links.length;i++){ links[i].classList.toggle('active', i===idx); }
   }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+})();
 </script>
-</body>
-</html>
+
+</body></html>
