@@ -137,46 +137,92 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="./assets/warehouse_portfolio.bundle.js?v=case-copy-nav-20260531"></script>
+  <script type="module" src="./assets/warehouse_portfolio.bundle.js?v=footer-buttons-20260623"></script>
   <script>
     (() => {
-      const addPreviousProjectLink = () => {
+      const styleProjectFooterButtons = () => {
         const footer = document.querySelector("footer");
-        if (!footer || footer.querySelector('a[href="./portfolio_case_retailrocket.html"]')) return;
-        const links = footer.querySelector("div > div:last-child");
+        if (!footer) return;
+
+        const nextLabel = "\uB2E4\uC74C \uD504\uB85C\uC81D\uD2B8 \u2192";
+        const previousLabel = "\u2190 \uC774\uC804 \uD504\uB85C\uC81D\uD2B8";
+        const previousHref = "./portfolio_case_retailrocket.html";
+        const nextHref = "./portfolio_case_instacart.html";
+
+        const nextProject = footer.querySelector(`a[href="${nextHref}"]`);
+        const links = nextProject?.parentElement || footer.firstElementChild?.lastElementChild;
         if (!links) return;
 
-        const previous = document.createElement("a");
-        previous.href = "./portfolio_case_retailrocket.html";
-        previous.textContent = "← 이전 프로젝트";
-        previous.style.cssText = [
-          "padding:8px 16px",
+        const strayPreviousLinks = [...footer.querySelectorAll(`a[href="${previousHref}"]`)];
+        let previous = strayPreviousLinks.find((link) => link.parentElement === links);
+        strayPreviousLinks.forEach((link) => {
+          if (link !== previous) link.remove();
+        });
+
+        links.style.display = "flex";
+        links.style.gap = "8px";
+        links.style.alignItems = "center";
+        links.style.justifyContent = "flex-end";
+        links.style.flexWrap = "wrap";
+
+        const baseButtonStyle = [
+          "display:inline-flex",
+          "align-items:center",
+          "justify-content:center",
+          "height:38px",
+          "padding:0 16px",
           "border-radius:7px",
-          "font-size:12px",
-          "background:transparent",
-          "color:#6b7280",
-          "border:1px solid #d9dee8",
-          "cursor:pointer",
+          "font-size:13px",
           "font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif",
-          "font-weight:600",
+          "font-weight:700",
+          "line-height:1",
           "text-decoration:none",
+          "white-space:nowrap",
+          "cursor:pointer",
           "transition:all 0.15s"
         ].join(";");
-        previous.addEventListener("mouseenter", () => {
+
+        if (nextProject) {
+          if (nextProject.textContent.trim() !== nextLabel) nextProject.textContent = nextLabel;
+          nextProject.style.cssText = [
+            baseButtonStyle,
+            "background:#2563eb",
+            "color:#fff",
+            "border:1px solid #2563eb"
+          ].join(";");
+        }
+
+        if (!previous) {
+          previous = document.createElement("a");
+          previous.href = previousHref;
+          links.prepend(previous);
+        } else if (previous.parentElement === links && previous !== links.firstElementChild) {
+          links.prepend(previous);
+        }
+
+        if (previous.textContent.trim() !== previousLabel) previous.textContent = previousLabel;
+        previous.style.cssText = [
+          baseButtonStyle,
+          "background:#f8fafc",
+          "color:#6b7280",
+          "border:1px solid #d9dee8"
+        ].join(";");
+        previous.onmouseenter = () => {
           previous.style.borderColor = "#d1d5db";
           previous.style.color = "#111827";
-        });
-        previous.addEventListener("mouseleave", () => {
+          previous.style.background = "#fff";
+        };
+        previous.onmouseleave = () => {
           previous.style.borderColor = "#d9dee8";
           previous.style.color = "#6b7280";
-        });
-        links.prepend(previous);
+          previous.style.background = "#f8fafc";
+        };
       };
 
-      const observer = new MutationObserver(addPreviousProjectLink);
+      const observer = new MutationObserver(styleProjectFooterButtons);
       observer.observe(document.documentElement, { childList: true, subtree: true });
-      window.addEventListener("load", addPreviousProjectLink);
-      addPreviousProjectLink();
+      window.addEventListener("load", styleProjectFooterButtons);
+      styleProjectFooterButtons();
     })();
   </script>
 </body>
