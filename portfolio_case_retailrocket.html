@@ -7,7 +7,7 @@
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#cbd5e1 var(--gray-lt)}
 :root{
   --pink:#2563EB;--pink-lt:#EFF6FF;--pink-mid:#60A5FA;
   --dark:#1A1A2E;--gray:#6B7280;--gray-lt:#F2F3F6;
@@ -18,7 +18,10 @@ html{scroll-behavior:smooth}
   --purple:#7C3AED;--purple-lt:#F5F3FF;
   --amber:#F59E0B;--amber-lt:#FFFBEB;
 }
-body{background:var(--gray-lt);color:var(--dark);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;word-break:keep-all}
+body{background:var(--gray-lt);color:var(--dark);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;word-break:keep-all}
+body::-webkit-scrollbar{width:8px}
+body::-webkit-scrollbar-track{background:var(--gray-lt)}
+body::-webkit-scrollbar-thumb{background:#cbd5e1;border:2px solid var(--gray-lt);border-radius:999px}
 a{color:inherit;text-decoration:none}
 
 /* NAV */
@@ -31,7 +34,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(242,243,246,.94);backdrop-
 .tab-bar{position:sticky;top:56px;z-index:90;background:rgba(242,243,246,.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);border-bottom:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.04)}
 .tab-inner{max-width:1100px;margin:0 auto;padding:0;display:flex;overflow-x:auto;scrollbar-width:none}
 .tab-inner::-webkit-scrollbar{display:none}
-.tab-link{display:inline-flex;align-items:center;height:56px;font-size:13px;font-weight:500;white-space:nowrap;padding:0 14px;color:var(--gray);border-bottom:2.5px solid transparent;transition:.15s}
+.tab-link{display:inline-flex;align-items:center;height:56px;font-size:14px;font-weight:500;white-space:nowrap;padding:0 16px;color:var(--gray);border-bottom:2.5px solid transparent;transition:.15s}
 .tab-link.active{color:var(--dark);font-weight:700;border-bottom-color:var(--dark)}
 
 /* LAYOUT */
@@ -44,17 +47,23 @@ section[id]{scroll-margin-top:132px}
 .sec-label-bar{width:3px;height:13px;background:var(--pink);border-radius:2px;flex-shrink:0}
 .sec-label-text{font-size:11px;font-weight:700;color:var(--pink);letter-spacing:.08em;text-transform:uppercase}
 
-h2{font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--dark);margin-bottom:18px}
+h2{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--dark);margin-bottom:18px}
 
 /* STEP BADGE */
 .step-badge{display:inline-block;background:var(--pink);color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:5px}
 .step-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.step-header-title{font-size:15px;font-weight:700;color:var(--dark)}
+.step-header-title{font-size:17px;font-weight:700;color:var(--dark)}
+.step-overview{display:grid;gap:20px;margin:18px 0 30px}
+.step-overview-item{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start}
+.step-overview-item+.step-overview-item{padding-top:20px;border-top:1px solid var(--border)}
+.step-pill{display:inline-flex;align-items:center;justify-content:center;width:max-content;background:var(--pink);color:#fff;font-size:13px;font-weight:800;padding:7px 13px;border-radius:5px}
+.step-overview-title{display:block;margin:1px 0 9px;font-size:18px;font-weight:800;color:var(--dark)}
+.step-overview-desc{font-size:15px;color:var(--gray);line-height:1.85}
 
 /* CARDS */
-.card{background:var(--white);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04);padding:20px}
-.card-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px}
-.card-body{font-size:13px;color:var(--gray);line-height:1.65}
+.card{background:var(--white);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04);padding:22px}
+.card-title{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:10px}
+.card-body{font-size:14px;color:var(--gray);line-height:1.8}
 
 /* GRIDS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -62,22 +71,22 @@ h2{font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--dark);margin-botto
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 
 /* METRIC CARDS */
-.metric-card{background:var(--white);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04);padding:18px 16px}
-.m-label{font-size:11px;color:var(--gray);font-weight:500;margin-bottom:6px}
+.metric-card{background:var(--white);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04);padding:22px 20px}
+.m-label{font-size:12px;color:var(--gray);font-weight:500;margin-bottom:8px}
 .m-value{font-size:30px;font-weight:700;line-height:1;margin-bottom:4px}
-.m-sub{font-size:11px;color:#9CA3AF}
+.m-sub{font-size:12px;color:#9CA3AF}
 
 /* TAGS */
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px}
-.tag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px}
-.tag-blue{background:var(--blue-lt);color:var(--blue)}
-.tag-gray{background:#F0F0F4;color:var(--gray)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tag{font-size:12px;font-weight:500;padding:5px 11px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--gray)}
+.tag-blue{background:var(--blue-lt);color:var(--blue);border-color:#bfdbfe}
+.tag-gray{background:#fff;color:var(--gray);border-color:#d8dee8}
 
 /* HERO */
 .hero{background:var(--gray-lt);border-bottom:1px solid var(--border);padding:92px 40px 56px}
 h1{font-size:clamp(38px,5vw,56px);font-weight:500;line-height:1.15;color:var(--dark);margin-bottom:16px;letter-spacing:-.02em}
 h1 span{color:var(--pink)}
-.hero-sub{font-size:15px;color:var(--gray);line-height:1.75;margin-bottom:32px}
+.hero-sub{font-size:17px;color:var(--gray);line-height:1.85;margin-bottom:32px}
 
 /* INFO TABLE */
 .info-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:28px}
@@ -91,15 +100,15 @@ h1 span{color:var(--pink)}
 .hyp-frame{border-radius:10px;overflow:hidden;border:1px solid;margin-bottom:28px}
 .hyp-header{display:flex;align-items:center;gap:10px;padding:14px 20px}
 .hyp-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px}
-.hyp-question{font-size:15px;font-weight:700}
+.hyp-question{font-size:16px;font-weight:800}
 .hyp-body{padding:0 20px 20px}
 .hyp-conclusion{border-radius:8px;padding:14px 18px;margin-top:16px}
 .hyp-conclusion-label{font-size:12px;font-weight:700;margin-bottom:4px}
-.hyp-conclusion-text{font-size:14px;line-height:1.65}
+.hyp-conclusion-text{font-size:15px;line-height:1.8}
 
 /* BAR */
 .bar-row{margin-bottom:14px}
-.bar-meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:5px}
+.bar-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:6px}
 .bar-track{height:10px;background:#F3F4F6;border-radius:5px;overflow:hidden}
 .bar-fill{height:100%;border-radius:5px;transition:width .6s ease}
 
@@ -133,7 +142,7 @@ h1 span{color:var(--pink)}
 .ab-b{background:var(--blue-lt);border:1px solid #BFDBFE;border-radius:10px;padding:20px;border-top:3px solid var(--blue)}
 .ab-label{font-size:11px;font-weight:700;margin-bottom:4px}
 .ab-strategy{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px}
-.ab-desc{font-size:13px;color:var(--gray);line-height:1.6}
+.ab-desc{font-size:14px;color:var(--gray);line-height:1.75}
 
 /* METRIC ROW */
 .m-row{display:flex;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border);align-items:flex-start}
@@ -146,27 +155,35 @@ h1 span{color:var(--pink)}
 /* INSIGHT BOX */
 .insight-box{background:var(--blue-lt);border:1px solid #BFDBFE;border-radius:10px;padding:16px 20px;margin-top:16px}
 .insight-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px}
-.insight-body{font-size:13px;color:var(--dark);line-height:1.65}
+.insight-body{font-size:14px;color:var(--dark);line-height:1.8}
 
 /* CONC */
 .conc-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:20px}
 .conc-emoji{font-size:22px;margin-bottom:10px}
-.conc-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:6px}
-.conc-body{font-size:13px;color:var(--gray);line-height:1.6}
+.conc-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:6px}
+.conc-body{font-size:14px;color:var(--gray);line-height:1.75}
 
 /* ACH */
 .ach-list{list-style:none}
-.ach-list li{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ach-list li{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);font-size:14px;align-items:flex-start}
 .ach-list li:last-child{border-bottom:none}
 .ach-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);margin-top:5px;flex-shrink:0}
-.ach-lbl{font-weight:700;color:var(--dark);white-space:nowrap;margin-right:6px}
-.ach-val{color:var(--gray)}
+.ach-list li>div:last-child{display:grid;grid-template-columns:128px 1fr;column-gap:18px;width:100%}
+.ach-lbl{font-weight:800;color:var(--dark);white-space:nowrap;margin-right:0}
+.ach-val{color:var(--gray);line-height:1.75}
 
 /* DONUT CHART */
-.donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.donut-wrap{display:flex;align-items:center;gap:28px;flex-wrap:wrap;min-height:214px}
 .donut-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:160px}
-.legend-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:13px}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cause-card{min-height:292px;display:flex;flex-direction:column}
+.cause-card .donut-wrap{flex:1}
+.cause-bars-card{min-height:292px}
+section p[style],.card p[style],.hyp-body p[style]{font-size:14px!important;line-height:1.85!important}
+*[style*="font-size:12px"]{font-size:13px!important}
+*[style*="font-size:13px"]{font-size:14px!important}
+*[style*="font-size:11px"]{font-size:12px!important}
 
 
 /* FOOTER */
@@ -192,6 +209,8 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .funnel-arrow{transform:rotate(90deg);align-self:center}
   .story-flow{flex-wrap:wrap;gap:14px}
   .algo-name{flex:0 0 120px;font-size:12px}
+  .step-overview-item{grid-template-columns:1fr}
+  .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
 }
 </style>
 </head>
@@ -201,7 +220,8 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
 <nav>
   <div class="nav-inner">
     <div class="nav-brand">데이터 분석 포트폴리오</div>
-    <a class="nav-close" href="./index.html#projects" aria-label="닫기">×</a>
+    <a class="nav-close" href="./index.html#projects" aria-label="닫기"
+      onclick="if(window.parent&&window.parent!==window){event.preventDefault();window.parent.postMessage({type:'closeProjectModal'},'*');}">×</a>
   </div>
 </nav>
 
@@ -253,6 +273,37 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
       <div class="step-badge">Step 1.</div>
       <span class="step-header-title">문제 정의 — 구매 단계 분석</span>
     </div>
+    <div class="step-overview" aria-label="RetailRocket 분석 진행 흐름">
+      <div class="step-overview-item">
+        <span class="step-pill">Step 1</span>
+        <div>
+          <strong class="step-overview-title">문제 정의 — 타깃 변수 분석</strong>
+          <p class="step-overview-desc">
+            조회 이후 장바구니 전 단계에서 이탈이 집중되는 구조 확인.<br>
+            구매 전환율 0.84%를 단순 성과 문제가 아닌 원인 분해가 필요한 타깃 변수로 설정.
+          </p>
+        </div>
+      </div>
+      <div class="step-overview-item">
+        <span class="step-pill">Step 2</span>
+        <div>
+          <strong class="step-overview-title">원인 분석 → 전략 도출</strong>
+          <p class="step-overview-desc">
+            상품 품질 문제와 이상 사용자 왜곡 가능성을 분리 검증.<br>
+            이후 정제된 데이터로 추천 알고리즘을 비교하고 A/B 테스트 설계까지 연결.
+          </p>
+        </div>
+      </div>
+      <div class="step-overview-item">
+        <span class="step-pill">Step 3</span>
+        <div>
+          <strong class="step-overview-title">결론 — 실험 기준 정의</strong>
+          <p class="step-overview-desc">
+            품절 상품 제거, 이상 사용자 기준, 추천 방식, 중단 조건을 하나의 실행 가능한 실험 설계로 정리.
+          </p>
+        </div>
+      </div>
+    </div>
     <h2 style="margin-bottom:8px">퍼널 분석: 어디서 이탈이 일어나는가</h2>
     <p style="font-size:13px;color:var(--gray);margin-bottom:20px">고객이 조회 → 장바구니 → 구매까지 가는 각 단계의 전환율을 측정.</p>
 
@@ -286,7 +337,7 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
 
     <div class="g3">
       <div class="card">
-        <div class="card-title" style="color:var(--red)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
+        <div class="card-title" style="color:var(--pink)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
         <div class="card-body">조회 100회 이상이지만 장바구니·구매가 단 0건인 상품이 903개. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 2가지 설정.</div>
       </div>
       <div class="card">
@@ -327,15 +378,15 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
 
         <div class="g2" style="margin-bottom:20px">
           <!-- Donut chart -->
-          <div class="card">
+          <div class="card cause-card">
             <div class="card-title" style="margin-bottom:14px">903개 상품 원인 분류</div>
             <div class="donut-wrap">
-              <canvas id="donutChart" width="140" height="140" style="flex-shrink:0"></canvas>
+              <canvas id="donutChart" width="170" height="170" style="flex-shrink:0"></canvas>
               <div class="donut-legend" id="donut-legend"></div>
             </div>
           </div>
           <!-- Bar breakdown -->
-          <div class="card">
+          <div class="card cause-bars-card">
             <div class="card-title" style="margin-bottom:14px">원인별 상세 분포</div>
             <div id="cause-bars"></div>
           </div>
@@ -345,7 +396,7 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
         <div class="card" style="margin-bottom:16px">
           <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전·후 추천 성능 비교</div>
           <p style="font-size:12px;color:var(--gray);margin-bottom:14px">살 수 없는 상품을 추천 후보에서 제거했을 때 Precision@10이 어떻게 바뀌는지 확인</p>
-          <canvas id="beforeAfterChart" height="80"></canvas>
+          <canvas id="beforeAfterChart" height="104"></canvas>
         </div>
 
         <div class="hyp-conclusion" style="background:var(--red-lt);border:1px solid rgba(239,68,68,.2)">
@@ -372,8 +423,9 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
       <div class="hyp-body">
 
         <p style="font-size:13px;color:var(--gray);margin:16px 0">
-          보통 사람은 사이트에서 1~2번 정도 행동하고 떠납니다. 그런데 일부 사용자는 구매도 장바구니도 없이
-          '보기'만 수십~수백 번 반복. 이런 사용자가 전체 조회 수를 부풀려서 전환율을 실제보다 낮아 보이게 만들 수 있음.
+          보통 사용자는 사이트에서 1~2번 정도 행동하고 떠남.<br>
+          그런데 일부 사용자는 구매도 장바구니도 없이 '보기'만 수십~수백 번 반복.
+          이런 사용자가 전체 조회 수를 부풀려 전환율을 실제보다 낮아 보이게 만들 수 있음.
         </p>
 
         <!-- 3 criteria -->
@@ -419,7 +471,7 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
         <div class="hyp-conclusion" style="background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)">
           <div class="hyp-conclusion-label" style="color:var(--purple)">✅ 가설 2 검증 결과</div>
           <div class="hyp-conclusion-text">
-            이상 사용자를 제거하면 전환율이 <strong>소폭 올라갑니다 (0.84% → 최대 0.90%)</strong>. 하지만 실제 구매 건수와
+            이상 사용자를 제거하면 전환율이 <strong>소폭 상승 (0.84% → 최대 0.90%)</strong>. 하지만 실제 구매 건수와
             "장바구니 → 구매" 비율은 거의 그대로. 즉, 이상 사용자는 구매를 막은 게 아니라
             <strong>'조회 수(분모)'를 부풀려서 전환율을 실제보다 낮게 보이게</strong> 만드는 구조.
             제거 효과가 작으므로, <strong>중간 기준 적용 후 가설 1(품절 제거)을 우선 해결책</strong>으로 채택.
@@ -527,7 +579,10 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
       </div>
       <div class="card">
         <div class="card-title">실험을 멈추는 기준</div>
-        <div class="card-body">구매 전환율이나 "장바구니 → 구매" 비율이 기존보다 눈에 띄게 나빠지거나, 품절 상품이 추천에 노출되는 일이 생기면 <strong style="color:var(--dark)">실험을 즉시 중단</strong>하고 이전 방식으로 되돌립니다.</div>
+          <div class="card-body">
+            구매 전환율이나 "장바구니 → 구매" 비율이 기존보다 눈에 띄게 나빠지거나,
+            품절 상품이 추천에 노출되는 일이 생기면 <strong style="color:var(--dark)">실험을 즉시 중단</strong>하고 이전 방식으로 되돌림.
+          </div>
       </div>
     </div>
   </div>
@@ -736,10 +791,12 @@ const convData = [
   const canvas = document.getElementById('donutChart');
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = 140 * dpr; canvas.height = 140 * dpr;
+  canvas.width = 170 * dpr; canvas.height = 170 * dpr;
+  canvas.style.width = '170px';
+  canvas.style.height = '170px';
   ctx.scale(dpr, dpr);
 
-  const cx = 70, cy = 70, outerR = 62, innerR = 38;
+  const cx = 85, cy = 85, outerR = 76, innerR = 45;
   let start = -Math.PI / 2;
   const total = causeData.reduce((a, b) => a + b.pct, 0);
 
@@ -758,10 +815,10 @@ const convData = [
   ctx.fillStyle = '#FFFFFF'; ctx.fill();
 
   // Center text
-  ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 16px "Pretendard", sans-serif';
+  ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 19px "Pretendard", sans-serif';
   ctx.textAlign = 'center'; ctx.fillText('903', cx, cy - 4);
-  ctx.fillStyle = '#6B7280'; ctx.font = '10px "Pretendard", sans-serif';
-  ctx.fillText('상품', cx, cy + 12);
+  ctx.fillStyle = '#6B7280'; ctx.font = '12px "Pretendard", sans-serif';
+  ctx.fillText('상품', cx, cy + 15);
 
   // Legend
   const legend = document.getElementById('donut-legend');
@@ -794,30 +851,30 @@ const convData = [
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const W = canvas.parentElement.clientWidth - 40;
-  const H = 80;
+  const H = 104;
   canvas.width = W * dpr; canvas.height = H * dpr;
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
 
   const items = [
-    { label: '전체 인기순 (품절 포함)', precision: 0.005, color: '#9CA3AF' },
-    { label: '★ 판매 가능 + 인기순 (품절 제거)', precision: 0.006, color: '#2563EB' },
+    { label: '전체 인기순 (품절 포함)', precision: 0.005, color: '#CBD5E1' },
+    { label: '★ 판매 가능 + 인기순 (품절 제거)', precision: 0.006, color: '#F87171' },
   ];
   const maxVal = 0.007;
-  const bh = 24; const gap = 10;
+  const bh = 28; const gap = 14;
   const labelW = 200; const scoreW = 48;
   const barW = W - labelW - scoreW - 8;
 
   items.forEach((s, i) => {
     const y = i * (bh + gap);
     const bw = barW * s.precision / maxVal;
-    ctx.fillStyle = '#6B7280'; ctx.font = '12px "Pretendard", sans-serif';
+    ctx.fillStyle = '#6B7280'; ctx.font = '13px "Pretendard", sans-serif';
     ctx.textAlign = 'left'; ctx.fillText(s.label, 0, y + bh/2 + 4);
     ctx.fillStyle = '#F3F4F6';
     ctx.beginPath(); ctx.roundRect(labelW, y, barW, bh, 4); ctx.fill();
     ctx.fillStyle = s.color;
     ctx.beginPath(); ctx.roundRect(labelW, y, bw, bh, 4); ctx.fill();
-    ctx.fillStyle = s.color; ctx.font = 'bold 12px "Pretendard", sans-serif';
+    ctx.fillStyle = s.color; ctx.font = 'bold 13px "Pretendard", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('P@10: ' + s.precision.toFixed(3), W, y + bh/2 + 4);
   });

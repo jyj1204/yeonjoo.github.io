@@ -763,6 +763,9 @@
       background: rgba(255, 255, 255, 0.9);
       color: #6b7280;
     }
+    #retailrocket-modal > .modal-dialog > .modal-close {
+      display: none;
+    }
     .exact-frame {
       display: block;
       width: 100%;
@@ -2616,6 +2619,12 @@
         modal.addEventListener("click", (event) => {
           if (event.target === modal) closeModal(modal);
         });
+      });
+
+      window.addEventListener("message", (event) => {
+        if (event.data?.type !== "closeProjectModal") return;
+        const open = document.querySelector('.project-modal[aria-hidden="false"]');
+        closeModal(open);
       });
 
       document.querySelectorAll(".modal-tabs a").forEach((link) => {
