@@ -19,9 +19,10 @@ html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#cbd5e1 var(--g
   --amber:#F59E0B;--amber-lt:#FFFBEB;
 }
 body{background:var(--gray-lt);color:var(--dark);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;word-break:keep-all}
-body::-webkit-scrollbar{width:8px}
-body::-webkit-scrollbar-track{background:var(--gray-lt)}
-body::-webkit-scrollbar-thumb{background:#cbd5e1;border:2px solid var(--gray-lt);border-radius:999px}
+html::-webkit-scrollbar,body::-webkit-scrollbar{width:8px}
+html::-webkit-scrollbar-track,body::-webkit-scrollbar-track{background:var(--gray-lt)}
+html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{background:#cbd5e1;border:2px solid var(--gray-lt);border-radius:999px}
+html::-webkit-scrollbar-button,body::-webkit-scrollbar-button{display:none;width:0;height:0}
 a{color:inherit;text-decoration:none}
 
 /* NAV */
@@ -29,6 +30,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(242,243,246,.94);backdrop-
 .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0;height:56px}
 .nav-brand{font-size:15px;font-weight:500;color:var(--dark)}
 .nav-close{width:36px;height:36px;border-radius:999px;border:1px solid #d9dee8;background:#fff;color:#64748b;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:500;line-height:1;transition:.15s}.nav-close:hover{color:var(--dark);border-color:#cbd5e1}
+body.in-modal .nav-close{display:none}
 
 /* TAB */
 .tab-bar{position:sticky;top:56px;z-index:90;background:rgba(242,243,246,.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);border-bottom:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.04)}
@@ -53,12 +55,6 @@ h2{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--dark);margin-botto
 .step-badge{display:inline-block;background:var(--pink);color:#fff;font-size:12px;font-weight:700;padding:4px 12px;border-radius:5px}
 .step-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
 .step-header-title{font-size:17px;font-weight:700;color:var(--dark)}
-.step-overview{display:grid;gap:20px;margin:18px 0 30px}
-.step-overview-item{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:start}
-.step-overview-item+.step-overview-item{padding-top:20px;border-top:1px solid var(--border)}
-.step-pill{display:inline-flex;align-items:center;justify-content:center;width:max-content;background:var(--pink);color:#fff;font-size:13px;font-weight:800;padding:7px 13px;border-radius:5px}
-.step-overview-title{display:block;margin:1px 0 9px;font-size:18px;font-weight:800;color:var(--dark)}
-.step-overview-desc{font-size:15px;color:var(--gray);line-height:1.85}
 
 /* CARDS */
 .card{background:var(--white);border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04);padding:22px}
@@ -87,6 +83,12 @@ h2{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--dark);margin-botto
 h1{font-size:clamp(38px,5vw,56px);font-weight:500;line-height:1.15;color:var(--dark);margin-bottom:16px;letter-spacing:-.02em}
 h1 span{color:var(--pink)}
 .hero-sub{font-size:17px;color:var(--gray);line-height:1.85;margin-bottom:32px}
+@keyframes retailFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hero .tags,.hero h1,.hero-sub,.hero .g4{opacity:0;animation:retailFadeUp .58s ease forwards}
+.hero .tags{animation-delay:.04s}
+.hero h1{animation-delay:.14s}
+.hero-sub{animation-delay:.24s}
+.hero .g4{animation-delay:.34s}
 
 /* INFO TABLE */
 .info-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:28px}
@@ -209,12 +211,14 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .funnel-arrow{transform:rotate(90deg);align-self:center}
   .story-flow{flex-wrap:wrap;gap:14px}
   .algo-name{flex:0 0 120px;font-size:12px}
-  .step-overview-item{grid-template-columns:1fr}
   .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
 }
 </style>
 </head>
 <body>
+<script>
+if(window.parent&&window.parent!==window){document.body.classList.add('in-modal');}
+</script>
 
 <!-- NAV -->
 <nav>
@@ -272,37 +276,6 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
     <div class="step-header">
       <div class="step-badge">Step 1.</div>
       <span class="step-header-title">문제 정의 — 구매 단계 분석</span>
-    </div>
-    <div class="step-overview" aria-label="RetailRocket 분석 진행 흐름">
-      <div class="step-overview-item">
-        <span class="step-pill">Step 1</span>
-        <div>
-          <strong class="step-overview-title">문제 정의 — 타깃 변수 분석</strong>
-          <p class="step-overview-desc">
-            조회 이후 장바구니 전 단계에서 이탈이 집중되는 구조 확인.<br>
-            구매 전환율 0.84%를 단순 성과 문제가 아닌 원인 분해가 필요한 타깃 변수로 설정.
-          </p>
-        </div>
-      </div>
-      <div class="step-overview-item">
-        <span class="step-pill">Step 2</span>
-        <div>
-          <strong class="step-overview-title">원인 분석 → 전략 도출</strong>
-          <p class="step-overview-desc">
-            상품 품질 문제와 이상 사용자 왜곡 가능성을 분리 검증.<br>
-            이후 정제된 데이터로 추천 알고리즘을 비교하고 A/B 테스트 설계까지 연결.
-          </p>
-        </div>
-      </div>
-      <div class="step-overview-item">
-        <span class="step-pill">Step 3</span>
-        <div>
-          <strong class="step-overview-title">결론 — 실험 기준 정의</strong>
-          <p class="step-overview-desc">
-            품절 상품 제거, 이상 사용자 기준, 추천 방식, 중단 조건을 하나의 실행 가능한 실험 설계로 정리.
-          </p>
-        </div>
-      </div>
     </div>
     <h2 style="margin-bottom:8px">퍼널 분석: 어디서 이탈이 일어나는가</h2>
     <p style="font-size:13px;color:var(--gray);margin-bottom:20px">고객이 조회 → 장바구니 → 구매까지 가는 각 단계의 전환율을 측정.</p>
@@ -667,7 +640,7 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
       <div class="card">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
           <div style="width:4px;height:16px;background:var(--amber);border-radius:2px"></div>
-          <span style="font-size:13px;font-weight:700;color:var(--dark)">아쉬운 점 / 다음에는</span>
+          <span style="font-size:13px;font-weight:700;color:var(--dark)">아쉬운 점</span>
         </div>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:14px">
           <li style="display:flex;gap:10px">
