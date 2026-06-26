@@ -115,10 +115,14 @@ p.body{font-size:15px;color:var(--gray);line-height:1.85;margin-bottom:16px}
 
 /* COUNTEREXAMPLE TABLE */
 .cx-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
-.cx-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.cx-card-hdr{padding:14px 18px;border-bottom:1px solid var(--border)}
+.cx-card{border:1px solid var(--border);border-top:3px solid var(--border);border-radius:10px;overflow:hidden;background:var(--white);box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.cx-card.red{border-top-color:var(--red)}
+.cx-card.amber{border-top-color:var(--amber)}
+.cx-card-hdr{padding:16px 18px 12px;background:var(--white)}
 .cx-card-label{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .cx-card-q{font-size:14px;font-weight:700;color:var(--pink)}
+.cx-card.red .cx-card-q{color:var(--red)}
+.cx-card.amber .cx-card-q{color:var(--amber)}
 .cx-tbl{width:100%;border-collapse:collapse;font-size:13px}
 .cx-tbl th{padding:7px 12px;background:var(--gray-lt);color:var(--gray);font-weight:700;text-align:left;border-bottom:1px solid var(--border)}
 .cx-tbl td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
@@ -148,13 +152,13 @@ p.body{font-size:15px;color:var(--gray);line-height:1.85;margin-bottom:16px}
 .model-tbl th{padding:8px 12px;background:var(--gray-lt);color:var(--gray);font-weight:700;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
 .model-tbl td{padding:10px 12px;border-bottom:1px solid var(--border)}
 .model-tbl tr:nth-child(even) td{background:#FAFAFA}
-.feat-card{background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid var(--border);border-left:3px solid}
+.feat-card{background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid var(--border)}
 .feat-card-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .feat-card-icon{font-size:18px}
 .feat-card-title{font-size:13px;font-weight:700;color:var(--dark)}
-.feat-card-count{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;display:inline-block}
+.feat-card-count{font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;display:inline-block;background:var(--blue-lt);color:var(--blue)}
 .feat-card-desc{font-size:12px;color:var(--gray);line-height:1.5;margin-bottom:6px}
-.feat-card-detail{font-size:11px;line-height:1.4;font-style:italic}
+.feat-card-detail{font-size:11px;line-height:1.5;color:var(--gray)}
 .version-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start}
 .version-row:last-child{border-bottom:none}
 .version-badge{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700}
@@ -332,13 +336,13 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     <div class="story-card" data-idx="3">
       <div class="story-card-step">군집화</div>
       <div class="story-card-title">취약 창고 군집 식별</div>
-      <div class="story-card-body">hub_spoke 창고 67%가 취약 군집에 집중. 레이아웃 원인 가설 설정.</div>
+      <div class="story-card-body">허브-스포크형 창고 67%가 취약 군집에 집중. 레이아웃 원인 가설 설정.</div>
       <span class="story-card-badge" style="background:var(--green-lt);color:var(--green)">가설 형성</span>
     </div>
     <div class="story-card" data-idx="4">
       <div class="story-card-step">PSM</div>
       <div class="story-card-title">레이아웃 가설 검증</div>
-      <div class="story-card-body">운영 조건 통제 후 hub_spoke 효과 소멸(p=0.783). 운영 지표 영향으로 재정의.</div>
+      <div class="story-card-body">운영 조건 통제 후 허브-스포크형 효과 소멸(p=0.783). 운영 지표 영향으로 재정의.</div>
       <span class="story-card-badge" style="background:var(--purple-lt);color:var(--purple)">결론 수정</span>
     </div>
   </div>
@@ -375,16 +379,16 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
     <div class="story-detail" data-idx="3">
       <div class="story-detail-head">군집화 — 취약 창고 102개 식별</div>
-      <div class="story-detail-sub">K-Means로 250개 창고를 운영 패턴 기준으로 분류. 고위험 군집은 102개(40.8%), 평균 지연 23.1분. hub_spoke 레이아웃 창고의 67%가 고위험 군집에 집중되어 레이아웃 원인 가설 설정.</div>
+      <div class="story-detail-sub">K-Means로 250개 창고를 운영 패턴 기준으로 분류. 고위험 군집은 102개(40.8%), 평균 지연 23.1분. 허브-스포크형 레이아웃 창고의 67%가 고위험 군집에 집중되어 레이아웃 원인 가설 설정.</div>
       <div class="story-arrow">
         <span>K-Means 군집화</span><span style="color:var(--gray)">→</span>
-        <span class="hl-a">hub_spoke 67% 취약</span><span style="color:var(--gray)">→</span>
+        <span class="hl-a">허브-스포크형 67% 취약</span><span style="color:var(--gray)">→</span>
         <span>레이아웃 가설?</span>
       </div>
     </div>
     <div class="story-detail" data-idx="4">
       <div class="story-detail-head">PSM으로 레이아웃 가설 검증</div>
-      <div class="story-detail-sub">성향점수매칭으로 운영 조건이 유사한 창고끼리 비교. 단순 비교에서는 hub_spoke가 +3.69분(p=0.007) 높았지만, PSM 매칭 후 -0.55분(p=0.783)으로 효과 소멸. 레이아웃 자체보다 운영 조건 차이가 지연을 설명.</div>
+      <div class="story-detail-sub">성향점수매칭으로 운영 조건이 유사한 창고끼리 비교. 단순 비교에서는 허브-스포크형 창고가 +3.69분(p=0.007) 높았지만, PSM 매칭 후 -0.55분(p=0.783)으로 효과 소멸. 레이아웃 자체보다 운영 조건 차이가 지연을 설명.</div>
       <div class="story-arrow">
         <span class="hl" style="background:var(--red-lt);color:var(--red)">단순비교 p=0.007</span><span style="color:var(--gray)">→</span>
         <span>PSM 적용</span><span style="color:var(--gray)">→</span>
@@ -473,11 +477,11 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
   <div class="find-panel" id="fp-psm">
     <div class="find-left">
-      <div class="find-key" style="background:var(--green-lt);color:var(--dark)">매칭 전: hub_spoke <strong style="color:var(--red)">+3.69분</strong> (p=0.007) → 매칭 후: <strong style="color:var(--green)">-0.55분</strong> (p=0.783). 효과 소멸.</div>
+      <div class="find-key" style="background:var(--green-lt);color:var(--dark)">매칭 전: 허브-스포크형 창고 <strong style="color:var(--red)">+3.69분</strong> (p=0.007) → 매칭 후: <strong style="color:var(--green)">-0.55분</strong> (p=0.783). 효과 소멸.</div>
       <div class="find-stat" style="color:var(--green)">p=0.783</div>
-      <div class="find-stat-sub">PSM 매칭 후 hub_spoke 효과 유의성</div>
+      <div class="find-stat-sub">PSM 매칭 후 허브-스포크형 효과 유의성</div>
       <h3>PSM — 레이아웃 가설 기각</h3>
-      <p>운영 조건 통제 후 레이아웃 효과 소멸. hub_spoke 창고의 지연이 길어 보인 이유는 원래부터 운영이 나쁜 창고가 집중되었기 때문. 레이아웃 개선보다 운영 개선이 우선.</p>
+      <p>운영 조건 통제 후 레이아웃 효과 소멸. 허브-스포크형 창고의 지연이 길어 보인 이유는 원래부터 운영이 나쁜 창고가 집중되었기 때문. 레이아웃 개선보다 운영 개선이 우선.</p>
       <div class="find-tip" style="background:var(--blue-lt);border-color:var(--blue)">
         <strong style="color:var(--blue);font-size:11px;letter-spacing:.04em">의사결정 반영</strong><br>
         <span style="color:var(--dark)">레이아웃 변경(고비용) → 운영 개선(저비용 · 즉각 효과)</span>
@@ -485,7 +489,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
     <div class="find-chart-box">
       <div class="find-chart-title">PSM 전후 레이아웃 효과 비교</div>
-      <div class="find-chart-sub">회색: PSM 전(단순비교) / 핑크: PSM 후(조건 통제)</div>
+      <div class="find-chart-sub">회색: PSM 전(단순 비교) / 파란색: PSM 후(운영 조건 통제)</div>
       <canvas id="c-psm" height="240"></canvas>
     </div>
   </div>
@@ -522,9 +526,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   </p>
 
   <div class="cx-grid">
-    <div class="cx-card">
-      <div class="cx-card-hdr" style="border-left:4px solid var(--blue);background:var(--blue-lt)">
-        <div class="cx-card-label" style="color:var(--blue)">반례 유형 1 — idle 높아도 지연이 큰 창고 (20개)</div>
+    <div class="cx-card red">
+      <div class="cx-card-hdr">
+        <div class="cx-card-label" style="color:var(--red)">반례 유형 1 — idle 높아도 지연이 큰 창고 (20개)</div>
         <div class="cx-card-q">Q. idle이 충분한데 왜 지연이 큰가?</div>
       </div>
       <table class="cx-tbl">
@@ -556,8 +560,8 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </div>
     </div>
 
-    <div class="cx-card">
-      <div class="cx-card-hdr" style="border-left:4px solid var(--amber);background:var(--amber-lt)">
+    <div class="cx-card amber">
+      <div class="cx-card-hdr">
         <div class="cx-card-label" style="color:var(--amber)">반례 유형 2 — 혼잡 낮아도 위기가 많은 창고 (29개)</div>
         <div class="cx-card-q">Q. 혼잡도가 낮은데 왜 위기가 자주 발생하는가?</div>
       </div>
@@ -790,7 +794,7 @@ const D={
   idle:[{g:'최저 20%',v:36.3},{g:'20~40%',v:28.1},{g:'40~60%',v:18.4},{g:'60~80%',v:10.2},{g:'최고 20%',v:5.5}],
   pack:[{g:'0~10%',v:19.8},{g:'10~20%',v:17.2},{g:'20~30%',v:15.4},{g:'30~40%',v:13.8},{g:'40~50%',v:13.3},{g:'50~60%',v:12.0},{g:'60~70%',v:12.1},{g:'70~80%',v:12.0},{g:'80~90%',v:12.0},{g:'90%+',v:29.6}],
   combo:[{g:'0개\n(모두 정상)',v:10.2},{g:'1개',v:17.9},{g:'2개',v:29.9},{g:'3개\n(모두 나쁨)',v:38.1}],
-  psm:[{g:'hub_spoke',before:22.09,after:21.68},{g:'나머지',before:18.40,after:22.24}],
+  psm:[{g:'허브-스포크형',before:22.09,after:21.68},{g:'기타 창고',before:18.40,after:22.24}],
   tl:[{s:'-6',idle:.226,cong:18.09},{s:'-5',idle:.223,cong:18.15},{s:'-4',idle:.221,cong:18.08},{s:'-3',idle:.219,cong:18.07},{s:'-2',idle:.217,cong:18.05},{s:'-1',idle:.215,cong:18.13},{s:'위기\n직전',idle:.214,cong:18.37}]
 };
 
@@ -858,7 +862,7 @@ function drawIdle(){
 function drawPack(){
   const R=ctx2d('c-pack',240); if(!R)return;
   const{c,w,h}=R;
-  const PL=46,PR=18,PT=34,PB=48,ch=h-PT-PB;
+  const PL=64,PR=64,PT=34,PB=48,ch=h-PT-PB;
   const labels=D.pack.map(d=>d.g), values=D.pack.map(d=>d.v);
   const minV=8,maxV=35,n=values.length;
   const xs=values.map((_,i)=>PL+i*(w-PL-PR)/(n-1));
@@ -869,7 +873,7 @@ function drawPack(){
     c.setLineDash([3,5]); c.beginPath(); c.moveTo(PL,yy); c.lineTo(w-PR,yy); c.stroke(); c.setLineDash([]);
     c.fillStyle='#9CA3AF'; c.font='10px sans-serif'; c.textAlign='right'; c.fillText(v+'분',PL-7,yy+3);
   });
-  const x0=xs[5]-20,x1=xs[8]+20;
+  const x0=Math.max(PL,xs[5]-18),x1=Math.min(w-PR,xs[8]+18);
   c.fillStyle='rgba(16,185,129,.07)'; c.fillRect(x0,PT,x1-x0,ch);
   c.fillStyle='#10B981'; c.font='bold 10px sans-serif'; c.textAlign='center'; c.fillText('최적 구간', (x0+x1)/2, PT+14);
   c.beginPath(); c.strokeStyle='#2563EB'; c.lineWidth=2.5;
@@ -882,9 +886,11 @@ function drawPack(){
     c.strokeStyle='#fff'; c.lineWidth=2; c.stroke();
     if(isLast||isMin||i<5){
       c.fillStyle=isLast?'#EF4444':isMin?'#10B981':'#1A1A2E';
-      c.font='bold 10px sans-serif'; c.textAlign='center'; c.fillText(values[i]+'분',x,y(values[i])-9);
+      c.font='bold 10px sans-serif'; c.textAlign='center';
+      c.fillText(values[i]+'분',Math.min(Math.max(x,PL+18),w-PR-18),y(values[i])-9);
     }
-    c.fillStyle='#6B7280'; c.font='10px sans-serif'; c.textAlign='center'; c.fillText(labels[i],x,PT+ch+18);
+    c.fillStyle='#6B7280'; c.font='10px sans-serif'; c.textAlign='center';
+    c.fillText(labels[i],Math.min(Math.max(x,PL+18),w-PR-18),PT+ch+18);
   });
 }
 function drawCombo(){
@@ -894,13 +900,14 @@ function drawCombo(){
 function drawPSM(){
   const R=ctx2d('c-psm',240); if(!R)return;
   const{c,w,h}=R;
-  const PL=46,PR=12,PT=28,PB=52,ch=h-PT-PB,maxV=28,gW=(w-PL-PR)/2;
+  const PL=58,PR=28,PT=32,PB=58,ch=h-PT-PB,minV=15,maxV=25,gW=(w-PL-PR)/2;
+  const y=v=>PT+ch-(v-minV)/(maxV-minV)*ch;
   c.strokeStyle='#E5E7EB'; c.lineWidth=.5;
-  [0,.25,.5,.75,1].forEach(r=>{
-    const y=PT+ch*(1-r);
-    c.setLineDash([3,3]); c.beginPath(); c.moveTo(PL,y); c.lineTo(w-PR,y); c.stroke(); c.setLineDash([]);
+  [15,17.5,20,22.5,25].forEach(v=>{
+    const yy=y(v);
+    c.setLineDash([3,3]); c.beginPath(); c.moveTo(PL,yy); c.lineTo(w-PR,yy); c.stroke(); c.setLineDash([]);
     c.fillStyle='#9CA3AF'; c.font='10px sans-serif'; c.textAlign='right';
-    c.fillText(Math.round(maxV*r)+'분',PL-5,y+3);
+    c.fillText(v%1?`${v}분`:`${v}분`,PL-5,yy+3);
   });
   // legend
   c.fillStyle='#CBD5E1'; c.fillRect(PL,10,10,6);
@@ -909,13 +916,14 @@ function drawPSM(){
 
   D.psm.forEach((g,gi)=>{
     const cx=PL+gi*gW+gW/2, bw2=gW*.28;
-    const bh1=(g.before/maxV)*ch, bh2=(g.after/maxV)*ch;
-    c.fillStyle='#CBD5E1'; c.beginPath(); c.roundRect(cx-bw2-4,PT+ch-bh1,bw2,bh1,3); c.fill();
+    const yBase=PT+ch, yBefore=y(g.before), yAfter=y(g.after);
+    const bh1=yBase-yBefore, bh2=yBase-yAfter;
+    c.fillStyle='#CBD5E1'; c.beginPath(); c.roundRect(cx-bw2-4,yBefore,bw2,bh1,3); c.fill();
     c.fillStyle='#6B7280'; c.font='bold 10px sans-serif'; c.textAlign='center';
-    c.fillText(g.before+'분',cx-bw2/2-4,PT+ch-bh1-6);
-    c.fillStyle='#2563EB'; c.beginPath(); c.roundRect(cx+4,PT+ch-bh2,bw2,bh2,3); c.fill();
+    c.fillText(g.before+'분',cx-bw2/2-4,yBefore-6);
+    c.fillStyle='#2563EB'; c.beginPath(); c.roundRect(cx+4,yAfter,bw2,bh2,3); c.fill();
     c.fillStyle='#2563EB'; c.font='bold 10px sans-serif';
-    c.fillText(g.after+'분',cx+bw2/2+4,PT+ch-bh2-6);
+    c.fillText(g.after+'분',cx+bw2/2+4,yAfter-6);
     c.fillStyle='#1A1A2E'; c.font='bold 11px sans-serif'; c.textAlign='center';
     c.fillText(g.g,cx,PT+ch+16);
     if(gi===0){
@@ -929,7 +937,7 @@ function drawPSM(){
 function drawTimeline(){
   const R=ctx2d('c-timeline',240); if(!R)return;
   const{c,w,h}=R;
-  const PL=50,PR=50,PT=28,PB=38,ch=h-PT-PB,n=D.tl.length;
+  const PL=68,PR=78,PT=34,PB=42,ch=h-PT-PB,n=D.tl.length;
   const xs=D.tl.map((_,i)=>PL+i*(w-PL-PR)/(n-1));
   const iMin=.21,iMax=.24, iyF=v=>PT+ch-(v-iMin)/(iMax-iMin)*ch;
   const cMin=18,cMax=18.5, cyF=v=>PT+ch-(v-cMin)/(cMax-cMin)*ch;
@@ -943,9 +951,9 @@ function drawTimeline(){
     c.textAlign='left'; c.fillText((cMin+(cMax-cMin)*r).toFixed(1),w-PR+5,y+3);
   });
   // axis labels
-  c.fillStyle='#2563EB'; c.font='bold 9px sans-serif'; c.save(); c.translate(PL-32,PT+ch/2);
+  c.fillStyle='#2563EB'; c.font='bold 9px sans-serif'; c.save(); c.translate(PL-42,PT+ch/2);
   c.rotate(-Math.PI/2); c.textAlign='center'; c.fillText('idle %',0,0); c.restore();
-  c.fillStyle='#F59E0B'; c.save(); c.translate(w-PR+32,PT+ch/2);
+  c.fillStyle='#F59E0B'; c.save(); c.translate(w-PR+46,PT+ch/2);
   c.rotate(Math.PI/2); c.textAlign='center'; c.fillText('혼잡도',0,0); c.restore();
   // congestion
   c.beginPath(); c.strokeStyle='#F59E0B'; c.lineWidth=1.5; c.setLineDash([4,3]);
@@ -968,13 +976,12 @@ function drawTimeline(){
     c.strokeStyle='#fff'; c.lineWidth=1.5; c.stroke();
     c.fillStyle=isLast?'#EF4444':'#1A1A2E';
     c.font=isLast?'bold 10px sans-serif':'10px sans-serif'; c.textAlign='center';
-    c.fillText((D.tl[i].idle*100).toFixed(1)+'%',x,iy-8);
+    const lx=Math.min(Math.max(x,PL+14),w-PR-14);
+    c.fillText((D.tl[i].idle*100).toFixed(1)+'%',lx,iy-8);
     c.fillStyle=isLast?'#EF4444':'#6B7280';
     c.font=isLast?'bold 10px sans-serif':'10px sans-serif';
-    D.tl[i].s.split('\n').forEach((line,li)=>c.fillText(line,x,PT+ch+14+li*12));
+    D.tl[i].s.split('\n').forEach((line,li)=>c.fillText(line,lx,PT+ch+14+li*12));
   });
-  c.fillStyle='#EF4444'; c.font='bold 10px sans-serif'; c.textAlign='center';
-  c.fillText('⚠',xs[n-1]+18,PT+8);
 }
 
 // ── 탭 (findings) ────────────────────────────────────────────────
@@ -1080,16 +1087,16 @@ const featData=[
 ];
 const fg=document.getElementById('featGrid');
 featData.forEach(f=>{
-  fg.innerHTML+=`<div class="feat-card" style="border-left-color:${f.color}">
+  fg.innerHTML+=`<div class="feat-card">
     <div class="feat-card-head">
       <span class="feat-card-icon">${f.icon}</span>
       <div>
         <div class="feat-card-title">${f.title}</div>
-        <span class="feat-card-count" style="background:${f.color}18;color:${f.color}">${f.count}</span>
+        <span class="feat-card-count">${f.count}</span>
       </div>
     </div>
     <div class="feat-card-desc">${f.desc}</div>
-    <div class="feat-card-detail" style="color:${f.color}">→ ${f.detail}</div>
+    <div class="feat-card-detail">→ ${f.detail}</div>
   </div>`;
 });
 
@@ -1180,7 +1187,7 @@ document.querySelectorAll('.model-tab').forEach(btn=>{
 const methods=[
   {q:'왜 GroupKFold를 선택했는가?',bad:'일반 KFold → 같은 창고 스냅샷이 학습·검증에 동시 포함 → 데이터 누출 → 성능 과대평가',good:'창고 단위로 완전 분리 → 학습에 없던 창고로만 검증 → 실제 배포 환경 시뮬레이션 → 신뢰할 수 있는 OOF 성능'},
   {q:'왜 상관계수 대신 모델 중요도를 봤는가?',bad:'상관계수만 → pack_utilization r=0.105 → 핵심 변수 누락 → 잘못된 분석 방향',good:'비선형 U자형 패턴 포착 가능 → 모델 1위 재발견 → 반례 분석과 수렴 → 신뢰도 상승'},
-  {q:'왜 PSM이 필요했는가?',bad:'단순 비교 → hub_spoke +3.69분 유의미 → 레이아웃 개선 추진 → 고비용 · 잘못된 방향',good:'운영 조건 통제 후 비교 → 효과 소멸(p=0.783) → 레이아웃이 아니라 운영 개선 → 비용 절감'},
+  {q:'왜 PSM이 필요했는가?',bad:'단순 비교 → 허브-스포크형 +3.69분 유의미 → 레이아웃 개선 추진 → 고비용 · 잘못된 방향',good:'운영 조건 통제 후 비교 → 효과 소멸(p=0.783) → 레이아웃이 아니라 운영 개선 → 비용 절감'},
   {q:'왜 반례 분석을 별도로 진행했는가?',bad:'단순 결론 → idle 정상인데 지연 큰 창고 20개 미발견 → 포장병목형 역설 놓침',good:'공통 원인: pack 과포화 → U자형 분석과 수렴 → 두 독립 분석이 같은 결론 → 신뢰도 상승'},
   {q:'왜 단일 임계값 경보가 실패했는가?',bad:'모든 조합 → Precision 최고 0.12 → 그리드 서치·ML 모두 동일 상한',good:'단일 변수 상위 10% 구간도 위기율 11% 상한 → 위기는 복합 누적 현상 → 연속 상태 감지 필요'},
 ];
