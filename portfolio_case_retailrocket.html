@@ -157,7 +157,7 @@ h1 span{color:var(--pink)}
 /* INSIGHT BOX */
 .insight-box{background:var(--blue-lt);border:1px solid #BFDBFE;border-radius:10px;padding:16px 20px;margin-top:16px}
 .insight-title{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px}
-.insight-body{font-size:14px;color:var(--dark);line-height:1.8}
+.insight-body{font-size:15px;color:var(--dark);line-height:1.85}
 
 /* CONC */
 .conc-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:20px}
@@ -182,6 +182,14 @@ h1 span{color:var(--pink)}
 .cause-card{min-height:292px;display:flex;flex-direction:column}
 .cause-card .donut-wrap{flex:1}
 .cause-bars-card{min-height:292px}
+.performance-card{min-height:292px;display:flex;flex-direction:column}
+.performance-card canvas{margin-top:auto}
+.ab-metric-table th{font-size:14px!important;padding:12px 14px!important}
+.ab-metric-table td{font-size:14px!important;padding:12px 14px!important}
+.cond-chip-label{font-size:13px!important}
+.cond-chip-val{font-size:14px!important;line-height:1.65}
+#abtest .card-title{font-size:15px}
+#abtest .card-body{font-size:15px;line-height:1.85}
 section p[style],.card p[style],.hyp-body p[style]{font-size:14px!important;line-height:1.85!important}
 *[style*="font-size:12px"]{font-size:13px!important}
 *[style*="font-size:13px"]{font-size:14px!important}
@@ -358,26 +366,22 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
               <div class="donut-legend" id="donut-legend"></div>
             </div>
           </div>
-          <!-- Bar breakdown -->
-          <div class="card cause-bars-card">
-            <div class="card-title" style="margin-bottom:14px">원인별 상세 분포</div>
-            <div id="cause-bars"></div>
+          <!-- Before/After: what if we remove these? -->
+          <div class="card performance-card">
+            <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전·후 추천 성능 비교</div>
+            <p style="font-size:12px;color:var(--gray);margin-bottom:14px">
+              살 수 없는 상품을 추천 후보에서 제거했을 때 Precision@10이 어떻게 바뀌는지 확인
+            </p>
+            <canvas id="beforeAfterChart" height="128"></canvas>
           </div>
-        </div>
-
-        <!-- Before/After: what if we remove these? -->
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전·후 추천 성능 비교</div>
-          <p style="font-size:12px;color:var(--gray);margin-bottom:14px">살 수 없는 상품을 추천 후보에서 제거했을 때 Precision@10이 어떻게 바뀌는지 확인</p>
-          <canvas id="beforeAfterChart" height="104"></canvas>
         </div>
 
         <div class="hyp-conclusion" style="background:var(--red-lt);border:1px solid rgba(239,68,68,.2)">
           <div class="hyp-conclusion-label" style="color:var(--red)">✅ 가설 1 검증 결과</div>
           <div class="hyp-conclusion-text">
-            903개 상품 중 <strong>78.7%가 품절 상태, 13.3%가 상품 정보 미등록</strong>으로 처음부터 구매 자체가 불가능.
-            "추천이나 마케팅의 문제"가 아니라, <strong>데이터 품질 문제</strong>.
-            품절 상품을 추천 후보에서 제거하는 것만으로 Precision@10이 <strong>0.005 → 0.006으로 개선</strong>.
+            903개 상품 중 <strong>78.7%가 품절 상태, 13.3%가 상품 정보 미등록</strong>으로 처음부터 구매 자체가 불가능.<br>
+            <strong>"추천이나 마케팅의 문제"가 아니라, 데이터 품질 문제.</strong>
+            품절 상품을 추천 후보에서 제거하는 것만으로 Precision@10이 <strong>0.005 → 0.006으로 개선.</strong>
           </div>
         </div>
       </div>
@@ -397,7 +401,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
         <p style="font-size:13px;color:var(--gray);margin:16px 0">
           보통 사용자는 사이트에서 1~2번 정도 행동하고 떠남.<br>
-          그런데 일부 사용자는 구매도 장바구니도 없이 '보기'만 수십~수백 번 반복.
+          그런데 일부 사용자는 구매도 장바구니도 없이 '보기'만 수십~수백 번 반복.<br>
           이런 사용자가 전체 조회 수를 부풀려 전환율을 실제보다 낮아 보이게 만들 수 있음.
         </p>
 
@@ -444,9 +448,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div class="hyp-conclusion" style="background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)">
           <div class="hyp-conclusion-label" style="color:var(--purple)">✅ 가설 2 검증 결과</div>
           <div class="hyp-conclusion-text">
-            이상 사용자를 제거하면 전환율이 <strong>소폭 상승 (0.84% → 최대 0.90%)</strong>. 하지만 실제 구매 건수와
-            "장바구니 → 구매" 비율은 거의 그대로. 즉, 이상 사용자는 구매를 막은 게 아니라
-            <strong>'조회 수(분모)'를 부풀려서 전환율을 실제보다 낮게 보이게</strong> 만드는 구조.
+            이상 사용자를 제거하면 전환율이 <strong>소폭 상승 (0.84% → 최대 0.90%)</strong>.<br>
+            하지만 실제 구매 건수와 "장바구니 → 구매" 비율은 거의 그대로.<br>
+            즉, 이상 사용자는 구매를 막은 게 아니라 <strong>'조회 수(분모)'를 부풀려 전환율을 실제보다 낮게 보이게</strong> 만드는 구조.<br>
             제거 효과가 작으므로, <strong>중간 기준 적용 후 가설 1(품절 제거)을 우선 해결책</strong>으로 채택.
           </div>
         </div>
@@ -489,9 +493,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     <div class="insight-box">
       <div class="insight-title">💡 핵심 인사이트: 상위 10개 추천에서는 '판매 가능 + 인기순'이 1위</div>
       <div class="insight-body">
-        복잡한 개인화 알고리즘이 아니라, <strong>"품절 상품을 추천 후보에서 빼는 것"</strong>만으로 세 가지 지표가 모두 개선.
-        다만 추천을 20개까지 넓히면 관심 카테고리 기반 추천이 더 좋은 결과를 보임. 즉,
-        <strong>상위 노출 영역에는 판매 가능한 인기 상품을, 더 넓은 영역에는 개인 관심사 기반 추천</strong>을 쓰는 것이 합리적.
+        복잡한 개인화 알고리즘이 아니라, <strong>"품절 상품을 추천 후보에서 빼는 것"</strong>만으로 세 가지 지표가 모두 개선.<br>
+        다만 추천을 20개까지 넓히면 관심 카테고리 기반 추천이 더 좋은 결과를 보임.<br>
+        즉, <strong>상위 노출 영역에는 판매 가능한 인기 상품을, 더 넓은 영역에는 개인 관심사 기반 추천</strong>을 쓰는 것이 합리적.
       </div>
     </div>
   </div>
@@ -521,7 +525,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
 
     <div class="sec-label" style="margin-bottom:10px"><div class="sec-label-bar"></div><span class="sec-label-text">측정 지표</span></div>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+    <table class="ab-metric-table" style="width:100%;border-collapse:collapse;margin-bottom:20px">
       <thead><tr style="background:var(--pink)">
         <th style="padding:10px 12px;font-size:12px;text-align:left;color:#fff;font-weight:700">구분</th>
         <th style="padding:10px 12px;font-size:12px;text-align:left;color:#fff;font-weight:700">지표명</th>
@@ -807,6 +811,7 @@ const convData = [
 // ─── CAUSE BARS ──────────────────────────────────────────
 (function() {
   const el = document.getElementById('cause-bars');
+  if (!el) return;
   causeData.forEach(d => {
     el.innerHTML += `<div class="bar-row">
       <div class="bar-meta">
@@ -824,7 +829,7 @@ const convData = [
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
   const W = canvas.parentElement.clientWidth - 40;
-  const H = 104;
+  const H = 128;
   canvas.width = W * dpr; canvas.height = H * dpr;
   canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
