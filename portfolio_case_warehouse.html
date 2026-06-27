@@ -50,7 +50,7 @@ section[id]{scroll-margin-top:132px}
 .hero{background:var(--gray-lt);border-bottom:1px solid var(--border);padding:92px 40px 56px}
 h1{font-size:clamp(38px,5vw,56px);font-weight:500;line-height:1.15;color:var(--dark);margin-bottom:16px;letter-spacing:-.02em}
 h1 span{color:var(--pink)}
-.hero-desc{font-size:18px;color:var(--gray);line-height:1.85;margin-bottom:32px;max-width:820px}
+.hero-desc{font-size:17px;color:var(--gray);line-height:1.85;margin-bottom:32px;max-width:820px}
 .line{display:block}
 .hero .tags,.hero h1,.hero-desc,.hero .stat-row{opacity:0;animation:caseFadeUp .58s ease forwards}
 .hero .tags{animation-delay:.04s}.hero h1{animation-delay:.14s}.hero-desc{animation-delay:.24s}.hero .stat-row{animation-delay:.34s}
@@ -286,10 +286,6 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   <p class="lead">
     <span class="line">분석 대상은 <strong style="color:var(--dark)">avg_delay_minutes_next_30m</strong>, 즉 다음 30분 평균 출고 지연.</span>
     <span class="line">평균 19.0분, 중앙값 13.9분, 최대 715분으로 분포가 크게 치우쳐 있어 단순 평균만으로 운영 상태를 설명하기 어려움.</span>
-  </p>
-
-  <p class="lead">
-    <span class="line">타겟 변수의 분산이 크기 때문에 하나의 평균 패턴으로 전체 창고를 설명하기 어려움.</span>
     <span class="line">지연 유형은 운영 지표 악화로 발생하는 운영 위기형과 주문 급증으로 발생하는 수요 폭증형으로 구분.</span>
   </p>
 
@@ -320,13 +316,13 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   <div class="story-cards" id="storyCards">
     <div class="story-card active" data-idx="0">
       <div class="story-card-step">EDA</div>
-      <div class="story-card-title">idle 임계점 확인</div>
+      <div class="story-card-title">대기 상태(idle) 임계점 확인</div>
       <div class="story-card-body">30% 이하 구간에서 지연 급증. 배터리 소모→충전 대기→가용 로봇 감소 구조 확인.</div>
       <span class="story-card-badge" style="background:var(--blue-lt);color:var(--blue)">발견</span>
     </div>
     <div class="story-card" data-idx="1">
       <div class="story-card-step">모델링</div>
-      <div class="story-card-title">pack_utilization 재평가</div>
+      <div class="story-card-title">포장 가동률(pack_utilization) 재평가</div>
       <div class="story-card-body">상관계수 0.105로 낮게 보였지만 모델 중요도 1위(14.2%)로 재확인.</div>
       <span class="story-card-badge" style="background:var(--amber-lt);color:var(--amber)">한계 발견</span>
     </div>
@@ -352,10 +348,10 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
   <div id="storyDetails">
     <div class="story-detail active" data-idx="0">
-      <div class="story-detail-head">idle 비율 — 지연 급증의 1차 신호</div>
-      <div class="story-detail-sub">대기 가능 로봇 비율(idle)이 30% 아래로 떨어지면 평균 지연이 급증. 최저 idle 구간 36.3분, 최고 idle 구간 5.5분으로 약 6.6배 차이. 배터리 소모→충전 대기→가용 로봇 감소의 연쇄 구조 확인.</div>
+      <div class="story-detail-head">대기 상태(idle) — 지연 급증의 1차 신호</div>
+      <div class="story-detail-sub">대기 상태(idle) 비율이 30% 아래로 떨어지면 평균 지연이 급증. 최저 대기 상태(idle) 구간 36.3분, 최고 대기 상태(idle) 구간 5.5분으로 약 6.6배 차이. 배터리 소모→충전 대기→가용 로봇 감소의 연쇄 구조 확인.</div>
       <div class="story-arrow">
-        <span>idle 30% 미만</span><span style="color:var(--gray)">→</span>
+        <span>대기 상태(idle) 30% 미만</span><span style="color:var(--gray)">→</span>
         <span>충전 대기 증가</span><span style="color:var(--gray)">→</span>
         <span>가용 로봇 감소</span><span style="color:var(--gray)">→</span>
         <span class="hl">지연 36.3분</span>
@@ -363,7 +359,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
     <div class="story-detail" data-idx="1">
       <div class="story-detail-head">선형 상관으로 놓친 비선형 병목</div>
-      <div class="story-detail-sub">pack_utilization은 선형 상관계수 r=0.105로 낮게 나타났지만, 모델 중요도에서는 1위(14.2%)로 확인. 낮은 가동률은 처리 부족, 높은 가동률은 후처리 병목으로 이어지는 U자형 패턴.</div>
+      <div class="story-detail-sub">포장 가동률(pack_utilization)은 선형 상관계수 r=0.105로 낮게 나타났지만, 모델 중요도에서는 1위(14.2%)로 확인. 낮은 가동률은 처리 부족, 높은 가동률은 후처리 병목으로 이어지는 U자형 패턴.</div>
       <div class="story-arrow">
         <span>EDA r=0.105</span><span style="color:var(--gray)">→</span>
         <span>'관련 없음'</span><span style="color:var(--gray)">→</span>
@@ -414,7 +410,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   </p>
 
   <div class="find-tabs">
-    <button class="find-tab active" data-tab="idle">idle 비율</button>
+    <button class="find-tab active" data-tab="idle">대기 상태(idle)</button>
     <button class="find-tab" data-tab="pack">U자형 발견</button>
     <button class="find-tab" data-tab="combo">복합 병목</button>
     <button class="find-tab" data-tab="psm">PSM 전후</button>
@@ -426,15 +422,15 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="find-key" style="background:var(--pink-lt);color:var(--dark)">핵심 발견: 최저 구간 <strong style="color:var(--pink)">36.3분</strong> vs 최고 구간 5.5분 — 30% 이하가 임계점</div>
       <div class="find-stat" style="color:var(--pink)">6.6배</div>
       <div class="find-stat-sub">최저 vs 최고 구간 지연 차이</div>
-      <h3>대기 가능 로봇 비율(idle) — 1차 방어선</h3>
-      <p>idle 30% 아래로 하락 시 지연 즉각 고착. 배터리 소모→충전 대기→가용 로봇 감소의 연쇄 구조. idle 30% 유지가 다른 모든 위험을 방어하는 가장 강력한 단일 지표.</p>
+      <h3>대기 상태(idle) 비율 — 1차 방어선</h3>
+      <p>대기 상태(idle) 비율이 30% 아래로 하락하면 지연이 즉각 고착. 배터리 소모→충전 대기→가용 로봇 감소의 연쇄 구조. 대기 상태(idle) 30% 유지가 다른 모든 위험을 방어하는 가장 강력한 단일 지표.</p>
       <div class="find-tip" style="background:var(--blue-lt);border-color:var(--blue)">
         <strong style="color:var(--blue);font-size:11px;letter-spacing:.04em">운영 기준</strong><br>
-        <span style="color:var(--dark)">idle &lt; 30% 감지 시 → 즉각 경보 + 충전 스케줄 조정</span>
+        <span style="color:var(--dark)">대기 상태(idle) &lt; 30% 감지 시 → 즉각 경보 + 충전 스케줄 조정</span>
       </div>
     </div>
     <div class="find-chart-box">
-      <div class="find-chart-title">idle 비율 구간별 평균 지연</div>
+      <div class="find-chart-title">대기 상태(idle) 구간별 평균 지연</div>
       <div class="find-chart-sub">붉은 구간(0~40%)에서 지연이 임계적으로 증가</div>
       <canvas id="c-idle" height="240"></canvas>
     </div>
@@ -449,7 +445,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <p><span class="hl-a">50~80%가 최적</span> — 너무 낮으면 처리 부족, 너무 높으면 후처리 병목. EDA만으로 분석을 완결하면 핵심 변수를 놓칠 수 있음.</p>
       <div class="find-tip" style="background:var(--green-lt);border-color:var(--green)">
         <strong style="color:var(--green);font-size:11px;letter-spacing:.04em">운영 기준</strong><br>
-        <span style="color:var(--dark)">pack_utilization 90%+ → 즉각 부하 분산 / 60~80% 유지 목표</span>
+        <span style="color:var(--dark)">포장 가동률(pack_utilization) 90%+ → 즉각 부하 분산 / 60~80% 유지 목표</span>
       </div>
     </div>
     <div class="find-chart-box">
@@ -461,14 +457,14 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
   <div class="find-panel" id="fp-combo">
     <div class="find-left">
-      <div class="find-key" style="background:var(--pink-lt);color:var(--dark)">3개 동시: <strong style="color:var(--pink)">38.1분</strong> (정상 10.2분의 3.7배). <strong style="color:var(--pink)">idle만 낮아도</strong> 23.5분</div>
+      <div class="find-key" style="background:var(--pink-lt);color:var(--dark)">3개 동시: <strong style="color:var(--pink)">38.1분</strong> (정상 10.2분의 3.7배). <strong style="color:var(--pink)">대기 상태(idle)만 낮아도</strong> 23.5분</div>
       <div class="find-stat" style="color:var(--dark)">3.7배</div>
       <div class="find-stat-sub">모두 정상(10.2분) → 3개 동시 나쁨(38.1분)</div>
       <h3>복합 병목 — 겹칠수록 폭발</h3>
-      <p>idle↓ + 배터리↓ + 혼잡↑ 3개가 동시에 나쁠 때 정상 대비 3.7배. <strong>idle 비율만 정상이면</strong> 나머지 둘이 나빠도 20분 수준으로 방어. idle이 복합 병목의 관문.</p>
+      <p>대기 상태(idle)↓ + 배터리↓ + 혼잡↑ 3개가 동시에 나쁠 때 정상 대비 3.7배. <strong>대기 상태(idle) 비율만 정상이면</strong> 나머지 둘이 나빠도 20분 수준으로 방어. 대기 상태(idle)가 복합 병목의 관문.</p>
       <div class="find-tip" style="background:var(--green-lt);border-color:var(--green)">
         <strong style="color:var(--green);font-size:11px;letter-spacing:.04em">전략적 시사점</strong><br>
-        <span style="color:var(--dark)">idle 수호가 1차 방어선. idle 정상이면 다른 조건이 나빠도 20분 이하.</span>
+        <span style="color:var(--dark)">대기 상태(idle) 수호가 1차 방어선. 대기 상태(idle)가 정상이면 다른 조건이 나빠도 20분 이하.</span>
       </div>
     </div>
     <div class="find-chart-box">
@@ -499,18 +495,18 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
   <div class="find-panel" id="fp-timeline">
     <div class="find-left">
-      <div class="find-key" style="background:var(--red-lt);color:var(--dark)">위기 <strong style="color:var(--red)">6스냅샷(약 30분) 전부터</strong> idle이 낮고 혼잡이 높은 상태 지속</div>
+      <div class="find-key" style="background:var(--red-lt);color:var(--dark)">위기 <strong style="color:var(--red)">6스냅샷(약 30분) 전부터</strong> 대기 상태(idle)가 낮고 혼잡이 높은 상태 지속</div>
       <div class="find-stat" style="color:var(--red)">~30분</div>
       <div class="find-stat-sub">위기 발생 전 누적 신호 지속 시간</div>
       <h3>위기 시계열 — 단일 시점의 한계</h3>
-      <p>위기가 터지기 6스냅샷 전부터 이미 idle이 낮고 혼잡이 높은 상태. 단일 시점 탐지로는 누락 — 연속 상태 누적 감지 필요. 경보 규칙 Precision ~0.12 상한의 구조적 이유.</p>
+      <p>위기가 터지기 6스냅샷 전부터 이미 대기 상태(idle)가 낮고 혼잡이 높은 상태. 단일 시점 탐지로는 누락 — 연속 상태 누적 감지 필요. 경보 규칙 Precision ~0.12 상한의 구조적 이유.</p>
       <div class="find-tip" style="background:var(--amber-lt);border-color:var(--amber)">
         <strong style="color:var(--amber);font-size:11px;letter-spacing:.04em">모델 설계 반영</strong><br>
         <span style="color:var(--dark)">lag/rolling 피처로 누적 신호를 직접 포착 → 예측 성능 향상</span>
       </div>
     </div>
     <div class="find-chart-box">
-      <div class="find-chart-title">위기 직전 idle 비율 변화</div>
+      <div class="find-chart-title">위기 직전 대기 상태(idle) 비율 변화</div>
       <div class="find-chart-sub">정상 구간(0.526) vs 위기 직전(0.214) — 6단계 전부터 하락</div>
       <canvas id="c-timeline" height="240"></canvas>
     </div>
@@ -525,20 +521,20 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   <h2>왜 일부 창고는 일반 패턴을 따르지 않았는가</h2>
   <p class="lead">
     <span class="line">평균 패턴에서 벗어난 창고를 별도로 분리해 비교.</span>
-    <span class="line">두 반례 유형 모두 pack_utilization 과포화가 공통 원인으로 확인.</span>
+    <span class="line">두 반례 유형 모두 포장 가동률(pack_utilization) 과포화가 공통 원인으로 확인.</span>
   </p>
 
   <div class="cx-grid">
     <div class="cx-card red">
       <div class="cx-card-hdr">
-        <div class="cx-card-label" style="color:var(--red)">반례 유형 1 — idle 높아도 지연이 큰 창고 (20개)</div>
-        <div class="cx-card-q">Q. idle이 충분한데 왜 지연이 큰가?</div>
+        <div class="cx-card-label" style="color:var(--red)">반례 유형 1 — 대기 상태(idle)가 높아도 지연이 큰 창고 (20개)</div>
+        <div class="cx-card-q">Q. 대기 상태(idle)가 충분한데 왜 지연이 큰가?</div>
       </div>
       <table class="cx-tbl">
         <thead><tr><th>변수</th><th>일반 창고</th><th>반례 창고</th><th>배율</th></tr></thead>
         <tbody>
           <tr>
-            <td style="font-weight:600">pack_utilization</td>
+            <td style="font-weight:600">포장 가동률(pack_utilization)</td>
             <td style="color:var(--gray)">0.436 (일반)</td>
             <td style="color:var(--dark);font-weight:600">0.732 (반례)</td>
             <td><strong style="color:var(--red)">1.68배</strong></td>
@@ -559,7 +555,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </table>
       <div class="cx-concl" style="background:var(--red-lt);border-color:#FECACA">
         <strong style="color:var(--red)">결론</strong>
-        idle은 필요조건, pack 최적화는 충분조건 — idle이 여유 있어도 포장 라인이 막히면 소용없음
+        대기 상태(idle)는 필요조건, 포장 가동률(pack_utilization) 최적화는 충분조건 — 대기 상태(idle)가 여유 있어도 포장 라인이 막히면 소용없음
       </div>
     </div>
 
@@ -572,7 +568,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <thead><tr><th>변수</th><th>일반 창고</th><th>반례 창고</th><th>배율</th></tr></thead>
         <tbody>
           <tr>
-            <td style="font-weight:600">pack_utilization</td>
+            <td style="font-weight:600">포장 가동률(pack_utilization)</td>
             <td style="color:var(--gray)">0.388 (일반)</td>
             <td style="color:var(--dark);font-weight:600">0.673 (반례)</td>
             <td><strong style="color:var(--red)">1.73배</strong></td>
@@ -593,13 +589,13 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </table>
       <div class="cx-concl" style="background:var(--amber-lt);border-color:#FDE68A">
         <strong style="color:var(--amber)">결론</strong>
-        단일 병목(pack)이 전체 시스템을 무력화 — 혼잡·배터리 정상이어도 pack이 막히면 위기
+        단일 병목인 포장 가동률(pack_utilization) 과부하가 전체 시스템을 무력화 — 혼잡·배터리가 정상이어도 포장 라인이 막히면 위기
       </div>
     </div>
   </div>
 
   <div style="margin-top:18px;padding:18px 22px;background:var(--blue-lt);border-radius:10px;border:1px solid #BFDBFE;box-shadow:0 1px 4px rgba(0,0,0,.04)">
-    <div style="font-size:14px;font-weight:800;color:var(--blue);margin-bottom:6px">두 반례의 공통 원인 — pack_utilization 과포화</div>
+    <div style="font-size:14px;font-weight:800;color:var(--blue);margin-bottom:6px">두 반례의 공통 원인 — 포장 가동률(pack_utilization) 과포화</div>
     <div style="font-size:14px;color:var(--dark);line-height:1.7">U자형 분석(모델 발견)과 반례 분석(예외 탐색)이 독립적인 방법으로 같은 결론에 도달.</div>
   </div>
 </div>
@@ -663,9 +659,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div style="font-size:12px;color:var(--dark);line-height:1.45">lag/rolling 피처, 누적 통계, onset 이벤트 피처</div>
       </div>
       <div style="background:var(--white);border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--amber)">
-        <div style="font-size:12px;color:var(--gray);margin-bottom:6px;line-height:1.4">pack_utilization 비선형 U자형</div>
+        <div style="font-size:12px;color:var(--gray);margin-bottom:6px;line-height:1.4">포장 가동률(pack_utilization) 비선형 U자형</div>
         <div style="font-size:13px;color:var(--amber);font-weight:600;margin-bottom:6px">→</div>
-        <div style="font-size:12px;color:var(--dark);line-height:1.45">pack_util² 비선형 항 + 조합 상호작용 피처 명시적 추가</div>
+        <div style="font-size:12px;color:var(--dark);line-height:1.45">포장 가동률² 비선형 항 + 조합 상호작용 피처 명시적 추가</div>
       </div>
       <div style="background:var(--white);border-radius:8px;padding:14px 16px;border:1px solid var(--border);border-top:3px solid var(--green)">
         <div style="font-size:12px;color:var(--gray);margin-bottom:6px;line-height:1.4">레이아웃보다 운영이 원인 (PSM)</div>
@@ -955,7 +951,7 @@ function drawTimeline(){
   });
   // axis labels
   c.fillStyle='#2563EB'; c.font='bold 9px sans-serif'; c.save(); c.translate(PL-42,PT+ch/2);
-  c.rotate(-Math.PI/2); c.textAlign='center'; c.fillText('idle %',0,0); c.restore();
+  c.rotate(-Math.PI/2); c.textAlign='center'; c.fillText('대기 상태 %',0,0); c.restore();
   c.fillStyle='#F59E0B'; c.save(); c.translate(w-PR+46,PT+ch/2);
   c.rotate(Math.PI/2); c.textAlign='center'; c.fillText('혼잡도',0,0); c.restore();
   // congestion
@@ -1014,11 +1010,11 @@ document.querySelectorAll('.story-card').forEach(card=>{
 
 // ── 운영 우선순위 ─────────────────────────────────────────────────
 const priData=[
-  {rank:'1순위',rc:'#EF4444',type:'즉시개입형',n:49,delay:24.6,dc:'#F59E0B',feat:'고혼잡 + 저idle',action:'경로 재배정 즉시 / 충전 스케줄 긴급 조정',target:'idle 30% 회복',tc:'#EF4444'},
-  {rank:'2순위',rc:'#EF4444',type:'배터리위기형',n:23,delay:23.3,dc:'#F59E0B',feat:'저idle + 배터리 나쁨',action:'사전 충전 스케줄 / 배터리 교체 점검',target:'저배터리 10% 이하',tc:'#EF4444'},
-  {rank:'3순위★',rc:'#F59E0B',type:'포장병목형',n:40,delay:27,dc:'#EF4444',feat:'pack 고가동 (숨은 병목)',action:'포장 부하 분산 / pack 60~80% 조정',target:'U자형 최적 구간',tc:'#F59E0B'},
-  {rank:'4순위',rc:'#F59E0B',type:'혼잡관리형',n:29,delay:15.4,dc:'#10B981',feat:'idle 정상 + 고혼잡',action:'피크타임 경로 사전 분산 / 모니터링',target:'혼잡도 임계 이하',tc:'#F59E0B'},
-  {rank:'5순위',rc:'#2563EB',type:'배터리최적화형',n:6,delay:17,dc:'#10B981',feat:'idle 정상 + 배터리 나쁨',action:'정기 충전 스케줄 최적화',target:'low_bat 10% 관리',tc:'#2563EB'},
+  {rank:'1순위',rc:'#EF4444',type:'즉시개입형',n:49,delay:24.6,dc:'#F59E0B',feat:'고혼잡 + 대기 상태 낮음',action:'경로 재배정 즉시 / 충전 스케줄 긴급 조정',target:'대기 상태 30% 회복',tc:'#EF4444'},
+  {rank:'2순위',rc:'#EF4444',type:'배터리위기형',n:23,delay:23.3,dc:'#F59E0B',feat:'대기 상태 낮음 + 배터리 나쁨',action:'사전 충전 스케줄 / 배터리 교체 점검',target:'저배터리 10% 이하',tc:'#EF4444'},
+  {rank:'3순위★',rc:'#F59E0B',type:'포장병목형',n:40,delay:27,dc:'#EF4444',feat:'포장 가동률 고가동 (숨은 병목)',action:'포장 부하 분산 / 포장 가동률 60~80% 조정',target:'U자형 최적 구간',tc:'#F59E0B'},
+  {rank:'4순위',rc:'#F59E0B',type:'혼잡관리형',n:29,delay:15.4,dc:'#10B981',feat:'대기 상태 정상 + 고혼잡',action:'피크타임 경로 사전 분산 / 모니터링',target:'혼잡도 임계 이하',tc:'#F59E0B'},
+  {rank:'5순위',rc:'#2563EB',type:'배터리최적화형',n:6,delay:17,dc:'#10B981',feat:'대기 상태 정상 + 배터리 나쁨',action:'정기 충전 스케줄 최적화',target:'low_bat 10% 관리',tc:'#2563EB'},
   {rank:'6순위',rc:'#10B981',type:'모니터링형',n:103,delay:13.5,dc:'#10B981',feat:'전반적 정상',action:'정기 모니터링 / 이상 징후 조기 감지',target:'현재 상태 유지',tc:'#10B981'},
 ];
 const pt=document.getElementById('priTbody');
@@ -1073,7 +1069,7 @@ const featData=[
    desc:'lag1~3, diff1, rollmean3/6/8, rollmax, rollstd, EWM(α=0.4). 시나리오 내 누적 패턴을 포착.',
    detail:'congestion_score, fault_count 등 9개 핵심 변수는 8스냅샷 롤링 통계 추가 계산'},
   {icon:'📐',title:'물리적 병목 피처',color:'var(--red)',count:'30개+ 조합 변수',
-   desc:'inflow÷robot, queue÷charger, pack_util², order·avg_trip_distance 등. 실제 운영 부하를 수치화.',
+   desc:'inflow÷robot, queue÷charger, 포장 가동률², order·avg_trip_distance 등. 실제 운영 부하를 수치화.',
    detail:'EDA 분석의 병목 인과구조를 수학적으로 표현 — 분석 인사이트가 모델로 연결됨'},
   {icon:'🔄',title:'안전 누적 통계',color:'var(--amber)',count:'7개 변수, 7종',
    desc:"시나리오 내 prev 기반 cummax, cummean, cumstd. 현재 값 ÷ 누적 최대 비율로 상대적 심각도 측정.",
@@ -1086,7 +1082,7 @@ const featData=[
    detail:"경보 규칙 실패 분석에서 발견한 '누적 신호'를 피처로 직접 모델링"},
   {icon:'📊',title:'교차 병목 피처',color:'var(--dark)',count:'6개 조합 상호작용',
    desc:'congestion8·fault8, queue8·wait8, inflow8÷active8 등. 복합 병목의 롤링 평균 상호작용.',
-   detail:'단일 변수로 놓치는 복합 병목(idle·pack·battery 38.1분) 현상을 피처로 구현'},
+   detail:'단일 변수로 놓치는 복합 병목(대기 상태·포장 가동률·배터리 38.1분) 현상을 피처로 구현'},
 ];
 const fg=document.getElementById('featGrid');
 featData.forEach(f=>{
@@ -1158,7 +1154,7 @@ versions.forEach(v=>{
   </div>`;
 });
 const insights=[
-  {icon:'💡',title:'분석 인사이트가 피처의 품질을 결정한다',desc:'pack_utilization²(비선형), onset 이벤트(누적), charge_pressure(복합 비율) — 모두 EDA에서 발견한 구조를 수식으로 변환한 결과. 도메인 없이는 만들 수 없는 피처.',color:'var(--blue)'},
+  {icon:'💡',title:'분석 인사이트가 피처의 품질을 결정한다',desc:'포장 가동률(pack_utilization)²(비선형), onset 이벤트(누적), charge_pressure(복합 비율) — 모두 EDA에서 발견한 구조를 수식으로 변환한 결과. 도메인 없이는 만들 수 없는 피처.',color:'var(--blue)'},
   {icon:'⚠️',title:'리더보드 성능과 OOF 성능은 다를 수 있다',desc:'v6에서 expanding 통계가 OOF MAE를 개선했지만 리더보드에서는 오히려 하락. 미묘한 리크 의심 → 제거 후 안정화. OOF 개선 = 실제 개선이 아닐 수 있음.',color:'var(--red)'},
   {icon:'🎯',title:'CatBoost가 log1p + MAE 조합에서 강했다',desc:'우편향 분포(지연 시간)에서 log1p 변환 후 MAE 최소화는 실제 오차 패턴과 잘 맞음. LightGBM Huber를 8%만 넣은 것도 다양성을 위한 최소 포함.',color:'var(--green)'},
 ];
@@ -1189,9 +1185,9 @@ document.querySelectorAll('.model-tab').forEach(btn=>{
 // ── 방법론 아코디언 ───────────────────────────────────────────────
 const methods=[
   {q:'왜 GroupKFold를 선택했는가?',bad:'일반 KFold → 같은 창고 스냅샷이 학습·검증에 동시 포함 → 데이터 누출 → 성능 과대평가',good:'창고 단위로 완전 분리 → 학습에 없던 창고로만 검증 → 실제 배포 환경 시뮬레이션 → 신뢰할 수 있는 OOF 성능'},
-  {q:'왜 상관계수 대신 모델 중요도를 봤는가?',bad:'상관계수만 → pack_utilization r=0.105 → 핵심 변수 누락 → 잘못된 분석 방향',good:'비선형 U자형 패턴 포착 가능 → 모델 1위 재발견 → 반례 분석과 수렴 → 신뢰도 상승'},
+  {q:'왜 상관계수 대신 모델 중요도를 봤는가?',bad:'상관계수만 → 포장 가동률(pack_utilization) r=0.105 → 핵심 변수 누락 → 잘못된 분석 방향',good:'비선형 U자형 패턴 포착 가능 → 모델 1위 재발견 → 반례 분석과 수렴 → 신뢰도 상승'},
   {q:'왜 PSM이 필요했는가?',bad:'단순 비교 → 중앙 거점형 레이아웃 +3.69분 유의미 → 레이아웃 개선 추진 → 고비용 · 잘못된 방향',good:'운영 조건 통제 후 비교 → 효과 소멸(p=0.783) → 레이아웃이 아니라 운영 개선 → 비용 절감'},
-  {q:'왜 반례 분석을 별도로 진행했는가?',bad:'단순 결론 → idle 정상인데 지연 큰 창고 20개 미발견 → 포장병목형 역설 놓침',good:'공통 원인: pack 과포화 → U자형 분석과 수렴 → 두 독립 분석이 같은 결론 → 신뢰도 상승'},
+  {q:'왜 반례 분석을 별도로 진행했는가?',bad:'단순 결론 → 대기 상태(idle)가 정상인데 지연 큰 창고 20개 미발견 → 포장병목형 역설 놓침',good:'공통 원인: 포장 가동률(pack_utilization) 과포화 → U자형 분석과 수렴 → 두 독립 분석이 같은 결론 → 신뢰도 상승'},
   {q:'왜 단일 임계값 경보가 실패했는가?',bad:'모든 조합 → Precision 최고 0.12 → 그리드 서치·ML 모두 동일 상한',good:'단일 변수 상위 10% 구간도 위기율 11% 상한 → 위기는 복합 누적 현상 → 연속 상태 감지 필요'},
 ];
 const ml=document.getElementById('methodList');
