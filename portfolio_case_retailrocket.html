@@ -242,7 +242,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </p>
     <div class="g4">
       <div class="metric-card"><div class="m-label">조회 대비 구매 비율</div><div class="m-value" style="color:var(--dark)">0.84%</div><div class="m-sub">구매 22,457건 / 조회 2,664,312건</div></div>
-      <div class="metric-card"><div class="m-label">조회만 발생한 상품</div><div class="m-value" style="color:var(--blue)">903개</div><div class="m-sub">조회 100회 이상, 장바구니·구매 0건</div></div>
+      <div class="metric-card"><div class="m-label">조회만 발생한 상품</div><div class="m-value" style="color:var(--blue)">903개</div><div class="m-sub">조회 100회 이상, 장바구니/구매 0건</div></div>
       <div class="metric-card"><div class="m-label">그중 품절 상태</div><div class="m-value" style="color:var(--red)">78.7%</div><div class="m-sub">903개 중 711개 상품</div></div>
       <div class="metric-card"><div class="m-label">이상 사용자 제외 영향</div><div class="m-value" style="color:var(--green)">+0.03%p</div><div class="m-sub">중간 기준 적용 시 0.84% → 0.87%</div></div>
     </div>
@@ -305,7 +305,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     <div class="g3">
       <div class="card">
         <div class="card-title" style="color:var(--pink)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
-        <div class="card-body">조회 100회 이상이지만 장바구니·구매가 단 0건인 상품이 903개. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 2가지 설정.</div>
+        <div class="card-body">조회 100회 이상이지만 장바구니/구매가 단 0건인 상품이 903개. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 2가지 설정.</div>
       </div>
       <div class="card">
         <div class="card-title" style="color:var(--pink)">📉 구매 전환율 0.84% — 글로벌 평균 절반 이하</div>
@@ -316,7 +316,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div class="card-body">
           <div style="display:flex;gap:10px;margin-bottom:8px">
             <span style="background:var(--red-lt);color:var(--red);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 1</span>
-            <span style="font-size:13px;color:var(--dark)">상품 자체의 문제일까? (품절·정보 누락)</span>
+            <span style="font-size:13px;color:var(--dark)">상품 자체의 문제일까? (품절/정보 누락)</span>
           </div>
           <div style="display:flex;gap:10px">
             <span style="background:var(--purple-lt);color:var(--purple);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 2</span>
@@ -339,7 +339,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="hyp-body">
 
         <p style="font-size:13px;color:var(--gray);margin:16px 0">
-          조회 100회 이상, 장바구니·구매 0건인 903개 상품을 확인.<br>
+          조회 100회 이상, 장바구니/구매 0건인 903개 상품을 확인.<br>
           추천이나 마케팅 문제라면 여러 상품에 걸쳐 랜덤하게 분포해야 함. 하지만 결과는 다름.
         </p>
 
@@ -354,7 +354,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
           </div>
           <!-- Before/After: what if we remove these? -->
           <div class="card performance-card">
-            <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전·후 추천 성능 비교</div>
+            <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전/후 추천 성능 비교</div>
             <p style="font-size:12px;color:var(--gray);margin-bottom:14px">
               살 수 없는 상품을 추천 후보에서 제거했을 때 Precision@10이 어떻게 바뀌는지 확인
             </p>
@@ -408,7 +408,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
         <!-- Conversion rate change chart - HTML bars -->
         <div class="card" style="margin-bottom:16px">
-          <div class="card-title" style="margin-bottom:4px">이상 사용자 제거 전·후 전환율 변화</div>
+          <div class="card-title" style="margin-bottom:4px">이상 사용자 제거 전/후 전환율 변화</div>
           <p style="font-size:12px;color:var(--gray);margin-bottom:16px">제거할수록 전환율이 소폭 상승하지만 극적인 변화는 없음 — 분모(조회수) 왜곡의 영향</p>
           <div style="display:flex;gap:24px;margin-bottom:18px">
             <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray)"><div style="width:10px;height:10px;border-radius:2px;background:var(--pink);flex-shrink:0"></div>조회→장바구니</div>
@@ -454,13 +454,13 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
     <h2 style="margin-bottom:8px">정제된 데이터로 5가지 추천 방식 비교</h2>
     <p style="font-size:13px;color:var(--gray);margin-bottom:20px">
-      과거 데이터(train)로 추천 후보를 만들고, 이후 기간(test)에 실제 장바구니·구매 상품이 추천 목록에 있었는지로 점수 산출.
+      과거 데이터(train)로 추천 후보를 만들고, 이후 기간(test)에 실제 장바구니/구매 상품이 추천 목록에 있었는지로 점수 산출.
     </p>
 
     <!-- Algo: clean single-metric bar rows -->
     <div class="card" style="margin-bottom:16px">
       <div class="card-title" style="margin-bottom:4px">Precision@10 비교 (상위 10개 추천 기준)</div>
-      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">추천한 10개 중 실제로 구매·장바구니에 담긴 비율. 높을수록 좋은 추천.</p>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">추천한 10개 중 실제로 구매/장바구니에 담긴 비율. 높을수록 좋은 추천.</p>
       <div id="algo-clean"></div>
     </div>
     <div class="g2" style="margin-bottom:16px">
@@ -574,7 +574,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 1 검증</span><span class="ach-val">전환 불가 상품 903개 중 78.7%가 품절임을 확인 — 데이터 품질 문제로 귀결</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 2 검증</span><span class="ach-val">이상 사용자 제거 시 전환율 소폭 상승 (0.84%→0.90%), 구매 건수 자체는 변화 미미</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">알고리즘 비교</span><span class="ach-val">5가지 추천 알고리즘 오프라인 평가 — '판매 가능 + 인기순'이 상위 10개 기준 최고 성능</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">A/B 테스트 설계</span><span class="ach-val">핵심·참고·안전장치 지표 정의, 실험 전 기준 확정, 중단 기준까지 완전 설계</span></div></li>
+        <li><div class="ach-dot"></div><div><span class="ach-lbl">A/B 테스트 설계</span><span class="ach-val">핵심/참고/안전장치 지표 정의, 실험 전 기준 확정, 중단 기준까지 완전 설계</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">제약 사항</span><span class="ach-val">실제 A/B 테스트 미실시 (오프라인 시뮬레이션). 실사용 데이터 확보 시 온라인 검증 필요</span></div></li>
       </ul>
     </div>
@@ -606,14 +606,14 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
             <span style="color:var(--green);font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
             <div>
               <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">이상 사용자 기준의 근거화</div>
-              <div style="font-size:12px;color:var(--gray);line-height:1.6">단일 기준을 임의로 정하지 않고 엄격·중간·느슨 3단계로 나눠 효과를 비교한 뒤, 중간 기준을 채택하는 근거를 데이터로 제시.</div>
+              <div style="font-size:12px;color:var(--gray);line-height:1.6">단일 기준을 임의로 정하지 않고 엄격/중간/느슨 3단계로 나눠 효과를 비교한 뒤, 중간 기준을 채택하는 근거를 데이터로 제시.</div>
             </div>
           </li>
           <li style="display:flex;gap:10px">
             <span style="color:var(--green);font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
             <div>
               <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">오프라인 평가 후 A/B 테스트 설계</div>
-              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘 비교를 오프라인 시뮬레이션으로 먼저 진행한 뒤, 가드레일 지표·중단 기준까지 포함한 실험 설계로 이어짐.</div>
+              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘 비교를 오프라인 시뮬레이션으로 먼저 진행한 뒤, 가드레일 지표/중단 기준까지 포함한 실험 설계로 이어짐.</div>
             </div>
           </li>
           <li style="display:flex;gap:10px">
