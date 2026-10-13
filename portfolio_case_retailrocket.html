@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RetailRocket 이커머스 로그 분석</title>
+<title>RetailRocket | 이커머스 구매 전환율 저하 원인 분석</title>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#cbd5e1 var(--gray-lt)}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#D1D5DB var(--gray-lt)}
 :root{
   --pink:#2563EB;--pink-lt:#EFF6FF;--pink-mid:#60A5FA;
   --dark:#1A1A2E;--gray:#6B7280;--gray-lt:#F2F3F6;
@@ -19,10 +19,9 @@ html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#cbd5e1 var(--g
   --amber:#F59E0B;--amber-lt:#FFFBEB;
 }
 body{background:var(--gray-lt);color:var(--dark);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;word-break:keep-all}
-html::-webkit-scrollbar,body::-webkit-scrollbar{width:8px}
+html::-webkit-scrollbar,body::-webkit-scrollbar{width:5px}
 html::-webkit-scrollbar-track,body::-webkit-scrollbar-track{background:var(--gray-lt)}
-html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{background:#cbd5e1;border:2px solid var(--gray-lt);border-radius:999px}
-html::-webkit-scrollbar-button,body::-webkit-scrollbar-button{display:none;width:0;height:0}
+html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px}
 a{color:inherit;text-decoration:none}
 
 /* NAV */
@@ -72,23 +71,16 @@ h2{font-size:clamp(22px,3vw,30px);font-weight:700;color:var(--dark);margin-botto
 .m-value{font-size:30px;font-weight:700;line-height:1;margin-bottom:4px}
 .m-sub{font-size:12px;color:#9CA3AF}
 
-/* TAGS */
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
-.tag{font-size:12px;font-weight:500;padding:5px 11px;border-radius:4px;border:1px solid var(--border);background:#fff;color:var(--gray)}
-.tag-blue{background:var(--blue-lt);color:var(--blue);border-color:#bfdbfe}
-.tag-gray{background:#fff;color:var(--gray);border-color:#d8dee8}
-
 /* HERO */
-.hero{background:var(--gray-lt);border-bottom:1px solid var(--border);padding:92px 40px 56px}
-h1{font-size:clamp(38px,5vw,56px);font-weight:500;line-height:1.15;color:var(--dark);margin-bottom:16px;letter-spacing:-.02em}
+.hero{background:var(--gray-lt);border-bottom:1px solid var(--border);padding:72px 40px 56px}
+h1{font-size:clamp(34px,4.4vw,50px);font-weight:700;line-height:1.2;color:var(--dark);margin-bottom:16px;letter-spacing:-.02em}
 h1 span{color:var(--pink)}
 .hero-sub{font-size:17px;color:var(--gray);line-height:1.85;margin-bottom:32px}
 @keyframes retailFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-.hero .tags,.hero h1,.hero-sub,.hero .g4{opacity:0;animation:retailFadeUp .58s ease forwards}
-.hero .tags{animation-delay:.04s}
-.hero h1{animation-delay:.14s}
-.hero-sub{animation-delay:.24s}
-.hero .g4{animation-delay:.34s}
+.hero h1,.hero-sub,.hero .g4{opacity:0;animation:retailFadeUp .58s ease forwards}
+.hero h1{animation-delay:.04s}
+.hero-sub{animation-delay:.14s}
+.hero .g4{animation-delay:.24s}
 
 /* INFO TABLE */
 .info-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:28px}
@@ -242,17 +234,10 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <!-- ════ HERO ════ -->
 <div class="hero">
   <div class="wrap">
-    <div class="tags">
-      <span class="tag tag-blue">이커머스 · 추천 분석</span>
-      <span class="tag tag-gray">Funnel Analysis</span>
-      <span class="tag tag-gray">데이터 품질 진단</span>
-      <span class="tag tag-gray">추천 알고리즘 비교</span>
-      <span class="tag tag-gray">A/B 테스트 설계</span>
-    </div>
-    <h1>RetailRocket<br><span>이커머스 로그</span> 분석</h1>
+    <h1>RetailRocket<br>이커머스 <span>구매 전환율 저하</span> 원인 분석</h1>
     <p class="hero-sub">
-      낮은 전환율의 원인을 파악하고, <strong style="color:var(--dark)">데이터 품질 문제</strong>를 먼저 검증한 뒤 추천 모델 비교와 A/B 테스트 설계<br>
-      퍼널 분석 → 상품 품질 진단 → 비정상 사용자 탐지 → 추천 모델링 → 실험 설계 순으로 진행
+      RetailRocket 공개 데이터에서 낮은 구매 전환율 확인, 상품 상태와 사용자 행동에 대한 두 가지 가설 검증<br>
+      검증 결과를 바탕으로 추천 방식 비교 및 A/B 테스트 설계
     </p>
     <div class="g4">
       <div class="metric-card"><div class="m-label">구매 전환율</div><div class="m-value" style="color:var(--dark)">0.84%</div><div class="m-sub">조회 → 실제 구매까지 간 비율</div></div>
@@ -687,7 +672,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
   <div class="footer-inner">
     <div>
       <div class="footer-title">데이터 분석 포트폴리오</div>
-      <div class="footer-sub">RetailRocket 이커머스 로그 분석</div>
+      <div class="footer-sub">RetailRocket 이커머스 구매 전환율 저하 원인 분석</div>
     </div>
     <a class="btn-pink" href="./portfolio_case_warehouse.html">다음 프로젝트 →</a>
   </div>
