@@ -316,7 +316,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </div>
     </div>
 
-    <div class="g2">
+    <div class="g3">
       <div class="card">
         <div class="card-title" style="color:var(--pink)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
         <div class="card-body">조회는 100회 이상이지만 장바구니/구매가 0건인 상품 903개 발견. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 두가지 설정.</div>
@@ -324,6 +324,19 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="card">
         <div class="card-title" style="color:var(--pink)">📉 구매 전환율 0.84% — 글로벌 평균 절반 이하</div>
         <div class="card-body">글로벌 이커머스 평균(2~3%)의 절반에도 못 미치는 전환율. 알고리즘 개선 전 근본적인 원인 파악이 선행되어야 함.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--pink)">💡 분석 방향: 2가지 가설</div>
+        <div class="card-body">
+          <div style="display:flex;gap:10px;margin-bottom:8px">
+            <span style="background:var(--red-lt);color:var(--red);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 1</span>
+            <span style="font-size:13px;color:var(--dark)">상품 자체의 문제일까? (품절/정보 누락)</span>
+          </div>
+          <div style="display:flex;gap:10px">
+            <span style="background:var(--purple-lt);color:var(--purple);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 2</span>
+            <span style="font-size:13px;color:var(--dark)">이상 사용자가 지표를 왜곡하는 걸까?</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -480,11 +493,10 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
 
     <div class="insight-box">
-      <div class="insight-title">💡 핵심 인사이트: 상위 10개 추천에서는 '판매 가능 + 인기순'이 1위</div>
+      <div class="insight-title">💡 핵심 인사이트</div>
       <div class="insight-body">
-        복잡한 개인화 알고리즘이 아니라, <strong>"품절 상품을 추천 후보에서 빼는 것"</strong>만으로 세 가지 지표가 모두 개선.<br>
-        다만 추천을 20개까지 넓히면 관심 카테고리 기반 추천이 더 좋은 결과를 보임.<br>
-        즉, <strong>상위 노출 영역에는 판매 가능한 인기 상품을, 더 넓은 영역에는 개인 관심사 기반 추천</strong>을 쓰는 것이 합리적.
+        품절 상품을 추천 후보에서 제외하는 것만으로 세 가지 지표가 모두 개선.<br>
+        <strong>상위 노출 영역에는 판매 가능한 인기 상품을, 더 넓은 영역에는 개인 관심사 기반 추천</strong>을 쓰는 방법을 추천.
       </div>
     </div>
   </div>
