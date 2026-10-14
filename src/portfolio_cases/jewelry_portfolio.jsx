@@ -293,8 +293,8 @@ const Hero = () => (
         fontSize: 17, color: C.muted, lineHeight: 1.85,
         marginBottom: 32, maxWidth: 900,
       }}>
-        매출과 ROAS 하락을 출발점으로, 광고 성과와 구매 리뷰를 분석해 기존 타깃과 구매 동기의 불일치를 확인.<br />
-        이를 바탕으로 고객군과 광고 예산의 재배치안을 제안.
+        매출과 ROAS 하락을 확인한 뒤, 광고 성과와 구매 리뷰를 분석해 기존 타깃과 구매 동기의 불일치를 발견<br />
+        이를 바탕으로 고객군과 광고 예산의 재배치안을 제안
       </p>
 
       <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
