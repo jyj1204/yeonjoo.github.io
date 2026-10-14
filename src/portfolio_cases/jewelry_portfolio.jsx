@@ -278,41 +278,35 @@ const SectionTabs = () => {
 
 /* ─── HERO ───────────────────────────────────── */
 const Hero = () => (
-  <section style={{ padding: "64px 40px 48px", borderBottom: `1px solid ${C.border}` }}>
+  <section style={{ padding: "96px 40px 88px", borderBottom: `1px solid ${C.border}` }}>
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-      <div className="fu fu1" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-        {["광고 최적화", "타겟 리포지셔닝", "고객 세분화", "SQL · Python · Tableau", "실제 기업 데이터"].map((t, i) => (
-          <Tag key={t} color={i === 0 ? C.accent : C.muted} bg={i === 0 ? C.accentBg : C.bg}>{t}</Tag>
-        ))}
-      </div>
-
       <h1 className="fu fu2" style={{
-        fontFamily: "'Lora', serif", fontSize: 48, fontWeight: 500,
-        lineHeight: 1.15, letterSpacing: "-0.02em", color: C.text,
-        marginBottom: 16, maxWidth: 720,
+        fontSize: "clamp(34px, 4.4vw, 50px)", fontWeight: 700,
+        lineHeight: 1.2, letterSpacing: "-0.02em", color: C.text,
+        marginBottom: 16, maxWidth: 1100,
       }}>
-        주얼리 브랜드 R사,<br />
-        <span style={{ color: C.accent }}>타겟 리포지셔닝</span>과 광고 예산 최적화
+        쥬얼리 브랜드 R사,<br />
+        <span style={{ color: C.accent }}>광고 타깃 재설계</span> 및 광고 예산 최적화
       </h1>
 
       <p className="fu fu3" style={{
-        fontSize: 17, color: C.muted, lineHeight: 1.7,
-        marginBottom: 44, maxWidth: 600,
+        fontSize: 17, color: C.muted, lineHeight: 1.85,
+        marginBottom: 32, maxWidth: 900,
       }}>
-        매출 <strong style={{ color: C.text }}>28% 하락, ROAS 17% 급감</strong>. 광고 예산의 30%가 잘못된 타겟에 낭비 중.<br />
-        리뷰 데이터 형태소 분석으로 실제 구매자 페르소나를 재정의하고, 추가 예산 없이 ROAS 23% 반등 시뮬레이션 도출.
+        매출과 ROAS 하락을 출발점으로, 광고 성과와 구매 리뷰를 분석해 기존 타깃과 구매 동기의 불일치를 확인.<br />
+        이를 바탕으로 고객군과 광고 예산의 재배치안을 제안.
       </p>
 
-      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
+      <div className="fu fu5" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
         {[
-          { label: "매출 하락폭 (YoY)", val: "–28%", sub: "2023 → 2024 전년 대비", color: C.red },
-          { label: "낭비 예산 규모", val: "~497만원/월", sub: "전체 예산의 30% 미스매칭", color: C.amber },
-          { label: "CTR 성과 격차", val: "5.2배", sub: "저효율 대비 고효율 구간", color: C.accent },
-          { label: "ROAS 반등 전망", val: "+23%", sub: "추가 예산 없이 재배치만으로", color: C.green },
+          { label: "매출 변화 (YoY)", val: "−28%", sub: "2023 → 2024 전년 대비", color: C.red },
+          { label: "ROAS 변화 (YoY)", val: "−17%", sub: "2023 → 2024 전년 대비", color: C.red },
+          { label: "타깃별 CTR 격차", val: "5.2배", sub: "저효율 대비 고효율 구간", color: C.accent },
+          { label: "재배치 검토 예산", val: "약 497만 원", sub: "월 기준 / 전체 광고비의 30%", color: C.amber },
         ].map(({ label, val, sub, color }) => (
-          <Card key={label} style={{ padding: "20px 24px" }}>
+          <Card key={label} style={{ padding: "22px 20px" }}>
             <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, fontWeight: 500 }}>{label}</div>
-            <div style={{ fontFamily: "'Lora', serif", fontSize: 28, color, letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 6 }}>{val}</div>
+            <div style={{ fontSize: 30, fontWeight: 700, color, letterSpacing: "-0.02em", lineHeight: 1, marginBottom: 4 }}>{val}</div>
             <div style={{ fontSize: 12, color: C.faint }}>{sub}</div>
           </Card>
         ))}
@@ -969,7 +963,7 @@ const StrategySection = () => (
         저효율 예산 30%를 고효율 '가족 세트'로 재배치
       </h2>
       <p style={{ fontSize: 14, color: C.muted, marginBottom: 36, lineHeight: 1.6, maxWidth: 580 }}>
-        추가 예산 없이, 기존 예산 재배치만으로 ROAS 23% 반등 가능.
+        예산 재배치 효과를 가정한 오프라인 시뮬레이션에서 ROAS 최대 23% 개선 전망. 실제 집행 성과는 미검증.
       </p>
 
       {/* 3가지 전략 축 */}
@@ -1026,7 +1020,7 @@ const StrategySection = () => (
       <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }}>
         <Card style={{ padding: "24px 28px" }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 4 }}>ROAS 개선 시뮬레이션</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>예산 재배치 비중에 따른 ROAS 개선폭 예측</div>
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>예산 재배치 비중에 따른 가정 기반 ROAS 개선폭 예측</div>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={DATA.roasSimulation} margin={{ top: 4, right: 16, left: -16, bottom: 4 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
@@ -1042,7 +1036,7 @@ const StrategySection = () => (
         </Card>
 
         <Card style={{ padding: "24px 28px", background: C.accentBg, border: `1px solid ${C.accentDim}` }} hover={false}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.accent, marginBottom: 20 }}>예상 성과 요약</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.accent, marginBottom: 20 }}>가정 기반 예상 성과</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {[
               { label: "ROAS 전망", val: "+23%", sub: "추가 예산 없이 전년 대비 반등", color: C.green },
@@ -1151,7 +1145,7 @@ const Footer = () => (
         <div style={{ fontFamily: "'Lora', serif", fontSize: 16, color: C.text, marginBottom: 4 }}>
           데이터 분석 포트폴리오
         </div>
-        <div style={{ fontSize: 13, color: C.muted }}>주얼리 브랜드 R사 — 타겟 리포지셔닝 및 광고 예산 최적화</div>
+        <div style={{ fontSize: 13, color: C.muted }}>쥬얼리 브랜드 R사 — 광고 타깃 재설계 및 광고 예산 최적화</div>
       </div>
       <div style={{ display: "flex", gap: 8 }}>
         <a href="./portfolio_case_instacart.html" style={{
