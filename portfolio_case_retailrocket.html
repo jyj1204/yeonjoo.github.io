@@ -593,12 +593,16 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <!-- ════ CONCLUSION ════ -->
 <section id="step3">
   <div class="wrap">
+    <div class="step-header">
+      <div class="step-badge">Step 5.</div>
+      <span class="step-header-title">프로젝트 결론 — 분석 결과와 인사이트</span>
+    </div>
     <h2>프로젝트 결론 및 인사이트</h2>
 
     <div class="g3" style="margin-bottom:22px">
-      <div class="conc-card"><div class="conc-emoji">🏷️</div><div class="conc-title">가설 1 — 상품 데이터 품질 문제</div><div class="conc-body">조회는 많은데 안 팔린 상품 903개의 78.7%는 품절 상태. 추천 알고리즘이 아닌 상품 데이터 관리가 우선 과제.</div></div>
-      <div class="conc-card"><div class="conc-emoji">👥</div><div class="conc-title">가설 2 — 이상 사용자의 지표 왜곡</div><div class="conc-body">이상 사용자 제거 시 전환율이 소폭 개선되지만, 구매 건수 자체의 변화는 미미함. 분모(조회수)를 부풀려 지표를 낮게 보이게 만드는 구조.</div></div>
-      <div class="conc-card"><div class="conc-emoji">🎯</div><div class="conc-title">핵심 인사이트 — 데이터 품질 우선</div><div class="conc-body">모델 고도화 전에 데이터 품질 점검이 선행 필요. '품절 제외' 필터 하나가 Precision@10 기준 가장 효과적인 개선.</div></div>
+      <div class="conc-card"><div class="conc-emoji">🏷️</div><div class="conc-title">가설 1 — 상품 데이터 품질 문제</div><div class="conc-body">조회는 많은데 안 팔린 상품 903개의 92%는 품절 또는 상품 정보 미등록 상태. 추천 알고리즘이 아닌 상품 데이터 관리가 우선 과제.</div></div>
+      <div class="conc-card"><div class="conc-emoji">👥</div><div class="conc-title">가설 2 — 이상 사용자의 지표 왜곡</div><div class="conc-body">이상 사용자 제거 시 전환율이 소폭 개선되지만, 구매 건수 자체의 변화는 미미함. 조회수를 부풀려 지표를 낮게 보이게 만드는 구조.</div></div>
+      <div class="conc-card"><div class="conc-emoji">🎯</div><div class="conc-title">핵심 인사이트 — 데이터 품질 우선</div><div class="conc-body">모델 고도화 전에 데이터 품질 점검이 우선적으로 필요. '품절 제외' 필터 하나가 Precision@10 기준 가장 효과적인 개선.</div></div>
     </div>
 
 
@@ -606,10 +610,10 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     <div class="sec-label" style="margin-bottom:10px"><div class="sec-label-bar"></div><span class="sec-label-text">프로젝트 주요 성과</span></div>
     <div class="card">
       <ul class="ach-list">
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 1 검증</span><span class="ach-val">전환 불가 상품 903개 중 78.7%가 품절임을 확인 — 데이터 품질 문제로 귀결</span></div></li>
+        <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 1 검증</span><span class="ach-val">전환 불가 상품 903개 중 92%가 품절 또는 상품 정보 미등록 상태임을 확인 - 데이터 품질 문제로 귀결</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 2 검증</span><span class="ach-val">이상 사용자 제거 시 전환율 소폭 상승 (0.84%→0.90%), 구매 건수 자체는 변화 미미</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">알고리즘 비교</span><span class="ach-val">5가지 추천 알고리즘 오프라인 평가 — '판매 가능 + 인기순'이 상위 10개 기준 최고 성능</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">A/B 테스트 설계</span><span class="ach-val">핵심/참고/안전장치 지표 정의, 실험 전 기준 확정, 중단 기준까지 완전 설계</span></div></li>
+        <li><div class="ach-dot"></div><div><span class="ach-lbl">A/B 테스트 설계</span><span class="ach-val">핵심/참고/안전장치 지표 정의, 실험 전 기준 확정, 중단 기준까지 설계</span></div></li>
         <li><div class="ach-dot"></div><div><span class="ach-lbl">제약 사항</span><span class="ach-val">실제 A/B 테스트 미실시 (오프라인 시뮬레이션). 실사용 데이터 확보 시 온라인 검증 필요</span></div></li>
       </ul>
     </div>
@@ -634,21 +638,21 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
             <span style="color:var(--green);font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
             <div>
               <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">가설 기반 분석 접근</div>
-              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘부터 개선하지 않고 "상품 문제"와 "사용자 왜곡" 두 가설을 먼저 세운 뒤 데이터로 검증하는 순서를 지킴.</div>
+              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘부터 개선하지 않고 상품 문제와 사용자 왜곡 두 가설을 먼저 세운 뒤 데이터로 검증하는 순서로 분석</div>
             </div>
           </li>
           <li style="display:flex;gap:10px">
             <span style="color:var(--green);font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
             <div>
-              <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">이상 사용자 기준의 근거화</div>
-              <div style="font-size:12px;color:var(--gray);line-height:1.6">단일 기준을 임의로 정하지 않고 엄격/중간/느슨 3단계로 나눠 효과를 비교한 뒤, 중간 기준을 채택하는 근거를 데이터로 제시.</div>
+              <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">이상 사용자 기준별 민감도 확인</div>
+              <div style="font-size:12px;color:var(--gray);line-height:1.6">엄격/중간/느슨 3단계 기준에 따른 전환율 변화를 비교하고, 후속 분석에는 중간 기준을 적용.</div>
             </div>
           </li>
           <li style="display:flex;gap:10px">
             <span style="color:var(--green);font-size:13px;flex-shrink:0;margin-top:1px">✓</span>
             <div>
               <div style="font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px">오프라인 평가 후 A/B 테스트 설계</div>
-              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘 비교를 오프라인 시뮬레이션으로 먼저 진행한 뒤, 가드레일 지표/중단 기준까지 포함한 실험 설계로 이어짐.</div>
+              <div style="font-size:12px;color:var(--gray);line-height:1.6">알고리즘 비교를 오프라인 시뮬레이션으로 먼저 진행한 뒤, 가드레일 지표, 중단 기준까지 포함한 실험 설계로 이어짐.</div>
             </div>
           </li>
           <li style="display:flex;gap:10px">
