@@ -272,7 +272,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <span class="step-header-title">문제 정의 — 구매 단계 분석</span>
     </div>
     <h2 style="margin-bottom:8px">퍼널 분석: 어디서 이탈이 일어나는가</h2>
-    <p style="font-size:13px;color:var(--gray);margin-bottom:20px">고객이 조회 → 장바구니 → 구매까지 가는 각 단계의 전환율을 측정.</p>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:20px">조회 → 장바구니 → 구매 흐름을 비교해 어느 단계에서 이탈이 크게 발생하는지 확인.</p>
 
     <!-- Funnel Visual -->
     <div class="funnel-wrap">
@@ -295,21 +295,14 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </div>
     </div>
 
-    <!-- Canvas funnel chart -->
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-title" style="margin-bottom:4px">퍼널 단계별 이탈 시각화</div>
-      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">조회 이후 95% 이상이 장바구니 단계에서 이탈, 구매 전환율은 0.84%에 불과</p>
-      <canvas id="funnelChart" height="120"></canvas>
-    </div>
-
     <div class="g3">
       <div class="card">
         <div class="card-title" style="color:var(--pink)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
-        <div class="card-body">조회 100회 이상이지만 장바구니/구매가 단 0건인 상품이 903개. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 2가지 설정.</div>
+        <div class="card-body">조회는 100회 이상이지만 장바구니/구매가 0건인 상품 903개 발견. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 두가지 설정.</div>
       </div>
       <div class="card">
         <div class="card-title" style="color:var(--pink)">📉 구매 전환율 0.84% — 글로벌 평균 절반 이하</div>
-        <div class="card-body">글로벌 이커머스 평균(2~3%)의 절반에도 못 미치는 전환율. 알고리즘 개선 전 근본 원인 파악이 선행되어야 함.</div>
+        <div class="card-body">글로벌 이커머스 평균(2~3%)의 절반에도 못 미치는 전환율. 알고리즘 개선 전 근본적인 원인 파악이 선행되어야 함.</div>
       </div>
       <div class="card">
         <div class="card-title" style="color:var(--pink)">💡 분석 방향: 2가지 가설</div>
@@ -354,7 +347,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
           </div>
           <!-- Before/After: what if we remove these? -->
           <div class="card performance-card">
-            <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전/후 추천 성능 비교</div>
+            <div class="card-title" style="margin-bottom:4px">품절 상품 제거 전/후 성능 비교</div>
             <p style="font-size:12px;color:var(--gray);margin-bottom:14px">
               살 수 없는 상품을 추천 후보에서 제거했을 때 Precision@10이 어떻게 바뀌는지 확인
             </p>
@@ -365,8 +358,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div class="hyp-conclusion" style="background:var(--red-lt);border:1px solid rgba(239,68,68,.2)">
           <div class="hyp-conclusion-label" style="color:var(--red)">✅ 가설 1 검증 결과</div>
           <div class="hyp-conclusion-text">
-            903개 상품 중 <strong>78.7%가 품절 상태, 13.3%가 상품 정보 미등록</strong>으로 처음부터 구매 자체가 불가능.<br>
-            <strong>"추천이나 마케팅의 문제"가 아니라, 데이터 품질 문제.</strong>
+            903개 상품 중 <strong>92%가 품절 또는 상품 정보 미등록 상태.</strong><br>
             품절 상품을 추천 후보에서 제거하는 것만으로 Precision@10이 <strong>0.005 → 0.006으로 개선.</strong>
           </div>
         </div>
@@ -386,9 +378,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="hyp-body">
 
         <p style="font-size:13px;color:var(--gray);margin:16px 0">
-          보통 사용자는 사이트에서 1~2번 정도 행동하고 떠남.<br>
-          그런데 일부 사용자는 구매도 장바구니도 없이 '보기'만 수십~수백 번 반복.<br>
-          이런 사용자가 전체 조회 수를 부풀려 전환율을 실제보다 낮아 보이게 만들 수 있음.
+          다수의 사용자는 사이트에서 1~2번 정도 행동하고 떠남.<br>
+          소수의 사용자는 장바구니도 구매도 없이 조회만 수십~수백 번 반복.<br>
+          이러한 사용자가 조회 수 분모를 부풀려 전환율이 왜곡.
         </p>
 
         <!-- 3 criteria -->
@@ -434,10 +426,9 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div class="hyp-conclusion" style="background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)">
           <div class="hyp-conclusion-label" style="color:var(--purple)">✅ 가설 2 검증 결과</div>
           <div class="hyp-conclusion-text">
-            이상 사용자를 제거하면 전환율이 <strong>소폭 상승 (0.84% → 최대 0.90%)</strong>.<br>
-            하지만 실제 구매 건수와 "장바구니 → 구매" 비율은 거의 그대로.<br>
-            즉, 이상 사용자는 구매를 막은 게 아니라 <strong>'조회 수(분모)'를 부풀려 전환율을 실제보다 낮게 보이게</strong> 만드는 구조.<br>
-            제거 효과가 작으므로, <strong>중간 기준 적용 후 가설 1(품절 제거)을 우선 해결책</strong>으로 채택.
+            이상 사용자를 제거하면 전환율이 <strong>소폭 상승.</strong><br>
+            이상 사용자는 구매를 막은 게 아니라 <strong>조회 수를 부풀려 전환율을 실제보다 낮게 보이게</strong> 만드는 구조.<br>
+            제거 효과가 작으므로, <strong>중간 기준 적용 후 가설 1을 우선 해결책</strong>으로 채택.
           </div>
         </div>
       </div>
@@ -704,51 +695,6 @@ const convData = [
   { label: '제거 (느슨)', view2cart: 2.75, view2buy: 0.90, cart2buy: 32.74 },
 ];
 
-// ─── FUNNEL CHART ─────────────────────────────────────────
-(function() {
-  const canvas = document.getElementById('funnelChart');
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.parentElement.clientWidth - 40;
-  const H = 120;
-  canvas.width = W * dpr; canvas.height = H * dpr;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
-
-  const stages = [
-    { label: '조회', pct: 100, color: '#2563EB' },
-    { label: '장바구니', pct: 4.92, color: '#60A5FA' },
-    { label: '구매', pct: 0.84, color: '#BFDBFE' },
-  ];
-  const maxPct = 100;
-  const bh = 28; const gap = 14;
-  const labelW = 70; const scoreW = 50;
-  const barW = W - labelW - scoreW - 16;
-
-  stages.forEach((s, i) => {
-    const y = i * (bh + gap);
-    const bw = barW * s.pct / maxPct;
-
-    // Label
-    ctx.fillStyle = '#6B7280'; ctx.font = '12px "Pretendard", sans-serif';
-    ctx.textAlign = 'left'; ctx.fillText(s.label, 0, y + bh/2 + 4);
-
-    // Track
-    ctx.fillStyle = '#F3F4F6';
-    const rx = labelW; const ry = y;
-    ctx.beginPath(); ctx.roundRect(rx, ry, barW, bh, 4); ctx.fill();
-
-    // Bar
-    ctx.fillStyle = s.color;
-    ctx.beginPath(); ctx.roundRect(rx, ry, Math.max(bw, 6), bh, 4); ctx.fill();
-
-    // Score
-    ctx.fillStyle = s.color; ctx.font = 'bold 13px "Pretendard", sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(s.pct + '%', W, y + bh/2 + 4);
-  });
-})();
-
 // ─── DONUT CHART ─────────────────────────────────────────
 (function() {
   const canvas = document.getElementById('donutChart');
@@ -778,10 +724,9 @@ const convData = [
   ctx.fillStyle = '#FFFFFF'; ctx.fill();
 
   // Center text
-  ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 19px "Pretendard", sans-serif';
-  ctx.textAlign = 'center'; ctx.fillText('903', cx, cy - 4);
-  ctx.fillStyle = '#6B7280'; ctx.font = '12px "Pretendard", sans-serif';
-  ctx.fillText('상품', cx, cy + 15);
+  ctx.fillStyle = '#1A1A2E'; ctx.font = 'bold 15px "Pretendard", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('903개 상품', cx, cy);
 
   // Legend
   const legend = document.getElementById('donut-legend');
@@ -821,12 +766,12 @@ const convData = [
   ctx.scale(dpr, dpr);
 
   const items = [
-    { label: '전체 인기순 (품절 포함)', precision: 0.005, color: '#CBD5E1' },
-    { label: '★ 판매 가능 + 인기순 (품절 제거)', precision: 0.006, color: '#F87171' },
+    { label: '품절 포함', precision: 0.005, color: '#CBD5E1' },
+    { label: '품절 제거', precision: 0.006, color: '#F87171' },
   ];
   const maxVal = 0.007;
   const bh = 28; const gap = 14;
-  const labelW = 200; const scoreW = 48;
+  const labelW = 82; const scoreW = 48;
   const barW = W - labelW - scoreW - 8;
 
   items.forEach((s, i) => {
