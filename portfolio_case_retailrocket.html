@@ -100,6 +100,21 @@ h1 span{color:var(--pink)}
 .hyp-conclusion{border-radius:8px;padding:14px 18px;margin-top:16px}
 .hyp-conclusion-label{font-size:12px;font-weight:700;margin-bottom:4px}
 .hyp-conclusion-text{font-size:15px;line-height:1.8}
+.conversion-comparison .comparison-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.conversion-comparison .comparison-heading .card-title{margin-bottom:0}
+.comparison-badge{background:var(--purple-lt);color:var(--purple);font-size:12px;font-weight:700;padding:5px 9px;border-radius:4px}
+.comparison-label{font-size:13px;color:var(--gray);margin-bottom:12px}
+.comparison-main{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:16px;background:var(--purple-lt);border-radius:10px;padding:20px}
+.comparison-side:last-child{text-align:right}
+.comparison-side-label{font-size:12px;color:var(--gray);margin-bottom:6px}
+.comparison-value{font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.comparison-side:last-child .comparison-value,.comparison-arrow,.comparison-delta{color:var(--purple)}
+.comparison-arrow{font-size:22px;font-weight:700}
+.comparison-delta{text-align:right;font-size:14px;font-weight:700;margin-top:10px}
+.comparison-secondary{display:flex;align-items:baseline;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;border-top:1px solid var(--border);margin-top:22px;padding-top:17px}
+.comparison-secondary-label{color:var(--gray);font-size:13px}
+.comparison-secondary-value{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.comparison-note{color:var(--gray);font-size:12px;margin-top:7px}
 
 /* BAR */
 .bar-row{margin-bottom:14px}
@@ -129,7 +144,6 @@ h1 span{color:var(--pink)}
 .conv-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--gray)}
 .conv-table tr:last-child td{border-bottom:none}
 .conv-table .row-label{font-weight:600;color:var(--dark)}
-.highlight-green{color:var(--green)!important;font-weight:700!important}
 
 /* AB */
 .ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
@@ -213,6 +227,11 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .story-flow{flex-wrap:wrap;gap:14px}
   .algo-name{flex:0 0 120px;font-size:12px}
   .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
+}
+@media(max-width:480px){
+  .comparison-main{grid-template-columns:1fr;gap:6px;padding:16px}
+  .comparison-side:last-child{text-align:left}
+  .comparison-arrow{font-size:18px;line-height:1;transform:rotate(90deg);justify-self:start;margin-left:8px}
 }
 </style>
 </head>
@@ -332,8 +351,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="hyp-body">
 
         <p style="font-size:13px;color:var(--gray);margin:16px 0">
-          조회 100회 이상, 장바구니/구매 0건인 903개 상품을 확인.<br>
-          추천이나 마케팅 문제라면 여러 상품에 걸쳐 랜덤하게 분포해야 함. 하지만 결과는 다름.
+          조회 100회 이상, 장바구니/구매가 0건인 상품 903개의 상태를 확인해 낮은 전환의 원인을 살펴봄.
         </p>
 
         <div class="g2" style="margin-bottom:20px">
@@ -398,29 +416,30 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
           </div>
         </div>
 
-        <!-- Conversion rate change chart - HTML bars -->
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-title" style="margin-bottom:4px">이상 사용자 제거 전/후 전환율 변화</div>
-          <p style="font-size:12px;color:var(--gray);margin-bottom:16px">제거할수록 전환율이 소폭 상승하지만 극적인 변화는 없음 — 분모(조회수) 왜곡의 영향</p>
-          <div style="display:flex;gap:24px;margin-bottom:18px">
-            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray)"><div style="width:10px;height:10px;border-radius:2px;background:var(--pink);flex-shrink:0"></div>조회→장바구니</div>
-            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray)"><div style="width:10px;height:10px;border-radius:2px;background:var(--purple);flex-shrink:0"></div>조회→구매</div>
+        <!-- Selected medium threshold: key comparison without a duplicate chart and table -->
+        <div class="card conversion-comparison" style="margin-bottom:16px">
+          <div class="comparison-heading">
+            <div class="card-title">이상 사용자 제외해도 구매 전환율은 소폭 상승</div>
+            <span class="comparison-badge">중간 기준 적용</span>
           </div>
-          <div id="conv-bars-html"></div>
-        </div>
-
-        <!-- Raw table -->
-        <div class="card" style="margin-bottom:16px;overflow-x:auto">
-          <div class="card-title" style="margin-bottom:12px">정확한 수치 비교</div>
-          <table class="conv-table">
-            <thead><tr><th>데이터</th><th>조회 → 장바구니</th><th>조회 → 구매</th><th>장바구니 → 구매</th></tr></thead>
-            <tbody>
-              <tr><td class="row-label">원본 데이터</td><td>2.60%</td><td>0.84%</td><td>32.39%</td></tr>
-              <tr style="background:#FAFAFA"><td class="row-label">이상 사용자 제거 (엄격)</td><td>2.64%</td><td>0.86%</td><td>32.41%</td></tr>
-              <tr><td class="row-label">이상 사용자 제거 (중간)</td><td>2.67%</td><td>0.87%</td><td>32.44%</td></tr>
-              <tr style="background:#FAFAFA"><td class="row-label">이상 사용자 제거 (느슨)</td><td class="highlight-green">2.75%</td><td class="highlight-green">0.90%</td><td>32.74%</td></tr>
-            </tbody>
-          </table>
+          <div class="comparison-label">조회 → 구매 전환율</div>
+          <div class="comparison-main" role="group" aria-label="원본 데이터 0.84%, 이상 사용자 제외 후 0.87%">
+            <div class="comparison-side">
+              <div class="comparison-side-label">원본 데이터</div>
+              <div class="comparison-value">0.84%</div>
+            </div>
+            <div class="comparison-arrow" aria-hidden="true">→</div>
+            <div class="comparison-side">
+              <div class="comparison-side-label">이상 사용자 제외 후</div>
+              <div class="comparison-value">0.87%</div>
+            </div>
+          </div>
+          <div class="comparison-delta">+0.03%p</div>
+          <div class="comparison-secondary">
+            <span class="comparison-secondary-label">장바구니 → 구매 전환율</span>
+            <span class="comparison-secondary-value">32.39% → 32.44%</span>
+          </div>
+          <div class="comparison-note">구매 단계의 변화는 거의 없음</div>
         </div>
 
         <div class="hyp-conclusion" style="background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)">
@@ -688,13 +707,6 @@ const algoData = [
   { name: '함께 본 상품 기반', hitrate: 0.036, recall: 0.018, precision: 0.004, best: false },
 ];
 
-const convData = [
-  { label: '원본 데이터', view2cart: 2.60, view2buy: 0.84, cart2buy: 32.39 },
-  { label: '제거 (엄격)', view2cart: 2.64, view2buy: 0.86, cart2buy: 32.41 },
-  { label: '제거 (중간)', view2cart: 2.67, view2buy: 0.87, cart2buy: 32.44 },
-  { label: '제거 (느슨)', view2cart: 2.75, view2buy: 0.90, cart2buy: 32.74 },
-];
-
 // ─── DONUT CHART ─────────────────────────────────────────
 (function() {
   const canvas = document.getElementById('donutChart');
@@ -786,34 +798,6 @@ const convData = [
     ctx.fillStyle = s.color; ctx.font = 'bold 13px "Pretendard", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('P@10: ' + s.precision.toFixed(3), W, y + bh/2 + 4);
-  });
-})();
-
-// ─── CONVERSION BARS (HTML) ──────────────────────────────
-(function() {
-  const el = document.getElementById('conv-bars-html');
-  if (!el) return;
-  const metrics = [
-    { key: 'view2cart', label: '조회 → 장바구니', color: '#2563EB', max: 3.0 },
-    { key: 'view2buy',  label: '조회 → 구매',     color: '#7C3AED', max: 1.0 },
-  ];
-  metrics.forEach(m => {
-    let html = `<div style="margin-bottom:18px">
-      <div style="font-size:12px;font-weight:700;color:var(--dark);margin-bottom:8px">${m.label}</div>`;
-    convData.forEach((row, ri) => {
-      const val = row[m.key];
-      const pct = Math.min((val / m.max) * 100, 100).toFixed(1);
-      const isBase = ri === 0;
-      html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span style="font-size:11px;color:${isBase?'var(--dark)':'var(--gray)'};width:120px;flex-shrink:0;font-weight:${isBase?600:400}">${row.label}</span>
-        <div style="flex:1;height:12px;background:#F3F4F6;border-radius:4px;overflow:hidden">
-          <div style="width:${pct}%;height:100%;background:${isBase?m.color+'44':m.color};border-radius:4px"></div>
-        </div>
-        <span style="font-size:11px;font-weight:${isBase?400:600};color:${isBase?'var(--gray)':m.color};width:38px;text-align:right">${val.toFixed(2)}%</span>
-      </div>`;
-    });
-    html += '</div>';
-    el.innerHTML += html;
   });
 })();
 
