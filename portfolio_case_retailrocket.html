@@ -104,18 +104,14 @@ h1 span{color:var(--pink)}
 .conversion-comparison .comparison-heading .card-title{margin-bottom:0}
 .comparison-badge{background:var(--purple-lt);color:var(--purple);font-size:12px;font-weight:700;padding:5px 9px;border-radius:4px}
 .comparison-label{font-size:13px;color:var(--gray);margin-bottom:12px}
-.comparison-main{background:var(--purple-lt);border-radius:10px;padding:20px}
-.comparison-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px;max-width:440px;margin:0 auto}
+.comparison-main{max-width:520px;margin:0 auto;background:var(--purple-lt);border-radius:10px;padding:18px 24px}
+.comparison-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:start;gap:24px;max-width:440px;margin:0 auto}
 .comparison-side:last-child{text-align:right}
 .comparison-side-label{font-size:12px;color:var(--gray);margin-bottom:6px}
 .comparison-value{font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .comparison-side:last-child .comparison-value,.comparison-arrow,.comparison-delta{color:var(--purple)}
-.comparison-arrow{font-size:22px;font-weight:700}
+.comparison-arrow{font-size:22px;font-weight:700;margin-top:29px}
 .comparison-delta{font-size:14px;font-weight:700;margin-top:8px}
-.comparison-secondary{display:flex;align-items:baseline;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;border-top:1px solid var(--border);margin-top:22px;padding-top:17px}
-.comparison-secondary-label{color:var(--gray);font-size:13px}
-.comparison-secondary-value{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.comparison-note{color:var(--gray);font-size:12px;margin-top:7px}
 
 /* BAR */
 .bar-row{margin-bottom:14px}
@@ -233,7 +229,7 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .comparison-main{padding:16px}
   .comparison-pair{grid-template-columns:1fr;gap:6px}
   .comparison-side:last-child{text-align:left}
-  .comparison-arrow{font-size:18px;line-height:1;transform:rotate(90deg);justify-self:start;margin-left:8px}
+  .comparison-arrow{font-size:18px;line-height:1;transform:rotate(90deg);justify-self:start;margin:0 0 0 8px}
 }
 </style>
 </head>
@@ -439,11 +435,6 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
               </div>
             </div>
           </div>
-          <div class="comparison-secondary">
-            <span class="comparison-secondary-label">장바구니 → 구매 전환율</span>
-            <span class="comparison-secondary-value">32.39% → 32.44%</span>
-          </div>
-          <div class="comparison-note">구매 단계의 변화는 거의 없음</div>
         </div>
 
         <div class="hyp-conclusion" style="background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)">
