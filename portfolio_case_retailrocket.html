@@ -119,12 +119,17 @@ h1 span{color:var(--pink)}
 .bar-track{height:10px;background:#F3F4F6;border-radius:5px;overflow:hidden}
 .bar-fill{height:100%;border-radius:5px;transition:width .6s ease}
 
-/* ALGO ROWS */
-.algo-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-.algo-row:last-child{border-bottom:none}
-.algo-name{flex:0 0 160px;font-size:13px;font-weight:500}
-.algo-bar-area{flex:1}
-.algo-score{font-size:13px;font-weight:700;width:46px;text-align:right}
+/* RECOMMENDATION SCORECARD */
+.scorecard-scroll{overflow-x:auto}
+.algo-scorecard{width:100%;min-width:620px;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.algo-scorecard th,.algo-scorecard td{padding:13px 16px;border-bottom:1px solid var(--border);text-align:right}
+.algo-scorecard thead th{background:#F8FAFC;color:var(--gray);font-size:12px;font-weight:700;white-space:nowrap}
+.algo-scorecard thead th:first-child,.algo-scorecard tbody th{text-align:left}
+.algo-scorecard tbody th{font-weight:500}
+.algo-scorecard tbody tr:last-child th,.algo-scorecard tbody tr:last-child td{border-bottom:0}
+.algo-scorecard .best-row{background:var(--blue-lt)}
+.algo-scorecard .best-row th,.algo-scorecard .best-row td{color:var(--blue);font-weight:700}
+.scorecard-notes{font-size:12px;color:var(--gray);line-height:1.7;margin-top:14px}
 .best-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--pink-lt);color:var(--pink);white-space:nowrap}
 
 /* FUNNEL VIZ */
@@ -190,6 +195,17 @@ h1 span{color:var(--pink)}
 .performance-card canvas{margin-top:auto}
 .ab-metric-table th{font-size:14px!important;padding:12px 14px!important}
 .ab-metric-table td{font-size:14px!important;padding:12px 14px!important}
+.ab-metric-scroll{overflow-x:auto;margin-bottom:20px}
+.ab-metric-table{min-width:670px}
+.ab-metric-table tbody td{border-bottom:1px solid var(--border);color:var(--gray)}
+.ab-metric-table tbody tr:nth-child(even){background:#FAFAFA}
+.ab-metric-table tbody tr:last-child td{border-bottom:0}
+.ab-metric-table tbody td:first-child{font-weight:700;white-space:nowrap}
+.ab-metric-table tbody td:nth-child(2){font-weight:600;color:var(--dark)}
+.ab-metric-table tbody tr.primary td:first-child{color:var(--pink)}
+.ab-metric-table tbody tr.guardrail td:first-child{color:var(--amber)}
+.ab-test-focus{background:var(--blue-lt);border:1px solid #BFDBFE;border-radius:8px;padding:12px 16px;font-size:13px;color:var(--dark);margin-bottom:18px}
+.ab-test-focus strong{color:var(--blue)}
 .cond-chip-label{font-size:13px!important}
 .cond-chip-val{font-size:14px!important;line-height:1.65}
 #abtest .card-title{font-size:15px}
@@ -222,8 +238,15 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .funnel-wrap{flex-direction:column}
   .funnel-arrow{transform:rotate(90deg);align-self:center}
   .story-flow{flex-wrap:wrap;gap:14px}
-  .algo-name{flex:0 0 120px;font-size:12px}
   .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
+  .algo-scorecard{min-width:0;display:block}
+  .algo-scorecard thead{display:none}
+  .algo-scorecard tbody{display:grid;gap:10px}
+  .algo-scorecard tbody tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .algo-scorecard tbody th{grid-column:1/-1;background:#F8FAFC;padding:10px 12px;font-size:13px}
+  .algo-scorecard tbody td{position:relative;padding:23px 6px 10px;text-align:center;font-size:14px;border-bottom:0}
+  .algo-scorecard tbody td::before{content:attr(data-label);position:absolute;top:7px;left:0;right:0;color:var(--gray);font-size:10px;font-weight:500}
+  .algo-scorecard .best-row th{background:var(--blue-lt)}
   .conversion-comparison{display:block}
   .comparison-result{margin-top:16px}
   .comparison-badge{margin-left:0}
@@ -473,23 +496,22 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       과거 데이터(train)로 추천 후보를 만들고, 이후 기간(test)에 실제 장바구니/구매 상품이 추천 목록에 있었는지로 점수 산출.
     </p>
 
-    <!-- Algo: clean single-metric bar rows -->
     <div class="card" style="margin-bottom:16px">
-      <div class="card-title" style="margin-bottom:4px">Precision@10 비교 (상위 10개 추천 기준)</div>
-      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">추천한 10개 중 실제로 구매/장바구니에 담긴 비율. 높을수록 좋은 추천.</p>
-      <div id="algo-clean"></div>
-    </div>
-    <div class="g2" style="margin-bottom:16px">
-      <div class="card">
-        <div class="card-title" style="margin-bottom:10px">Hit Rate 비교</div>
-        <p style="font-size:11px;color:var(--gray);margin-bottom:12px">추천 중 하나라도 맞은 사용자 비율</p>
-        <div id="algo-hitrate"></div>
+      <div class="card-title" style="margin-bottom:4px">5가지 추천 방식, 세 지표로 비교</div>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">상위 10개 추천 기준(K=10). 각 지표는 높을수록 좋음.</p>
+      <div class="scorecard-scroll">
+        <table class="algo-scorecard" aria-label="추천 방식별 Precision, Hit Rate, Recall 비교">
+          <thead><tr><th scope="col">추천 방식</th><th scope="col">Precision@10</th><th scope="col">Hit Rate@10</th><th scope="col">Recall@10</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">전체 인기순 (기본)</th><td data-label="Precision">0.005</td><td data-label="Hit Rate">0.046</td><td data-label="Recall">0.024</td></tr>
+            <tr><th scope="row">이상 사용자 제거 + 인기순</th><td data-label="Precision">0.005</td><td data-label="Hit Rate">0.044</td><td data-label="Recall">0.022</td></tr>
+            <tr class="best-row"><th scope="row">판매 가능 + 인기순 <span class="best-badge">K=10 1위</span></th><td data-label="Precision">0.006</td><td data-label="Hit Rate">0.051</td><td data-label="Recall">0.028</td></tr>
+            <tr><th scope="row">관심 카테고리 기반</th><td data-label="Precision">0.004</td><td data-label="Hit Rate">0.044</td><td data-label="Recall">0.025</td></tr>
+            <tr><th scope="row">함께 본 상품 기반</th><td data-label="Precision">0.004</td><td data-label="Hit Rate">0.036</td><td data-label="Recall">0.018</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:10px">Recall 비교</div>
-        <p style="font-size:11px;color:var(--gray);margin-bottom:12px">실제 관심 상품 중 추천에 포함된 비율</p>
-        <div id="algo-recall"></div>
-      </div>
+      <p class="scorecard-notes">Precision: 추천 10개 중 정답 비율 · Hit Rate: 하나라도 맞은 사용자 비율 · Recall: 관심 상품 중 추천에 포함된 비율<br>K=20에서는 관심 카테고리 기반 추천이 Hit Rate와 Recall에서 가장 높았음.</p>
     </div>
 
     <div class="insight-box">
@@ -509,43 +531,45 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="step-badge">Step 4.</div>
       <span class="step-header-title">매출 상승 전략 — A/B 테스트 설계</span>
     </div>
-    <h2 style="margin-bottom:14px">추천 영역 개선, 실제로 효과가 있는지 검증하기</h2>
-    <p style="font-size:13px;color:var(--gray);margin-bottom:20px">오프라인 분석 결과를 바로 적용하지 않고, 실제 사용자를 대상으로 비교 실험을 설계함.</p>
+    <h2 style="margin-bottom:14px">인기순 추천보다 관심 카테고리 추천이 장바구니 행동을 늘릴까?</h2>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:20px">Step 3에서 판매 가능 + 인기순이 상위 10개 기준으로 가장 좋았음. 이를 기준선으로 두고, 관심 카테고리를 반영한 추천이 실제 사용자에게 더 많은 장바구니 추가를 만드는지 검증하도록 설계.</p>
+
+    <div class="ab-test-focus"><strong>두 그룹 모두 품절 상품 제외.</strong> 비교하는 것은 전체 인기순 추천과 개인 관심 카테고리 추천의 차이.</div>
 
     <div class="g2" style="margin-bottom:20px">
       <div style="background:var(--gray-lt);border:1px solid var(--border);border-radius:10px;padding:20px;">
         <div style="font-size:11px;font-weight:700;color:var(--gray);margin-bottom:4px;">A그룹 (대조군, 50%)</div>
         <div style="font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px;">판매 가능 + 인기순 추천</div>
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">품절 상품 제거 후 전체 인기 기준으로 추천. 오프라인 평가에서 최고 성능을 기록한 기준선.</div>
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">판매 가능한 상품 중 전체 사용자의 장바구니/구매 이력이 많은 순서로 추천. 오프라인 평가에서 가장 좋은 기준선.</div>
       </div>
       <div style="background:var(--pink-lt);border:1px solid var(--pink);border-radius:10px;padding:20px;">
         <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:4px;">B그룹 (실험군, 50%)</div>
-        <div style="font-size:13px;font-weight:700;color:var(--pink);margin-bottom:8px;">판매 가능 + SVD 개인화 추천</div>
-        <div style="font-size:12px;color:var(--gray);line-height:1.6;">품절 상품 제거 + 사용자 구매 이력 기반 SVD 협업 필터링 개인화 추천 적용.</div>
+        <div style="font-size:13px;font-weight:700;color:var(--pink);margin-bottom:8px;">판매 가능 + 관심 카테고리 추천</div>
+        <div style="font-size:12px;color:var(--gray);line-height:1.6;">같은 판매 가능 상품 중 사용자의 과거 행동으로 파악한 관심 카테고리의 인기 상품을 추천.</div>
       </div>
     </div>
 
     <div class="sec-label" style="margin-bottom:10px"><div class="sec-label-bar"></div><span class="sec-label-text">측정 지표</span></div>
-    <table class="ab-metric-table" style="width:100%;border-collapse:collapse;margin-bottom:20px">
+    <div class="ab-metric-scroll"><table class="ab-metric-table" style="width:100%;border-collapse:collapse">
       <thead><tr style="background:var(--pink)">
         <th style="padding:10px 12px;font-size:12px;text-align:left;color:#fff;font-weight:700">구분</th>
         <th style="padding:10px 12px;font-size:12px;text-align:left;color:#fff;font-weight:700">지표명</th>
         <th style="padding:10px 12px;font-size:12px;text-align:left;color:#fff;font-weight:700">측정 방법</th>
       </tr></thead>
       <tbody>
-        <tr><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--pink)">핵심 지표</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark)">구매 전환율</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--gray)">추천 노출 후 구매 완료 / 추천 클릭 수</td></tr>
-        <tr style="background:#FAFAFA"><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--pink)">핵심 지표</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark)">장바구니 → 구매 전환율</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--gray)">구매 완료 / 장바구니 추가 수</td></tr>
-        <tr><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--gray)">보조 지표</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark)">추천 클릭률 (CTR)</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--gray)">추천 클릭 수 / 추천 노출 수</td></tr>
-        <tr style="background:#FAFAFA"><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--gray)">보조 지표</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark)">세션당 조회 상품 수</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--gray)">세션 내 상품 조회 이벤트 수 / 세션 수</td></tr>
-        <tr><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:700;color:var(--amber)">가드레일</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);font-weight:600;color:var(--dark)">품절 상품 추천 노출 수</td><td style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);color:var(--gray)">추천된 상품 중 availableCount=0 건수</td></tr>
-        <tr style="background:#FAFAFA"><td style="padding:10px 12px;font-size:12px;font-weight:700;color:var(--amber)">가드레일</td><td style="padding:10px 12px;font-size:12px;font-weight:600;color:var(--dark)">전체 구매 전환율</td><td style="padding:10px 12px;font-size:12px;color:var(--gray)">전체 세션 기준 구매 완료율</td></tr>
+        <tr class="primary"><td>핵심 지표</td><td>추천 상품 장바구니 추가율</td><td>추천 상품 장바구니 추가 사용자 수 / 추천 영역 노출 사용자 수</td></tr>
+        <tr><td>보조 지표</td><td>추천 클릭률 (CTR)</td><td>추천 상품 클릭 사용자 수 / 추천 영역 노출 사용자 수</td></tr>
+        <tr><td>보조 지표</td><td>구매 전환율</td><td>구매 완료 사용자 수 / 추천 영역 노출 사용자 수</td></tr>
+        <tr class="guardrail"><td>가드레일</td><td>품절 상품 추천 노출률</td><td>판매 불가능 상품 추천 노출 수 / 전체 추천 노출 수</td></tr>
+        <tr class="guardrail"><td>가드레일</td><td>이상 사용자 비중</td><td>두 그룹의 이상 사용자 비중을 비교해 트래픽 품질 확인</td></tr>
+        <tr class="guardrail"><td>가드레일</td><td>장바구니 → 구매 이벤트 비율</td><td>구매 이벤트 수 / 장바구니 추가 이벤트 수</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <div class="sec-label" style="margin-bottom:10px"><div class="sec-label-bar"></div><span class="sec-label-text">실험 조건</span></div>
     <div class="cond-chips">
-      <div class="cond-chip"><div class="cond-chip-label">대상</div><div class="cond-chip-val">로그인하지 않은 모든 방문자</div></div>
-      <div class="cond-chip"><div class="cond-chip-label">트래픽</div><div class="cond-chip-val">대조군 50%, 실험군 50%</div></div>
+      <div class="cond-chip"><div class="cond-chip-label">대상</div><div class="cond-chip-val">추천 영역에 노출된 방문자</div></div>
+      <div class="cond-chip"><div class="cond-chip-label">트래픽</div><div class="cond-chip-val">방문자 단위로 A/B 각 50%</div></div>
       <div class="cond-chip"><div class="cond-chip-label">기간</div><div class="cond-chip-val">최소 1~2주</div></div>
       <div class="cond-chip"><div class="cond-chip-label">기준</div><div class="cond-chip-val">신뢰수준 95% (p-value &lt; 0.05)</div></div>
     </div>
@@ -558,8 +582,8 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       <div class="card">
         <div class="card-title">실험을 멈추는 기준</div>
           <div class="card-body">
-            구매 전환율이나 "장바구니 → 구매" 비율이 기존보다 눈에 띄게 나빠지거나,
-            품절 상품이 추천에 노출되는 일이 생기면 <strong style="color:var(--dark)">실험을 즉시 중단</strong>하고 이전 방식으로 되돌림.
+            구매 전환율이나 장바구니 → 구매 이벤트 비율이 대조군보다 유의미하게 낮아지거나,
+            품절 상품이 추천에 노출되면 <strong style="color:var(--dark)">실험을 즉시 중단</strong>하고 이전 방식으로 되돌림.
           </div>
       </div>
     </div>
@@ -700,14 +724,6 @@ const causeData = [
   { label: '같은 사람이 반복 조회', count: 8, pct: 0.9, color: '#E2E8F0' },
 ];
 
-const algoData = [
-  { name: '전체 인기순 (기본)', hitrate: 0.046, recall: 0.024, precision: 0.005, best: false },
-  { name: '이상 사용자 제거 + 인기순', hitrate: 0.044, recall: 0.022, precision: 0.005, best: false },
-  { name: '★ 판매 가능 + 인기순', hitrate: 0.051, recall: 0.028, precision: 0.006, best: true },
-  { name: '관심 카테고리 기반', hitrate: 0.044, recall: 0.025, precision: 0.004, best: false },
-  { name: '함께 본 상품 기반', hitrate: 0.036, recall: 0.018, precision: 0.004, best: false },
-];
-
 // ─── DONUT CHART ─────────────────────────────────────────
 (function() {
   const canvas = document.getElementById('donutChart');
@@ -799,59 +815,6 @@ const algoData = [
     ctx.fillStyle = s.color; ctx.font = 'bold 13px "Pretendard", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText('P@10: ' + s.precision.toFixed(3), W, y + bh/2 + 4);
-  });
-})();
-
-// ─── ALGO CLEAN BARS (Precision only, main) ───────────────
-(function() {
-  const el = document.getElementById('algo-clean');
-  if (!el) return;
-  const maxP = 0.007;
-  algoData.forEach(a => {
-    const pct = (a.precision / maxP * 100).toFixed(1);
-    el.innerHTML += `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:13px;font-weight:${a.best?700:500};color:${a.best?'var(--pink)':'var(--dark)'};width:180px;flex-shrink:0">
-        ${a.name}${a.best?' <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--pink-lt);color:var(--pink)">1위</span>':''}
-      </span>
-      <div style="flex:1;height:14px;background:#F3F4F6;border-radius:4px;overflow:hidden">
-        <div style="width:${pct}%;height:100%;background:${a.best?'var(--pink)':'#D1D5DB'};border-radius:4px"></div>
-      </div>
-      <span style="font-size:13px;font-weight:700;color:${a.best?'var(--pink)':'var(--gray)'};width:48px;text-align:right">${a.precision.toFixed(3)}</span>
-    </div>`;
-  });
-})();
-
-// ─── ALGO HIT RATE BARS ───────────────────────────────────
-(function() {
-  const el = document.getElementById('algo-hitrate');
-  if (!el) return;
-  const maxH = 0.06;
-  algoData.forEach(a => {
-    const pct = (a.hitrate / maxH * 100).toFixed(1);
-    el.innerHTML += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <span style="font-size:11px;color:${a.best?'var(--pink)':'var(--dark)'};font-weight:${a.best?700:400};width:140px;flex-shrink:0">${a.name.replace('★ ','')}</span>
-      <div style="flex:1;height:10px;background:#F3F4F6;border-radius:3px;overflow:hidden">
-        <div style="width:${pct}%;height:100%;background:${a.best?'var(--pink)':'#D1D5DB'};border-radius:3px"></div>
-      </div>
-      <span style="font-size:11px;font-weight:${a.best?700:400};color:${a.best?'var(--pink)':'var(--gray)'};width:40px;text-align:right">${a.hitrate.toFixed(3)}</span>
-    </div>`;
-  });
-})();
-
-// ─── ALGO RECALL BARS ─────────────────────────────────────
-(function() {
-  const el = document.getElementById('algo-recall');
-  if (!el) return;
-  const maxR = 0.03;
-  algoData.forEach(a => {
-    const pct = (a.recall / maxR * 100).toFixed(1);
-    el.innerHTML += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <span style="font-size:11px;color:${a.best?'var(--pink)':'var(--dark)'};font-weight:${a.best?700:400};width:140px;flex-shrink:0">${a.name.replace('★ ','')}</span>
-      <div style="flex:1;height:10px;background:#F3F4F6;border-radius:3px;overflow:hidden">
-        <div style="width:${pct}%;height:100%;background:${a.best?'var(--pink)':'#D1D5DB'};border-radius:3px"></div>
-      </div>
-      <span style="font-size:11px;font-weight:${a.best?700:400};color:${a.best?'var(--pink)':'var(--gray)'};width:40px;text-align:right">${a.recall.toFixed(3)}</span>
-    </div>`;
   });
 })();
 
