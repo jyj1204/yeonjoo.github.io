@@ -174,15 +174,6 @@ h1 span{color:var(--pink)}
 .conc-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:6px}
 .conc-body{font-size:14px;color:var(--gray);line-height:1.75}
 
-/* ACH */
-.ach-list{list-style:none}
-.ach-list li{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);font-size:14px;align-items:flex-start}
-.ach-list li:last-child{border-bottom:none}
-.ach-dot{width:8px;height:8px;border-radius:50%;background:var(--pink);margin-top:5px;flex-shrink:0}
-.ach-list li>div:last-child{display:grid;grid-template-columns:128px 1fr;column-gap:18px;width:100%}
-.ach-lbl{font-weight:800;color:var(--dark);white-space:nowrap;margin-right:0}
-.ach-val{color:var(--gray);line-height:1.75}
-
 /* DONUT CHART */
 .donut-wrap{display:flex;align-items:center;gap:28px;flex-wrap:wrap;min-height:214px}
 .donut-legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:160px}
@@ -238,7 +229,6 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .funnel-wrap{flex-direction:column}
   .funnel-arrow{transform:rotate(90deg);align-self:center}
   .story-flow{flex-wrap:wrap;gap:14px}
-  .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
   .algo-scorecard{min-width:0;display:block}
   .algo-scorecard thead{display:none}
   .algo-scorecard tbody{display:grid;gap:10px}
@@ -599,23 +589,10 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
     </div>
     <h2>프로젝트 결론 및 인사이트</h2>
 
-    <div class="g3" style="margin-bottom:22px">
-      <div class="conc-card"><div class="conc-emoji">🏷️</div><div class="conc-title">가설 1 — 상품 데이터 품질 문제</div><div class="conc-body">조회는 많은데 안 팔린 상품 903개의 92%는 품절 또는 상품 정보 미등록 상태. 추천 알고리즘이 아닌 상품 데이터 관리가 우선 과제.</div></div>
-      <div class="conc-card"><div class="conc-emoji">👥</div><div class="conc-title">가설 2 — 이상 사용자의 지표 왜곡</div><div class="conc-body">이상 사용자 제거 시 전환율이 소폭 개선되지만, 구매 건수 자체의 변화는 미미함. 조회수를 부풀려 지표를 낮게 보이게 만드는 구조.</div></div>
-      <div class="conc-card"><div class="conc-emoji">🎯</div><div class="conc-title">핵심 인사이트 — 데이터 품질 우선</div><div class="conc-body">모델 고도화 전에 데이터 품질 점검이 우선적으로 필요. '품절 제외' 필터 하나가 Precision@10 기준 가장 효과적인 개선.</div></div>
-    </div>
-
-
-
-    <div class="sec-label" style="margin-bottom:10px"><div class="sec-label-bar"></div><span class="sec-label-text">프로젝트 주요 성과</span></div>
-    <div class="card">
-      <ul class="ach-list">
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 1 검증</span><span class="ach-val">전환 불가 상품 903개 중 92%가 품절 또는 상품 정보 미등록 상태임을 확인 - 데이터 품질 문제로 귀결</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">가설 2 검증</span><span class="ach-val">이상 사용자 제거 시 전환율 소폭 상승 (0.84%→0.90%), 구매 건수 자체는 변화 미미</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">알고리즘 비교</span><span class="ach-val">5가지 추천 알고리즘 오프라인 평가 — '판매 가능 + 인기순'이 상위 10개 기준 최고 성능</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">A/B 테스트 설계</span><span class="ach-val">핵심/참고/안전장치 지표 정의, 실험 전 기준 확정, 중단 기준까지 설계</span></div></li>
-        <li><div class="ach-dot"></div><div><span class="ach-lbl">제약 사항</span><span class="ach-val">실제 A/B 테스트 미실시 (오프라인 시뮬레이션). 실사용 데이터 확보 시 온라인 검증 필요</span></div></li>
-      </ul>
+    <div class="g3">
+      <div class="conc-card"><div class="conc-emoji">🔍</div><div class="conc-title">무엇을 발견했나</div><div class="conc-body">조회는 많지만 장바구니/구매가 없던 상품 903개 중 92%가 품절 또는 상품 정보 미등록 상태. 이상 사용자 제외 후 구매 전환율은 0.84% → 0.87%로 소폭 상승(중간 기준).</div></div>
+      <div class="conc-card"><div class="conc-emoji">🎯</div><div class="conc-title">무엇을 제안했나</div><div class="conc-body">모델 고도화보다 상품 데이터 정제를 우선. 품절 상품을 추천 후보에서 제외하고, 상위 노출에는 판매 가능한 인기 상품을, 더 넓은 영역에는 관심 카테고리 기반 추천을 제안.</div></div>
+      <div class="conc-card"><div class="conc-emoji">🧪</div><div class="conc-title">어디까지 검증했나</div><div class="conc-body">5가지 추천 방식을 오프라인에서 비교하고 A/B 테스트의 지표와 중단 기준까지 설계. 실제 사용자 대상 실험은 진행하지 않아 온라인 성과는 아직 검증되지 않음.</div></div>
     </div>
   </div>
 </section>
