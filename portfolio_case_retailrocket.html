@@ -100,18 +100,18 @@ h1 span{color:var(--pink)}
 .hyp-conclusion{border-radius:8px;padding:14px 18px;margin-top:16px}
 .hyp-conclusion-label{font-size:12px;font-weight:700;margin-bottom:4px}
 .hyp-conclusion-text{font-size:15px;line-height:1.8}
-.conversion-comparison .comparison-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-.conversion-comparison .comparison-heading .card-title{margin-bottom:0}
-.comparison-badge{background:var(--purple-lt);color:var(--purple);font-size:12px;font-weight:700;padding:5px 9px;border-radius:4px}
-.comparison-label{font-size:13px;color:var(--gray);margin-bottom:12px}
-.comparison-main{max-width:520px;margin:0 auto;background:var(--purple-lt);border-radius:10px;padding:18px 24px}
-.comparison-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:start;gap:24px;max-width:440px;margin:0 auto}
-.comparison-side:last-child{text-align:right}
+.conversion-comparison{display:flex;align-items:center;justify-content:space-between;gap:28px}
+.comparison-copy{min-width:0}
+.comparison-copy .card-title{margin-bottom:10px}
+.comparison-badge{display:block;width:max-content;margin:0 0 12px auto;background:var(--purple-lt);color:var(--purple);font-size:12px;font-weight:700;padding:5px 9px;border-radius:4px}
+.comparison-label{font-size:13px;color:var(--gray)}
+.comparison-main{margin:0}
+.comparison-pair{display:grid;grid-template-columns:repeat(4,max-content);align-items:end;gap:20px}
 .comparison-side-label{font-size:12px;color:var(--gray);margin-bottom:6px}
 .comparison-value{font-size:clamp(28px,4vw,40px);font-weight:700;line-height:1.1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-.comparison-side:last-child .comparison-value,.comparison-arrow,.comparison-delta{color:var(--purple)}
-.comparison-arrow{font-size:22px;font-weight:700;margin-top:29px}
-.comparison-delta{font-size:14px;font-weight:700;margin-top:8px}
+.comparison-after .comparison-value,.comparison-arrow,.comparison-delta{color:var(--purple)}
+.comparison-arrow{font-size:22px;font-weight:700;line-height:1;margin-bottom:7px}
+.comparison-delta{font-size:14px;font-weight:700;line-height:1;margin-bottom:7px}
 
 /* BAR */
 .bar-row{margin-bottom:14px}
@@ -224,12 +224,16 @@ footer{background:var(--gray-lt);border-top:1px solid var(--border);padding:40px
   .story-flow{flex-wrap:wrap;gap:14px}
   .algo-name{flex:0 0 120px;font-size:12px}
   .ach-list li>div:last-child{grid-template-columns:1fr;row-gap:3px}
+  .conversion-comparison{display:block}
+  .comparison-result{margin-top:16px}
+  .comparison-badge{margin-left:0}
 }
 @media(max-width:480px){
-  .comparison-main{padding:16px}
-  .comparison-pair{grid-template-columns:1fr;gap:6px}
-  .comparison-side:last-child{text-align:left}
-  .comparison-arrow{font-size:18px;line-height:1;transform:rotate(90deg);justify-self:start;margin:0 0 0 8px}
+  .comparison-pair{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);column-gap:8px;row-gap:8px}
+  .comparison-side-label{font-size:11px;line-height:1.35;min-height:30px}
+  .comparison-value{font-size:clamp(25px,7.5vw,32px)}
+  .comparison-arrow{font-size:18px;margin-bottom:5px}
+  .comparison-delta{grid-column:3;font-size:12px;margin:0}
 }
 </style>
 </head>
@@ -312,7 +316,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
       </div>
     </div>
 
-    <div class="g3">
+    <div class="g2">
       <div class="card">
         <div class="card-title" style="color:var(--pink)">🔍 조회는 많은데 안 팔린 상품 903개 발견</div>
         <div class="card-body">조회는 100회 이상이지만 장바구니/구매가 0건인 상품 903개 발견. 전환이 극도로 낮은 구조적 문제를 확인하고 가설을 두가지 설정.</div>
@@ -321,19 +325,6 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
         <div class="card-title" style="color:var(--pink)">📉 구매 전환율 0.84% — 글로벌 평균 절반 이하</div>
         <div class="card-body">글로벌 이커머스 평균(2~3%)의 절반에도 못 미치는 전환율. 알고리즘 개선 전 근본적인 원인 파악이 선행되어야 함.</div>
       </div>
-      <div class="card">
-        <div class="card-title" style="color:var(--pink)">💡 분석 방향: 2가지 가설</div>
-        <div class="card-body">
-          <div style="display:flex;gap:10px;margin-bottom:8px">
-            <span style="background:var(--red-lt);color:var(--red);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 1</span>
-            <span style="font-size:13px;color:var(--dark)">상품 자체의 문제일까? (품절/정보 누락)</span>
-          </div>
-          <div style="display:flex;gap:10px">
-            <span style="background:var(--purple-lt);color:var(--purple);font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap">가설 2</span>
-            <span style="font-size:13px;color:var(--dark)">이상 사용자가 지표를 왜곡하는 걸까?</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -341,6 +332,11 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <!-- ════ HYPOTHESIS 1 ════ -->
 <section id="hyp1">
   <div class="wrap">
+    <div class="step-header">
+      <div class="step-badge">Step 2.</div>
+      <span class="step-header-title">원인 가설 검증 — 상품 상태와 사용자 행동</span>
+    </div>
+    <p class="step-intro" style="font-size:13px;color:var(--gray);margin-bottom:20px">낮은 구매 전환율의 원인을 상품 상태와 사용자 행동, 두 방향에서 검증.</p>
     <div class="hyp-frame" style="border-color:var(--red)">
       <div class="hyp-header" style="background:var(--red-lt)">
         <span class="hyp-badge" style="background:var(--red);color:#fff">가설 1</span>
@@ -416,21 +412,23 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 
         <!-- Selected medium threshold: key comparison without a duplicate chart and table -->
         <div class="card conversion-comparison" style="margin-bottom:16px">
-          <div class="comparison-heading">
+          <div class="comparison-copy">
             <div class="card-title">이상 사용자 제외해도 구매 전환율은 소폭 상승</div>
-            <span class="comparison-badge">중간 기준 적용</span>
+            <div class="comparison-label">조회 → 구매 전환율</div>
           </div>
-          <div class="comparison-label">조회 → 구매 전환율</div>
-          <div class="comparison-main" role="group" aria-label="원본 데이터 0.84%, 이상 사용자 제외 후 0.87%">
-            <div class="comparison-pair">
-              <div class="comparison-side">
-                <div class="comparison-side-label">원본 데이터</div>
-                <div class="comparison-value">0.84%</div>
-              </div>
-              <div class="comparison-arrow" aria-hidden="true">→</div>
-              <div class="comparison-side">
-                <div class="comparison-side-label">이상 사용자 제외 후</div>
-                <div class="comparison-value">0.87%</div>
+          <div class="comparison-result">
+            <span class="comparison-badge">중간 기준 적용</span>
+            <div class="comparison-main" role="group" aria-label="원본 데이터 0.84%, 이상 사용자 제외 후 0.87%">
+              <div class="comparison-pair">
+                <div class="comparison-side">
+                  <div class="comparison-side-label">원본 데이터</div>
+                  <div class="comparison-value">0.84%</div>
+                </div>
+                <div class="comparison-arrow" aria-hidden="true">→</div>
+                <div class="comparison-side comparison-after">
+                  <div class="comparison-side-label">이상 사용자 제외 후</div>
+                  <div class="comparison-value">0.87%</div>
+                </div>
                 <div class="comparison-delta">+0.03%p</div>
               </div>
             </div>
@@ -454,7 +452,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <section id="algo">
   <div class="wrap">
     <div class="step-header">
-      <div class="step-badge">Step 2.</div>
+      <div class="step-badge">Step 3.</div>
       <span class="step-header-title">매출 상승 전략 — 추천 알고리즘 비교</span>
     </div>
     <h2 style="margin-bottom:8px">정제된 데이터로 5가지 추천 방식 비교</h2>
@@ -496,7 +494,7 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <section id="abtest" class="bg-light">
   <div class="wrap">
     <div class="step-header">
-      <div class="step-badge">Step 2.</div>
+      <div class="step-badge">Step 4.</div>
       <span class="step-header-title">매출 상승 전략 — A/B 테스트 설계</span>
     </div>
     <h2 style="margin-bottom:14px">추천 영역 개선, 실제로 효과가 있는지 검증하기</h2>
@@ -559,10 +557,6 @@ if(window.parent&&window.parent!==window){document.body.classList.add('in-modal'
 <!-- ════ CONCLUSION ════ -->
 <section id="step3">
   <div class="wrap">
-    <div class="step-header">
-      <div class="step-badge">Step 3.</div>
-      <span class="step-header-title">결론</span>
-    </div>
     <h2>프로젝트 결론 및 인사이트</h2>
 
     <div class="g3" style="margin-bottom:22px">
