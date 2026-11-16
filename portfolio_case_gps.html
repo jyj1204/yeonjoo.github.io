@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>차량 GPS 위치 이상 탐지 | 전연주 포트폴리오</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    :root{--ink:#1A1A2E;--muted:#6B7280;--line:#E5E7EB;--paper:#fff;--bg:#F2F3F6;--teal:#2563EB;--mint:#EFF6FF;--blue:#2563EB;--bluebg:#EFF6FF;--amber:#B45309;--amberbg:#FFFBEB}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#D1D5DB var(--bg)}
+    body{background:var(--bg);color:var(--ink);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;word-break:keep-all}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1100px,calc(100% - 80px));margin:auto}
+    nav{position:sticky;top:0;z-index:20;background:rgba(242,243,246,.94);backdrop-filter:blur(12px)}
+    .nav-inner{height:56px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:500;font-size:15px}.close{width:36px;height:36px;display:grid;place-items:center;border:1px solid #d9dee8;border-radius:50%;background:#fff;color:#64748b;font-size:22px}.in-modal .close{display:none}
+    .tabs{position:sticky;top:56px;z-index:19;background:rgba(242,243,246,.96);border-top:1px solid var(--line);border-bottom:1px solid var(--line);box-shadow:0 8px 18px rgba(15,23,42,.04);backdrop-filter:blur(12px)}
+    .tabs .wrap{display:flex;overflow:auto;scrollbar-width:none}.tabs .wrap::-webkit-scrollbar{display:none}.tabs a{display:inline-flex;align-items:center;height:56px;padding:0 16px;color:var(--muted);font-size:14px;font-weight:500;white-space:nowrap;border-bottom:2.5px solid transparent}.tabs a:hover,.tabs a.active{color:var(--ink);border-color:var(--ink);font-weight:700}
+    header{padding:100px 0 88px;background:var(--bg);border-bottom:1px solid var(--line)}
+    .eyebrow{display:flex;gap:9px;align-items:center;color:var(--teal);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px}.eyebrow::before{content:'';width:28px;height:2px;background:var(--teal)}
+    h1{max-width:840px;font-size:clamp(34px,4.4vw,50px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:16px}h1 span{color:var(--teal)}
+    .lede{max-width:820px;color:var(--muted);font-size:17px;line-height:1.85}.lede strong{color:var(--ink)}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}.chip{padding:5px 11px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--muted);font-size:12px;font-weight:500}.chip.accent{color:var(--blue);border-color:#BFDBFE;background:var(--bluebg)}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}.kpi{padding:22px 20px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)}.kpi small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}.kpi b{display:block;font-size:30px;font-weight:700;line-height:1;color:var(--teal)}.kpi span{display:block;color:#9CA3AF;font-size:12px;margin-top:5px}
+    section{padding:64px 0;border-bottom:1px solid var(--line);scroll-margin-top:132px}.section-label{color:var(--teal);font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}.section-title{font-size:clamp(22px,3vw,30px);line-height:1.3;letter-spacing:-.02em;margin-bottom:18px}.intro{max-width:820px;color:var(--muted);font-size:16px;margin-bottom:28px}.intro strong{color:var(--ink)}
+    .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px;box-shadow:0 1px 4px rgba(0,0,0,.04)}.card .num{color:var(--teal);font-size:12px;font-weight:800}.card h3{font-size:17px;margin:8px 0}.card p,.card li{color:var(--muted);font-size:14px}.card ul{padding-left:18px;display:grid;gap:6px}
+    .problem{border-left:4px solid var(--teal)}.problem strong{color:var(--teal)}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;counter-reset:flow}.flow article{position:relative;background:#fff;border:1px solid var(--line);border-radius:10px;padding:19px 16px;min-height:142px}.flow article::before{counter-increment:flow;content:'0' counter(flow);display:block;color:var(--teal);font-size:11px;font-weight:800;margin-bottom:12px}.flow h3{font-size:14px;margin-bottom:7px}.flow p{font-size:12px;color:var(--muted)}
+    .rules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.rule{background:#fff;border:1px solid var(--line);border-top:3px solid var(--teal);border-radius:10px;padding:21px}.rule b{font-size:26px;color:var(--teal)}.rule h3{font-size:14px;margin:7px 0}.rule p{font-size:13px;color:var(--muted)}
+    .logic{margin-top:16px;padding:18px 22px;border-radius:10px;background:var(--mint);border:1px solid #BFDBFE;color:#374151;font-size:14px}.logic strong{color:var(--teal)}
+    .funnel{display:grid;grid-template-columns:1.7fr 44px 1fr 44px .78fr;align-items:center;gap:10px;margin-top:26px}.funnel-box{display:grid;place-items:center;text-align:center;min-height:132px;padding:20px;border-radius:10px;background:#fff;border:1px solid var(--line)}.funnel-box b{display:block;font-size:32px;line-height:1;color:var(--ink)}.funnel-box span{font-size:13px;color:var(--muted);margin-top:9px}.funnel-box.final{background:var(--teal);border-color:var(--teal);color:#fff}.funnel-box.final b,.funnel-box.final span{color:#fff}.arrow{text-align:center;color:var(--teal);font-size:25px;font-weight:800}
+    .bar-card{margin-top:16px}.bar-row{display:grid;grid-template-columns:110px 1fr 90px;gap:14px;align-items:center;margin:18px 0}.bar-label{font-size:13px;font-weight:700}.track{height:20px;border-radius:999px;background:#edf1f3;overflow:hidden}.fill{height:100%;min-width:3px;border-radius:999px;background:var(--teal)}.bar-row.low .fill{background:#aab6c3}.bar-value{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}.bar-note{padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+    .snapshot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}.month{padding:22px;border-radius:10px;background:#fff;border:1px solid var(--line);text-align:center}.month small{color:var(--muted)}.month b{display:block;color:var(--teal);font-size:32px;line-height:1.2}.overlap{padding:12px 16px;border-radius:4px;background:var(--mint);color:var(--teal);font-size:13px;font-weight:800;text-align:center}
+    .lesson{background:var(--bluebg);border-color:#BFDBFE}.lesson p,.lesson li{color:var(--muted)}.lesson h3,.lesson strong{color:var(--ink)}
+    .warning{background:var(--amberbg);border-color:#FDE68A}.warning .num,.warning h3{color:var(--amber)}
+    .support{margin-top:28px}.support .card{min-height:210px}.tag{display:inline-block;margin-top:14px;padding:4px 9px;border-radius:5px;background:var(--bluebg);color:var(--blue);font-size:11px;font-weight:800}
+    .takeaway{padding:32px;border-radius:10px;background:#fff;border:1px solid var(--line);font-size:clamp(20px,3vw,30px);line-height:1.45;font-weight:700;letter-spacing:-.02em}.takeaway span{color:var(--teal)}
+    .story-copy{max-width:840px;margin:0 0 26px;color:var(--muted);font-size:16px}.story-copy strong{color:var(--ink)}
+    .evidence{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.evidence .card{padding:19px}.evidence b{display:block;color:var(--teal);font-size:25px;line-height:1.2;margin:7px 0}.evidence p{font-size:13px}
+    .decision-note{margin-top:18px;padding:20px 24px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;color:var(--muted);font-size:14px}.decision-note strong{color:var(--ink)}
+    .result-head{font-size:20px;margin:34px 0 12px}.result-head:first-child{margin-top:0}
+    .conclusion-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.conclusion-grid .card{min-height:190px}
+    footer{padding:42px 0;color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;align-items:center;gap:18px}.back{padding:10px 15px;border:1px solid var(--line);border-radius:8px;background:#fff;font-weight:700}
+    @media(max-width:900px){.kpis,.rules{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}.flow article:last-child{grid-column:1/-1}.grid3{grid-template-columns:1fr}.funnel{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+    @media(max-width:720px){.wrap{width:min(100% - 40px,1100px)}header{padding:68px 0 52px}.lede{font-size:16px}.kpis,.grid2,.rules,.evidence,.conclusion-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow article:last-child{grid-column:auto}.snapshot{grid-template-columns:1fr}.overlap{border-radius:10px}.bar-row{grid-template-columns:92px 1fr 62px;gap:8px}section{padding:56px 0}.foot{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <nav><div class="wrap nav-inner"><span class="brand">데이터 분석 포트폴리오</span><a class="close" href="index.html#projects" aria-label="포트폴리오로 돌아가기">×</a></div></nav>
+
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">Data Analysis Internship · FMS</p>
+      <h1>GPS 이상 문의가 왔을 때<br><span>어떤 단말기를 먼저 점검할까?</span></h1>
+      <p class="lede">위치 오류 문의마다 현장 점검을 진행하면 비용이 발생합니다. 운행 로그에서 <strong>일시적인 GPS 오류와 반복되는 이상을 구분할 기준</strong>을 만들고, A/S 이력으로 그 기준이 실제 점검 우선순위에 도움이 되는지 확인했습니다.</p>
+      <div class="chips"><span class="chip accent">데이터 분석 인턴 · 실무 데이터</span><span class="chip">2026.07–09</span><span class="chip">운행 로그</span><span class="chip">A/S 이력</span><span class="chip">규칙 기반 이상 탐지</span></div>
+      <div class="kpis" aria-label="핵심 성과">
+        <div class="kpi"><small>분석 단말기</small><b>31,468대</b><span>8·9월 운행 데이터</span></div>
+        <div class="kpi"><small>우선 점검 후보</small><b>678대</b><span>전체의 2.15%</span></div>
+        <div class="kpi"><small>분석 대상 내 좌표 관련 고장 재현율</small><b>51.0%</b><span>149대 중 76대 포착</span></div>
+        <div class="kpi"><small>비후보 대비 AS 농축도</small><b>47.3배</b><span>11.21% vs 0.24%</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs" aria-label="프로젝트 섹션"><div class="wrap"><a href="#overview">시작한 이유</a><a href="#method">분석 과정</a><a href="#validation">검증 결과</a><a href="#decisions">결론</a><a href="#scope">인턴 업무</a><a href="#limits">한계</a></div></div>
+
+  <main>
+    <section id="overview"><div class="wrap">
+      <p class="section-label">01 · 시작한 이유와 목표</p><h2 class="section-title">위치 이상 문의는 들어오는데,<br>로그만으로 고장을 확정할 수는 없었습니다.</h2>
+      <p class="story-copy">위치 이상을 신고한 차량은 단말기 자체의 문제인지, 운행 환경 때문에 잠깐 GPS가 흔들린 것인지 먼저 구분해야 합니다. 그러나 문의가 들어온 뒤에만 확인하면 현장 출동이나 A/S 점검 비용이 발생하고, 모든 단말기를 같은 강도로 살펴보기도 어렵습니다.</p>
+      <p class="intro">그래서 이 프로젝트는 <strong>운행 데이터에서 실제 좌표 관련 고장과 닮은 패턴을 찾아, 우선 점검할 단말기를 좁히는 것</strong>에서 시작했습니다. 목표는 고장 여부를 자동 확정하는 것이 아니라, 점검 대상의 규모를 줄이면서 확인된 고장 사례를 가능한 한 많이 포함하는 기준을 만드는 것이었습니다.</p>
+      <div class="grid3">
+        <article class="card problem"><span class="num">업무 상황</span><h3>점검 자원은 제한적</h3><p>위치 이상 문의가 접수될 때마다 원인을 현장에서 확인해야 하므로, 먼저 살펴볼 대상을 정할 근거가 필요했습니다.</p></article>
+        <article class="card problem"><span class="num">데이터의 어려움</span><h3>정상 운행에도 무효 좌표 발생</h3><p>시동 직후 위성을 찾는 동안에는 정상 단말기에서도 좌표 (0,0) 등이 나타났습니다. 이상값 한 번만으로 고장을 판단하기 어려웠습니다.</p></article>
+        <article class="card problem"><span class="num">분석 목표</span><h3>고위험 후보를 작은 규모로 선별</h3><p>이상이 오래 지속되거나 여러 운행에서 반복되고 정상 좌표로 회복되지 않는 단말기를 우선 점검 후보로 정의했습니다.</p></article>
+      </div>
+    </div></section>
+
+    <section id="method"><div class="wrap">
+      <p class="section-label">02 · 분석 과정</p><h2 class="section-title">정상적인 GPS 흔들림을 먼저 확인하고,<br>고장 사례에 반복된 흐름을 규칙으로 만들었습니다.</h2>
+      <p class="story-copy">먼저 과거 A/S 171건에서 좌표와 직접 관련된 67건을 골랐습니다. 단말기별 운행 로그를 연결해 이 사례들과 정상 기준군의 좌표 흐름을 비교했습니다. 분석해 보니 운행 시작 직후에는 정상군에서도 위치 무효가 흔했고 약 300초 뒤 안정됐습니다. 이 구간을 빼지 않으면 정상 단말기를 후보에 과도하게 포함하게 됩니다.</p>
+      <p class="intro">초기 300초를 제외한 뒤에는 <strong>좌표가 얼마나 오래 무효였는지, 이후 회복됐는지, 다음 운행에서도 같은 문제가 이어졌는지</strong>를 계산했습니다. 위성 수가 믿을 만하게 기록된 모델에서는 좌표와 위성 수가 함께 무너지는 패턴도 별도로 확인했습니다.</p>
+      <div class="flow">
+        <article><h3>① 운행 연결</h3><p>ACTIVATION·RT·TRIP을 단말기 ID와 운행 ID로 묶음</p></article>
+        <article><h3>② 정상 구간 확인</h3><p>정상군의 초기 GPS 포착 지연을 확인하고 300초 제외</p></article>
+        <article><h3>③ 이상 흐름 계산</h3><p>무효 지속시간, 회복 여부, 운행 간 반복 횟수 산출</p></article>
+        <article><h3>④ 후보 기준 선택</h3><p>서로 다른 이상 조건을 결합해 우선 점검 후보 정의</p></article>
+        <article><h3>⑤ 실제 사례 대조</h3><p>월별 후보와 좌표 관련 A/S 이력을 단말기 ID로 비교</p></article>
+      </div>
+      <div class="rules" style="margin-top:22px">
+        <article class="rule"><b>A</b><h3>장시간 미회복</h3><p>위치 무효가 30분 이상 지속되고 같은 운행에서 정상 좌표로 회복되지 않는 패턴</p></article>
+        <article class="rule"><b>B</b><h3>다음 운행까지 실패</h3><p>무효 상태로 운행이 끝난 뒤 다음 운행에서도 정상 좌표가 확인되지 않는 패턴</p></article>
+        <article class="rule"><b>C</b><h3>반복적인 포착 지연</h3><p>정상 좌표까지 300초를 넘기거나 끝까지 좌표를 받지 못한 운행이 반복되는 패턴</p></article>
+        <article class="rule"><b>D</b><h3>위성·좌표 동시 붕괴</h3><p>위성 수 0과 (0,0) 좌표가 함께 지속·반복되는 특정 모델의 고위험 패턴</p></article>
+      </div>
+      <p class="logic"><strong>강한 후보의 기준:</strong> A·B·C 중 서로 다른 조건 2개 이상을 충족하거나, 위성 수가 유효하게 기록되는 모델에서 D를 충족한 단말기입니다. 한 번의 무효 좌표만으로 후보가 되지 않도록 지속·반복·회복 실패를 함께 확인했습니다.</p>
+    </div></section>
+
+    <section id="validation"><div class="wrap">
+      <p class="section-label">03 · 검증 결과</p><h2 class="section-title">8·9월 후보를 합쳐 보니,<br>전체의 2.15%에서 확인 고장의 51.0%를 포착했습니다.</h2>
+      <p class="story-copy">설계한 기준을 8월 15일과 9월 15일의 운행 데이터에 각각 적용했습니다. 두 시점에서 모두 후보였던 284대를 한 번만 세어, 누적 강한 후보 678대를 얻었습니다. 이는 한 번 실행한 결과가 아니라 <strong>두 시점 후보의 합집합</strong>입니다.</p>
+      <div class="snapshot" aria-label="월별 강한 후보 중복 현황"><div class="month"><small>8월 15일</small><b>475대</b><span>강한 후보</span></div><div class="overlap">두 시점 공통 284대</div><div class="month"><small>9월 15일</small><b>487대</b><span>강한 후보</span></div></div>
+      <div class="funnel" aria-label="점검 대상 압축 퍼널"><div class="funnel-box"><b>31,468대</b><span>전체 라벨링 단말기</span></div><div class="arrow">→</div><div class="funnel-box"><b>678대</b><span>중복 제거 누적 후보</span></div><div class="arrow">→</div><div class="funnel-box final"><b>2.15%</b><span>우선 점검 대상</span></div></div>
+      <h3 class="result-head">실제 좌표 관련 A/S와는 어떻게 비교했나</h3>
+      <p class="story-copy">A/S 기록 중 ‘AS필요’이며 오류유형이 좌표0·좌표고정·좌표오류인 단말기를 확인했습니다. 접수는 233건이지만 같은 단말기의 재접수가 있어 고유 단말기는 223대였습니다. 이 중 74대는 8·9월 라벨링 모집단에 없어 후보로 뽑힐 기회가 없었으므로, <strong>분석 가능한 149대</strong>를 재현율의 분모로 사용했습니다.</p>
+      <div class="evidence" aria-label="A/S 검증 분모와 포착 수">
+        <article class="card"><span class="num">좌표 관련 AS필요</span><b>223대</b><p>접수 233건을 단말기 기준으로 중복 제거</p></article>
+        <article class="card"><span class="num">분석 모집단 포함</span><b>149대</b><p>모집단 밖 74대를 제외한 평가 가능 단말기</p></article>
+        <article class="card"><span class="num">강한 후보로 포착</span><b>76대</b><p>76 ÷ 149 = 분석 대상 내 재현율 51.0%</p></article>
+      </div>
+      <p class="story-copy">점검 대상은 31,468대에서 678대(2.15%)로 좁아졌고, 그 안에 분석 가능한 좌표 관련 A/S 단말기 149대 중 76대가 포함됐습니다. 반대로 <strong>73대는 후보로 포착하지 못했습니다.</strong> 따라서 이 기준은 모든 GPS 문제를 찾는 규칙이 아니라 우선 점검 대상을 정하는 규칙으로 사용해야 합니다.</p>
+      <div class="card bar-card" aria-label="후보군과 비후보군 AS 확인률 비교">
+        <h3>후보에 실제 A/S 사례가 더 많이 모였는가</h3>
+        <p>후보군 AS 확인률을 비후보군과 비교해 우선 점검 기준의 유용성을 확인했습니다.</p>
+        <div class="bar-row"><span class="bar-label">후보군</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="bar-value">11.21%</span></div>
+        <div class="bar-row low"><span class="bar-label">비후보군</span><div class="track"><div class="fill" style="width:2.12%"></div></div><span class="bar-value">0.24%</span></div>
+        <p class="bar-note">후보 678대 중 76대(11.21%), 비후보 30,790대 중 73대(0.24%)에서 좌표 관련 A/S 이력이 확인됐습니다. 후보군의 관측된 A/S 확인률이 <strong>47.3배</strong> 높아, 선별 기준이 실제 고장 이력이 있는 집단을 농축했다는 근거를 얻었습니다.</p>
+      </div>
+    </div></section>
+
+    <section id="decisions"><div class="wrap">
+      <p class="section-label">04 · 결론과 활용</p><h2 class="section-title">운행 로그로 점검 순서를 정할 수 있다는<br>근거를 만들었습니다.</h2>
+      <p class="story-copy">분석의 결론은 명확합니다. 좌표 오류 문의가 발생한 뒤 모든 단말기를 같은 순서로 확인하기보다, <strong>반복적 미회복과 위성·좌표 동시 이상이 나타난 678대를 우선 점검 후보로 제시</strong>할 수 있습니다. 전체 단말기의 2.15%로 좁힌 집단에서 좌표 관련 A/S 확인 비율이 비후보보다 47.3배 높았기 때문입니다.</p>
+      <div class="conclusion-grid">
+        <article class="card lesson"><span class="num">운영에 줄 수 있는 결과</span><h3>우선 점검 목록</h3><p>후보 단말기를 먼저 살펴볼 근거를 제시했습니다. 후보 여부는 점검 순서를 정하기 위한 신호이며, 실제 고장 판정은 현장 확인과 후속 A/S 기록이 필요합니다.</p></article>
+        <article class="card"><span class="num">다음 개선 방향</span><h3>놓친 고장 유형을 따로 분석</h3><p>분석 가능한 A/S 149대 중 73대는 후보에 없었습니다. 좌표고정 등 현재 규칙으로 덜 포착되는 유형을 따로 살펴보고, 이후 기간에도 성능을 재검증할 필요가 있습니다.</p></article>
+      </div>
+      <div class="decision-note"><strong>기준을 고를 때의 판단:</strong> 개발 단계의 과거 좌표 관련 A/S 67건에서는 현재 기준이 48건을 포착했습니다. 기준을 완화하면 52건을 찾았지만 당시 후보가 618대에서 1,294대로 늘어났습니다. 추가 4건을 위해 점검량이 크게 늘어나는 대신, 현장에서 다룰 수 있는 후보 규모를 선택했습니다. 이 개발 단계 수치는 위의 8·9월 재검증 수치와 분석 시점이 다릅니다.</div>
+    </div></section>
+
+    <section id="scope"><div class="wrap">
+      <p class="section-label">05 · 함께 수행한 인턴 업무</p><h2 class="section-title">같은 차량 데이터로<br>다른 운영 질문도 검토했습니다.</h2>
+      <p class="intro">GPS 위치 이상 탐지가 이 페이지의 대표 사례입니다. 인턴 기간에는 패킷 수신 품질과 엔진오일 교체 효과도 각각 별도의 질문으로 분석했습니다.</p>
+      <div class="grid2 support">
+        <article class="card"><span class="num">PACKET QUALITY</span><h3>패킷 미수신 구간 7개 상태 라벨링</h3><p>30분 초과 공백을 복구, 복구 후 이상, 탈거, 방전, 특정 패킷 누락, 고장, 판단 보류로 나눴습니다. 정상 GPS 60분 주기와 월말 관찰 부족을 분리해 오판을 줄였습니다.</p><span class="tag">DuckDB · Parquet · 시계열 전처리</span></article>
+        <article class="card"><span class="num">CAUSAL INTERPRETATION</span><h3>엔진오일 교체 전후 효과 검증</h3><p>같은 차량의 교체 전후를 비교하고 운행조건을 보정했으며, 위약 시점과 최소 검출 가능 효과를 함께 확인했습니다. 결론은 “효과 없음”이 아니라 “현재 데이터로 작은 효과를 자연 변동과 분리하기 어려움”이었습니다.</p><span class="tag">회귀 보정 · Placebo · MDE</span></article>
+      </div>
+    </div></section>
+
+    <section id="limits"><div class="wrap">
+      <p class="section-label">06 · 해석 범위와 한계</p><h2 class="section-title">점검 우선순위라는 결론의 범위를<br>명확히 남겼습니다.</h2>
+      <div class="grid3">
+        <article class="card warning"><span class="num">평가 가능 범위</span><h3>모집단 밖 74대</h3><p>좌표 관련 A/S 단말기 223대 중 74대는 해당 기간 라벨링 모집단에 없어 후보로 판정할 기회가 없었습니다.</p></article>
+        <article class="card warning"><span class="num">A/S 기록의 의미</span><h3>미접수 단말기를 정상으로 볼 수 없음</h3><p>A/S는 접수와 확인을 거친 사례만 담습니다. 후보군의 11.2%는 관측된 A/S 확인률이며 정밀도나 전체 실제 고장률이 아닙니다.</p></article>
+        <article class="card warning"><span class="num">후속 검증</span><h3>기간·오류유형별 성능 확인</h3><p>두 시점의 누적 후보 결과입니다. 다른 기간과 모델에서도 확인하고, 현재 규칙이 상대적으로 덜 포착하는 좌표고정 유형도 보완해야 합니다.</p></article>
+      </div>
+      <div class="takeaway" style="margin-top:28px">운행 로그에서 반복되는 GPS 이상을 찾아 <span>전체의 2.15%를 우선 점검 후보로 압축</span>했고, 분석 가능한 좌표 관련 A/S 단말기의 51.0%가 그 안에 포함됐습니다.</div>
+    </div></section>
+  </main>
+
+  <footer><div class="wrap foot"><div><strong>차량 GPS 위치 이상 탐지 및 점검 우선순위화</strong><br>Data Analysis Internship Case Study</div><a class="back" href="index.html#projects">← 프로젝트 목록</a></div></footer>
+  <script>
+    if(window.self!==window.top)document.body.classList.add('in-modal');
+    const links=[...document.querySelectorAll('.tabs a')];
+    const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const activate=()=>{let current=sections[0];for(const section of sections){if(section.getBoundingClientRect().top<=150)current=section}links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current.id))};
+    addEventListener('scroll',activate,{passive:true});activate();
+  </script>
+</body>
+</html>
