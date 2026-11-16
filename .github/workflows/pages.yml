@@ -26,10 +26,8 @@ jobs:
         run: |
           tar \
             --dereference --hard-dereference \
-            --directory . \
+            --directory offline \
             -cvf "$RUNNER_TEMP/artifact.tar" \
-            --exclude=.git \
-            --exclude=.github \
             .
       - id: upload
         uses: actions/upload-artifact@v4
